@@ -1,3 +1,3 @@
-mod optimisation;
+mod model;
 
 fn main() {}
