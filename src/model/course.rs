@@ -1,12 +1,9 @@
-enum CourseType {
-    Lab,
-    Theo,
-}
+use super::group::Group;
 
+#[derive(Debug, Clone)]
 pub struct Course {
-    sigle: String,
-    group: String,
-    course_type: CourseType,
-    nb_students: usize,
-    capacity: usize,
+    pub sigle: String,
+    pub theo_group: Vec<Group>,
+    pub lab_group: Vec<Group>,
+    pub nb_credit: usize,
 }
