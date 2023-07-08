@@ -9,6 +9,19 @@ pub struct TakenCourse {
 }
 
 impl TakenCourse {
+    pub fn new(
+        sigle: String,
+        theo_group: Option<Group>,
+        lab_group: Option<Group>,
+        nb_credit: usize,
+    ) -> TakenCourse {
+        Self {
+            sigle,
+            theo_group,
+            lab_group,
+            nb_credit,
+        }
+    }
     pub fn from(
         course: &Course,
         theo_group: Option<Group>,
