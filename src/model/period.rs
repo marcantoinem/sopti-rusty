@@ -1,4 +1,4 @@
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum WeekDay {
     Mon,
     Tue,
@@ -9,10 +9,17 @@ pub enum WeekDay {
     Sun,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Period {
     day: WeekDay,
-    time_end: u32,
-    time_start: u32,
+    start: u32,
+    end: u32,
     room: String,
+}
+
+impl Period {
+    /// This function suppose that the two period are sorted in order before.
+    pub fn is_overlapping(&self, other: &Period) -> bool {
+        (self.day == other.day) && (self.end >= other.start)
+    }
 }

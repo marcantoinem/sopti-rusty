@@ -2,8 +2,8 @@ use super::period::Period;
 
 #[derive(Debug, Clone)]
 pub struct Group {
-    name: String,
-    nb_students: usize,
-    students_capacity: usize,
-    periods: Vec<Period>,
+    pub name: String,
+    pub nb_students: usize,
+    pub students_capacity: usize,
+    pub periods: Vec<Period>,
 }
