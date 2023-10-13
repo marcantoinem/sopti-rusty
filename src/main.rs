@@ -1,10 +1,16 @@
 #![allow(dead_code)]
-use model::courses::Courses;
+mod course;
+mod courses;
+mod group;
+mod period;
+mod schedule;
+mod schedule_course;
+mod schedule_value;
+
+use courses::Courses;
 use std::{fs::File, io::BufReader};
 
-use crate::model::schedule::Schedule;
-
-mod model;
+use crate::schedule::Schedule;
 
 fn main() {
     let csv_horsage = BufReader::new(File::open("horsage.csv").unwrap());
