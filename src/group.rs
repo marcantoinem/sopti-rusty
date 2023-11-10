@@ -1,6 +1,6 @@
 use super::period::Period;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Group {
     pub name: String,
     pub closed: bool,

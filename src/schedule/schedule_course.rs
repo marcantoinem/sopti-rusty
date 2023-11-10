@@ -1,8 +1,9 @@
-use super::{course::Course, group::Group};
+use crate::{course::Course, group::Group};
+use std::rc::Rc;
 
-#[derive(Debug, Clone)]
+#[derive(PartialEq, Eq, Debug, Clone)]
 pub struct TakenCourse {
-    pub sigle: String,
+    pub sigle: Rc<str>,
     pub theo_group: Option<Group>,
     pub lab_group: Option<Group>,
     pub nb_credit: usize,
@@ -10,7 +11,7 @@ pub struct TakenCourse {
 
 impl TakenCourse {
     pub fn new(
-        sigle: String,
+        sigle: Rc<str>,
         theo_group: Option<Group>,
         lab_group: Option<Group>,
         nb_credit: usize,

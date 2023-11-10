@@ -1,7 +1,9 @@
+use super::course::Course;
 use super::period::Period;
-use super::schedule::Schedule;
-use super::{course::Course, schedule_course::TakenCourse};
-use crate::group::Group;
+use crate::{
+    group::Group,
+    schedule::{schedule::Schedule, schedule_course::TakenCourse, schedules::Schedules},
+};
 use std::{array, collections::HashMap, io::BufRead};
 
 #[derive(Debug, Clone)]
@@ -98,13 +100,21 @@ impl Courses {
         &self,
         courses_to_take: &[&str],
         rule: impl Fn(&Schedule) -> bool,
-    ) -> Vec<Schedule> {
+        evaluation: impl Fn(&Schedule) -> f64,
+        nb_schedule: usize,
+    ) -> Schedules {
         let courses_to_take: Vec<&Course> = courses_to_take
             .iter()
             .filter_map(|name| self.courses.get(*name))
             .collect();
-        let mut schedules = vec![];
-        self.get_schedules_rec(Schedule::default(), &courses_to_take, &mut schedules, &rule);
+        let mut schedules = Schedules::new(nb_schedule);
+        self.get_schedules_rec(
+            Schedule::default(),
+            &courses_to_take,
+            &mut schedules,
+            &rule,
+            &evaluation,
+        );
         schedules
     }
 
@@ -112,19 +122,27 @@ impl Courses {
         &self,
         courses_taken: Schedule,
         courses: &[&Course],
-        schedules: &mut Vec<Schedule>,
+        schedules: &mut Schedules,
         rule: &impl Fn(&Schedule) -> bool,
+        evaluation: &impl Fn(&Schedule) -> f64,
     ) {
         let Some(course) = courses.first() else {
-            schedules.push(courses_taken);
+            schedules.push(courses_taken, evaluation);
             return;
         };
+
         if course.theo_groups.is_empty() {
             for lab_group in &course.lab_groups {
                 let course = TakenCourse::from(course, None, Some(lab_group.clone()));
                 let courses_taken = courses_taken.clone().add(course);
                 if rule(&courses_taken) {
-                    self.get_schedules_rec(courses_taken, &courses[1..], schedules, rule);
+                    self.get_schedules_rec(
+                        courses_taken,
+                        &courses[1..],
+                        schedules,
+                        rule,
+                        evaluation,
+                    );
                 }
             }
         }
@@ -133,7 +151,13 @@ impl Courses {
                 let course = TakenCourse::from(course, Some(theo_group.clone()), None);
                 let courses_taken = courses_taken.clone().add(course);
                 if rule(&courses_taken) {
-                    self.get_schedules_rec(courses_taken, &courses[1..], schedules, rule);
+                    self.get_schedules_rec(
+                        courses_taken,
+                        &courses[1..],
+                        schedules,
+                        rule,
+                        evaluation,
+                    );
                 }
             }
             for lab_group in &course.lab_groups {
@@ -141,7 +165,13 @@ impl Courses {
                     TakenCourse::from(course, Some(theo_group.clone()), Some(lab_group.clone()));
                 let courses_taken = courses_taken.clone().add(course);
                 if rule(&courses_taken) {
-                    self.get_schedules_rec(courses_taken, &courses[1..], schedules, rule);
+                    self.get_schedules_rec(
+                        courses_taken,
+                        &courses[1..],
+                        schedules,
+                        rule,
+                        evaluation,
+                    );
                 }
             }
         }
