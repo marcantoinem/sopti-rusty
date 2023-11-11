@@ -1,3 +1,5 @@
+// There is no course the saturday at Poly, but knowing them, it wouldn't be far
+// stretched to assume that, it could.
 #[repr(u8)]
 #[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Day {

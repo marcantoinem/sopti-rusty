@@ -11,10 +11,10 @@ pub struct Course {
 }
 
 impl Course {
-    pub fn new(sigle: impl AsRef<str>, name: impl AsRef<str>, nb_credit: usize) -> Self {
+    pub fn new(sigle: Rc<str>, name: Rc<str>, nb_credit: usize) -> Self {
         Course {
-            sigle: Rc::from(sigle.as_ref()),
-            name: Rc::from(name.as_ref()),
+            sigle,
+            name,
             theo_groups: Groups::default(),
             lab_groups: Groups::default(),
             nb_credit,

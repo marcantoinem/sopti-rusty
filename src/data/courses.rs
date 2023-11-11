@@ -44,7 +44,7 @@ impl Courses {
                     .collect::<String>()
                     .parse::<usize>()
                     else {continue};
-                let mut course = Course::new(sigle, name, nb_credit);
+                let mut course = Course::new(sigle.into(), name.into(), nb_credit);
                 let period = Period::new(week_day, room.into(), hour);
                 let groups = match course_type {
                     "L" => &mut course.lab_groups,

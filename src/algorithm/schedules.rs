@@ -1,9 +1,12 @@
 use super::schedule::Schedule;
-use std::collections::BinaryHeap;
+use std::{
+    cmp::Reverse,
+    collections::{btree_map::Values, BinaryHeap},
+};
 
 #[derive(Debug)]
 pub struct Schedules {
-    schedules: BinaryHeap<Schedule>,
+    schedules: BinaryHeap<Reverse<Schedule>>,
     max_size: usize,
 }
 
@@ -17,7 +20,7 @@ impl Schedules {
 
     pub fn push(&mut self, mut schedule: Schedule, evaluation: impl Fn(&Schedule) -> f64) {
         let evaluation = evaluation(&schedule);
-        if let Some(schedule) = self.schedules.peek() {
+        if let Some(Reverse(schedule)) = self.schedules.peek() {
             if evaluation < schedule.value {
                 return;
             }
@@ -26,6 +29,15 @@ impl Schedules {
             self.schedules.pop();
         }
         schedule.value = evaluation;
-        self.schedules.push(schedule);
+        self.schedules.push(Reverse(schedule));
+    }
+
+    pub fn into_sorted_vec(self) -> Vec<Schedule> {
+        self.schedules
+            .into_sorted_vec()
+            .into_iter()
+            .map(|r| r.0)
+            .rev()
+            .collect()
     }
 }

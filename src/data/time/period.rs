@@ -1,7 +1,4 @@
-use super::{
-    day::Day,
-    hours::{Hours, NO_HOUR},
-};
+use super::{day::Day, hours::Hours};
 use std::rc::Rc;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -18,8 +15,5 @@ impl Period {
             room,
             hours: hours.into(),
         }
-    }
-    fn overlap(&self, other: &Self) -> bool {
-        self.hours & other.hours != NO_HOUR
     }
 }

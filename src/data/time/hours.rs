@@ -1,11 +1,25 @@
 // Hour start at 8 and stop and include 22
 // Each 1 represent an occupied 15min
-use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign};
+use std::fmt::Debug;
+use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Deref};
 
 pub const NO_HOUR: Hours = Hours(0);
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default)]
-pub struct Hours(u64);
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default)]
+pub struct Hours(pub u64);
+
+impl Debug for Hours {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:016X}", self.0)
+    }
+}
+
+impl Deref for Hours {
+    type Target = u64;
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
 
 impl From<&str> for Hours {
     fn from(value: &str) -> Self {
