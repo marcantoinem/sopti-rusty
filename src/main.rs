@@ -1,12 +1,8 @@
-#![allow(dead_code)]
-mod course;
-mod courses;
-mod group;
-mod period;
-mod schedule;
+mod algorithm;
+mod data;
 
-use crate::schedule::schedule::Schedule;
-use courses::Courses;
+use crate::algorithm::schedule::Schedule;
+use crate::data::courses::Courses;
 use std::{fs::File, io::BufReader, time::Instant};
 
 fn main() {

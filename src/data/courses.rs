@@ -1,9 +1,7 @@
 use super::course::Course;
-use super::period::Period;
-use crate::{
-    group::Group,
-    schedule::{schedule::Schedule, schedule_course::TakenCourse, schedules::Schedules},
-};
+use super::group::Group;
+use super::time::period::Period;
+use crate::algorithm::{schedule::Schedule, schedules::Schedules, taken_course::TakenCourse};
 use std::{array, collections::HashMap, io::BufRead};
 
 #[derive(Debug, Clone)]
@@ -26,33 +24,19 @@ impl Courses {
         for line in lines {
             let Ok(line) = line else { continue };
             let mut columns = line.split(';');
-            let [_, Some(sigle), Some(group), Some(nb_credit), _, _, Some(room), Some(course_type), _, _, _, Some(name), _, Some(week_day), Some(hour)] =
+            let [_, Some(sigle), Some(number), Some(nb_credit), _, _, Some(room), Some(course_type), _, _, _, Some(name), _, Some(week_day), Some(hour)] =
                 array::from_fn(|_| columns.next())
             else {
                 continue;
             };
             if let Some(course) = self.courses.get_mut(sigle) {
-                let Ok(hour) = hour.parse::<usize>() else {
-                    continue;
-                };
-                let period = Period::new(week_day, hour, room);
-                match course_type {
-                    "L" => {
-                        if let Some(g) = course.lab_groups.iter_mut().find(|g| g.name == group) {
-                            g.periods.push(period);
-                        } else {
-                            course.lab_groups.push(Group::new(group, period));
-                        }
-                    }
-                    "C" => {
-                        if let Some(g) = course.theo_groups.iter_mut().find(|g| g.name == group) {
-                            g.periods.push(period);
-                        } else {
-                            course.theo_groups.push(Group::new(group, period));
-                        }
-                    }
+                let period = Period::new(week_day, room.into(), hour);
+                let groups = match course_type {
+                    "L" => &mut course.lab_groups,
+                    "C" => &mut course.theo_groups,
                     _ => continue,
-                }
+                };
+                groups.insert_or_push(Group::new(number, period));
             } else {
                 let Ok(nb_credit) = nb_credit
                     .chars()
@@ -60,15 +44,14 @@ impl Courses {
                     .collect::<String>()
                     .parse::<usize>()
                     else {continue};
-                let Ok(hour) = hour.parse::<usize>() else {continue};
                 let mut course = Course::new(sigle, name, nb_credit);
-                let period = Period::new(week_day, hour, room);
-                let group = Group::new(group, period);
-                match course_type {
-                    "L" => course.lab_groups.push(group),
-                    "C" => course.theo_groups.push(group),
+                let period = Period::new(week_day, room.into(), hour);
+                let groups = match course_type {
+                    "L" => &mut course.lab_groups,
+                    "C" => &mut course.theo_groups,
                     _ => continue,
-                }
+                };
+                groups.insert_or_push(Group::new(number, period));
                 self.courses.insert(sigle.to_string(), course);
             }
         }
@@ -79,27 +62,23 @@ impl Courses {
         for line in lines {
             let Ok(line) = line else { continue };
             let mut columns = line.split(';');
-            let [_, Some(sigle), Some(group), Some(course_type)] =
+            let [_, Some(sigle), Some(number), Some(course_type)] =
                 array::from_fn(|_| columns.next()) else { continue };
             let Some(course) = self.courses.get_mut(sigle) else { continue };
-            match course_type {
-                "L" => {
-                    let Some(group) = course.lab_groups.iter_mut().find(|g| g.name == group) else { continue };
-                    group.closed = true;
-                }
-                "C" => {
-                    let Some(group) = course.theo_groups.iter_mut().find(|g| g.name == group) else { continue };
-                    group.closed = true;
-                }
+            let Ok(number) = number.parse() else { continue };
+            let groups = match course_type {
+                "L" => &mut course.lab_groups,
+                "C" => &mut course.theo_groups,
                 _ => continue,
-            }
+            };
+            groups.get_mut(number).and_then(|g| Some(g.closed = true));
         }
     }
 
     pub fn get_schedules(
         &self,
         courses_to_take: &[&str],
-        rule: impl Fn(&Schedule) -> bool,
+        rule: impl Fn(&Schedule, &TakenCourse) -> bool,
         evaluation: impl Fn(&Schedule) -> f64,
         nb_schedule: usize,
     ) -> Schedules {
@@ -123,7 +102,7 @@ impl Courses {
         courses_taken: Schedule,
         courses: &[&Course],
         schedules: &mut Schedules,
-        rule: &impl Fn(&Schedule) -> bool,
+        rule: &impl Fn(&Schedule, &TakenCourse) -> bool,
         evaluation: &impl Fn(&Schedule) -> f64,
     ) {
         let Some(course) = courses.first() else {
@@ -132,10 +111,10 @@ impl Courses {
         };
 
         if course.theo_groups.is_empty() {
-            for lab_group in &course.lab_groups {
-                let course = TakenCourse::from(course, None, Some(lab_group.clone()));
-                let courses_taken = courses_taken.clone().add(course);
-                if rule(&courses_taken) {
+            for lab_group in course.lab_groups.iter() {
+                let course = TakenCourse::new(course, None, Some(lab_group.clone()));
+                if rule(&courses_taken, &course) {
+                    let courses_taken = courses_taken.clone().add(course);
                     self.get_schedules_rec(
                         courses_taken,
                         &courses[1..],
@@ -146,11 +125,11 @@ impl Courses {
                 }
             }
         }
-        for theo_group in &course.theo_groups {
+        for theo_group in course.theo_groups.iter() {
             if course.lab_groups.is_empty() {
-                let course = TakenCourse::from(course, Some(theo_group.clone()), None);
-                let courses_taken = courses_taken.clone().add(course);
-                if rule(&courses_taken) {
+                let course = TakenCourse::new(course, Some(theo_group.clone()), None);
+                if rule(&courses_taken, &course) {
+                    let courses_taken = courses_taken.clone().add(course);
                     self.get_schedules_rec(
                         courses_taken,
                         &courses[1..],
@@ -160,11 +139,11 @@ impl Courses {
                     );
                 }
             }
-            for lab_group in &course.lab_groups {
+            for lab_group in course.lab_groups.iter() {
                 let course =
-                    TakenCourse::from(course, Some(theo_group.clone()), Some(lab_group.clone()));
-                let courses_taken = courses_taken.clone().add(course);
-                if rule(&courses_taken) {
+                    TakenCourse::new(course, Some(theo_group.clone()), Some(lab_group.clone()));
+                if rule(&courses_taken, &course) {
+                    let courses_taken = courses_taken.clone().add(course);
                     self.get_schedules_rec(
                         courses_taken,
                         &courses[1..],

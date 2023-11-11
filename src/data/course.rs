@@ -1,12 +1,12 @@
-use super::group::Group;
+use super::groups::Groups;
 use std::rc::Rc;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Course {
     pub sigle: Rc<str>,
     pub name: Rc<str>,
-    pub theo_groups: Vec<Group>,
-    pub lab_groups: Vec<Group>,
+    pub theo_groups: Groups,
+    pub lab_groups: Groups,
     pub nb_credit: usize,
 }
 
@@ -15,8 +15,8 @@ impl Course {
         Course {
             sigle: Rc::from(sigle.as_ref()),
             name: Rc::from(name.as_ref()),
-            theo_groups: vec![],
-            lab_groups: vec![],
+            theo_groups: Groups::default(),
+            lab_groups: Groups::default(),
             nb_credit,
         }
     }
