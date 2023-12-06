@@ -1,8 +1,5 @@
 use super::schedule::Schedule;
-use std::{
-    cmp::Reverse,
-    collections::{btree_map::Values, BinaryHeap},
-};
+use std::{cmp::Reverse, collections::BinaryHeap};
 
 #[derive(Debug)]
 pub struct Schedules {

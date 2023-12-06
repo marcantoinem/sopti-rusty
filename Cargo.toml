@@ -5,4 +5,16 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+debug = false
+
+[profile.dev]
+opt-level = 3
+debug = true
+
 [dependencies]
+compact_str = "0.7.1"
+smallvec = "1.11.2"

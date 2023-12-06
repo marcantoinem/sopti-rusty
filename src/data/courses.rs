@@ -2,16 +2,19 @@ use super::course::Course;
 use super::group::Group;
 use super::time::period::Period;
 use crate::algorithm::{schedule::Schedule, schedules::Schedules, taken_course::TakenCourse};
+use compact_str::CompactString;
 use std::{array, collections::HashMap, io::BufRead};
 
 #[derive(Debug, Clone)]
 pub struct Courses {
-    courses: HashMap<String, Course>,
+    courses: HashMap<CompactString, Course>,
 }
+
+pub static mut COUNTER: usize = 0;
 
 impl Courses {
     pub fn from_csv(csv_horsages: impl BufRead, csv_fermes: impl BufRead) -> Courses {
-        let courses = HashMap::<String, Course>::new();
+        let courses = HashMap::new();
         let mut courses = Courses { courses };
         courses.update_all_courses(csv_horsages);
         courses.update_closed(csv_fermes);
@@ -52,7 +55,7 @@ impl Courses {
                     _ => continue,
                 };
                 groups.insert_or_push(Group::new(number, period));
-                self.courses.insert(sigle.to_string(), course);
+                self.courses.insert(sigle.into(), course);
             }
         }
     }
@@ -96,7 +99,6 @@ impl Courses {
         );
         schedules
     }
-
     fn get_schedules_rec(
         &self,
         courses_taken: Schedule,
@@ -105,6 +107,9 @@ impl Courses {
         rule: &impl Fn(&Schedule, &TakenCourse) -> bool,
         evaluation: &impl Fn(&Schedule) -> f64,
     ) {
+        unsafe {
+            COUNTER += 1;
+        }
         let Some(course) = courses.first() else {
             schedules.push(courses_taken, evaluation);
             return;

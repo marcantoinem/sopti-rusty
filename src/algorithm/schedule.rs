@@ -5,22 +5,36 @@ use crate::data::time::{
 };
 use std::{cmp::Ordering, fmt::Display};
 
-#[derive(PartialEq, Debug, Clone, Default)]
+#[derive(PartialEq, Debug, Clone)]
 pub struct Schedule {
     pub value: f64,
     week: Week,
     courses: Vec<TakenCourse>,
 }
 
+impl Default for Schedule {
+    fn default() -> Self {
+        Self {
+            value: 0.0,
+            week: Week::default(),
+            courses: Vec::with_capacity(8),
+        }
+    }
+}
+
 // This omits 15 min gap even if the data is taken in account
 impl Display for Schedule {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut to_print = String::from(
-            "      | lundi        | mardi        | mercredi     | jeudi        | vendredi     |\n",
+        let mut to_print = String::new();
+        for c in &self.courses {
+            to_print.push_str(&c.to_string());
+        }
+        to_print.push_str(
+            "      |    lundi     |    mardi     |   mercredi   |    jeudi     |   vendredi   |\n",
         );
         let mut i = 0;
         for hour in 8..=21 {
-            for min in (0..4) {
+            for min in 0..4 {
                 if min % 2 == 1 {
                     i += 1;
                     continue;
@@ -101,7 +115,7 @@ impl Schedule {
             let mut new_week = schedule.week.clone();
             if let Some(theo_group) = &new_course.theo_group {
                 for period in &theo_group.periods {
-                    if schedule.week.conflict_in_day(period) {
+                    if new_week.conflict_in_day(period) {
                         conflicts += 1;
                         if conflicts > n {
                             return false;
@@ -112,7 +126,7 @@ impl Schedule {
             }
             if let Some(lab_group) = &new_course.lab_group {
                 for period in &lab_group.periods {
-                    if schedule.week.conflict_in_day(period) {
+                    if new_week.conflict_in_day(period) {
                         conflicts += 1;
                         if conflicts > n {
                             return false;
@@ -128,7 +142,7 @@ impl Schedule {
         let mut new_week = self.week.clone();
         if let Some(theo_group) = &new_course.theo_group {
             for period in &theo_group.periods {
-                if self.week.conflict_in_day(period) {
+                if new_week.conflict_in_day(period) {
                     return false;
                 }
                 new_week.add_period(period);
@@ -136,7 +150,7 @@ impl Schedule {
         }
         if let Some(lab_group) = &new_course.lab_group {
             for period in &lab_group.periods {
-                if self.week.conflict_in_day(period) {
+                if new_week.conflict_in_day(period) {
                     return false;
                 }
                 new_week.add_period(period);
@@ -145,17 +159,31 @@ impl Schedule {
         true
     }
     pub fn more_morning(&self) -> f64 {
-        // let mut sum = 0;
-        // let mut non_zero_day = 0;
-        // for day in 0..7 {
-        //     if self.week[day] != NO_HOUR {
-        //         non_zero_day += 1;
-        //         sum += self.week[day].trailing_zeros();
-        //     }
-        // }
-        // sum as f64 / non_zero_day as f64
-        (0..7)
-            .map(|i| if self.week[i] == NO_HOUR { 1.0 } else { 0.0 })
+        let mut sum = 0;
+        let mut non_zero_day = 0;
+        for day in 0..7 {
+            if self.week[day] != NO_HOUR {
+                non_zero_day += 1;
+                sum += self.week[day].trailing_zeros();
+            }
+        }
+        sum as f64 / non_zero_day as f64
+    }
+    pub fn more_day_off(&self) -> f64 {
+        self.week
+            .iter()
+            .map(|d| if d == &NO_HOUR { 1.0 } else { 0.0 })
             .sum()
+    }
+    pub fn finish_early(&self) -> f64 {
+        let mut sum = 0;
+        let mut non_zero_day = 0;
+        for day in 0..7 {
+            if self.week[day] != NO_HOUR {
+                non_zero_day += 1;
+                sum += self.week[day].leading_zeros();
+            }
+        }
+        sum as f64 / non_zero_day as f64
     }
 }

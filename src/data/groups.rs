@@ -16,17 +16,7 @@ impl Groups {
             self.0.extend((0..=n).map(|_| None));
         }
         if let Some(group) = &mut self.0[n] {
-            for new_period in new_group.periods {
-                if let Some(period) = group
-                    .periods
-                    .iter_mut()
-                    .find(|p| p.day == new_period.day && p.room == new_period.room)
-                {
-                    period.hours |= new_period.hours;
-                } else {
-                    group.periods.push(new_period);
-                }
-            }
+            group.add_period(new_group);
         } else {
             self.0[n] = Some(new_group);
         }
