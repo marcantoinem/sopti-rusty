@@ -10,8 +10,6 @@ pub struct Courses {
     courses: HashMap<CompactString, Course>,
 }
 
-pub static mut COUNTER: usize = 0;
-
 impl Courses {
     pub fn from_csv(csv_horsages: impl BufRead, csv_fermes: impl BufRead) -> Courses {
         let courses = HashMap::new();
@@ -46,7 +44,9 @@ impl Courses {
                     .take_while(|c| c.is_numeric())
                     .collect::<String>()
                     .parse::<usize>()
-                    else {continue};
+                else {
+                    continue;
+                };
                 let mut course = Course::new(sigle.into(), name.into(), nb_credit);
                 let period = Period::new(week_day, room.into(), hour);
                 let groups = match course_type {
@@ -66,8 +66,13 @@ impl Courses {
             let Ok(line) = line else { continue };
             let mut columns = line.split(';');
             let [_, Some(sigle), Some(number), Some(course_type)] =
-                array::from_fn(|_| columns.next()) else { continue };
-            let Some(course) = self.courses.get_mut(sigle) else { continue };
+                array::from_fn(|_| columns.next())
+            else {
+                continue;
+            };
+            let Some(course) = self.courses.get_mut(sigle) else {
+                continue;
+            };
             let Ok(number) = number.parse() else { continue };
             let groups = match course_type {
                 "L" => &mut course.lab_groups,
@@ -107,9 +112,6 @@ impl Courses {
         rule: &impl Fn(&Schedule, &TakenCourse) -> bool,
         evaluation: &impl Fn(&Schedule) -> f64,
     ) {
-        unsafe {
-            COUNTER += 1;
-        }
         let Some(course) = courses.first() else {
             schedules.push(courses_taken, evaluation);
             return;

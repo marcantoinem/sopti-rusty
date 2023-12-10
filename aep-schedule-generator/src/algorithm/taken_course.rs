@@ -1,7 +1,6 @@
-use compact_str::CompactString;
-
 use crate::data::course::Course;
 use crate::data::group::Group;
+use compact_str::CompactString;
 use std::fmt::Display;
 use std::rc::Rc;
 
