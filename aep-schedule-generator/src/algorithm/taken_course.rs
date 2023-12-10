@@ -2,12 +2,12 @@ use crate::data::course::Course;
 use crate::data::group::Group;
 use compact_str::CompactString;
 use std::fmt::Display;
-use std::rc::Rc;
+use std::sync::Arc;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TakenCourse {
     pub sigle: CompactString,
-    pub name: Rc<str>,
+    pub name: Arc<str>,
     pub theo_group: Option<Group>,
     pub lab_group: Option<Group>,
     pub nb_credit: usize,

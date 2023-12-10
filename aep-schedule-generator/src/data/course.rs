@@ -1,18 +1,18 @@
 use super::groups::Groups;
 use compact_str::CompactString;
-use std::rc::Rc;
+use std::sync::Arc;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Course {
     pub sigle: CompactString,
-    pub name: Rc<str>,
+    pub name: Arc<str>,
     pub theo_groups: Groups,
     pub lab_groups: Groups,
     pub nb_credit: usize,
 }
 
 impl Course {
-    pub fn new(sigle: &str, name: Rc<str>, nb_credit: usize) -> Self {
+    pub fn new(sigle: &str, name: Arc<str>, nb_credit: usize) -> Self {
         Course {
             sigle: sigle.into(),
             name,

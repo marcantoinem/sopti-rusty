@@ -1,5 +1,5 @@
-struct Scores([u8; 8]);
+// struct Scores([u8; 8]);
 
-impl Scores {
-    fn new() {}
-}
+// impl Scores {
+//     fn new() {}
+// }

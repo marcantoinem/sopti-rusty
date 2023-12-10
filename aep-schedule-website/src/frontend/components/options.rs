@@ -52,10 +52,6 @@ pub fn SchedulesOptions() -> impl IntoView {
             // submitting should cause a client-side
             // navigation, not a full reload
             <input type="submit"/>
-            <button on:click=move |_| {
-                spawn_local(async {
-                    let _ = get_schedules().await;
-            });}/>
         </Form>
         <Suspense fallback=move || view! {<p>"Loading User"</p> }>
             <p>test</p>

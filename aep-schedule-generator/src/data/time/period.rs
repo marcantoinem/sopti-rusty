@@ -1,7 +1,6 @@
 use compact_str::CompactString;
 
 use super::{day::Day, hours::Hours};
-use std::rc::Rc;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Period {

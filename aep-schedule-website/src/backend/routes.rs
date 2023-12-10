@@ -1,9 +1,8 @@
-use leptos::server;
-use leptos::ServerFnError;
+use leptos::*;
 
 #[server(GetSchedule, "/api")]
 pub async fn get_schedules() -> Result<Vec<String>, ServerFnError> {
-    use aep_schedule_generator::algorithm::schedules::Schedules;
-    println!("Hello from the server");
+    use crate::backend::state::AppState;
+    let courses = AppState::courses();
     Ok(vec![])
 }
