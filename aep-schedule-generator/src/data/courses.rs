@@ -11,7 +11,7 @@ pub struct Courses {
     courses: HashMap<CompactString, Course>,
 }
 
-#[derive(Serialize, Deserialize, Default, Debug, Clone)]
+#[derive(Serialize, Deserialize, Default, Debug, Clone, PartialEq)]
 pub struct SchedulesOptions {
     pub courses_to_take: Vec<String>,
 }
