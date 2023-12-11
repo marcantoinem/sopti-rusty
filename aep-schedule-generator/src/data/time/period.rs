@@ -1,8 +1,8 @@
-use compact_str::CompactString;
-
 use super::{day::Day, hours::Hours};
+use compact_str::CompactString;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Period {
     pub day: Day,
     pub room: CompactString,

@@ -3,13 +3,14 @@ use crate::data::time::{
     hours::{Hours, NO_HOUR},
     week::Week,
 };
+use serde::{Deserialize, Serialize};
 use std::{cmp::Ordering, fmt::Display};
 
-#[derive(PartialEq, Debug, Clone)]
+#[derive(Deserialize, Serialize, PartialEq, Debug, Clone)]
 pub struct Schedule {
     pub value: f64,
-    week: Week,
-    courses: Vec<TakenCourse>,
+    pub week: Week,
+    pub courses: Vec<TakenCourse>,
 }
 
 impl Default for Schedule {

@@ -3,11 +3,17 @@ use super::group::Group;
 use super::time::period::Period;
 use crate::algorithm::{schedule::Schedule, schedules::Schedules, taken_course::TakenCourse};
 use compact_str::CompactString;
+use serde::{Deserialize, Serialize};
 use std::{array, collections::HashMap, io::BufRead};
 
 #[derive(Debug, Clone)]
 pub struct Courses {
     courses: HashMap<CompactString, Course>,
+}
+
+#[derive(Serialize, Deserialize, Default, Debug, Clone)]
+pub struct SchedulesOptions {
+    pub courses_to_take: Vec<String>,
 }
 
 impl Courses {
@@ -83,24 +89,19 @@ impl Courses {
         }
     }
 
-    pub fn get_schedules(
-        &self,
-        courses_to_take: &[&str],
-        rule: impl Fn(&Schedule, &TakenCourse) -> bool,
-        evaluation: impl Fn(&Schedule) -> f64,
-        nb_schedule: usize,
-    ) -> Schedules {
-        let courses_to_take: Vec<&Course> = courses_to_take
+    pub fn get_schedules(&self, schedules_options: SchedulesOptions) -> Schedules {
+        let courses_to_take: Vec<&Course> = schedules_options
+            .courses_to_take
             .iter()
-            .filter_map(|name| self.courses.get(*name))
+            .filter_map(|name| self.courses.get(name.as_str()))
             .collect();
-        let mut schedules = Schedules::new(nb_schedule);
+        let mut schedules = Schedules::new(50);
         self.get_schedules_rec(
             Schedule::default(),
             &courses_to_take,
             &mut schedules,
-            &rule,
-            &evaluation,
+            &Schedule::forbid_conflicts,
+            &Schedule::more_morning,
         );
         schedules
     }

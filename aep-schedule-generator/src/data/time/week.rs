@@ -2,9 +2,10 @@ use super::{
     hours::{Hours, NO_HOUR},
     period::Period,
 };
+use serde::{Deserialize, Serialize};
 use std::ops::Deref;
 
-#[derive(Debug, PartialEq, Eq, Clone, Default)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Eq, Clone, Default)]
 pub struct Week([Hours; 7]);
 
 impl Deref for Week {

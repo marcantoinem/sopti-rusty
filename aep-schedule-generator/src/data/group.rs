@@ -1,7 +1,8 @@
 use super::time::period::Period;
+use serde::{Deserialize, Serialize};
 use smallvec::{smallvec, SmallVec};
 
-#[derive(Debug, PartialEq, Eq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
 pub struct Group {
     pub number: u8,
     pub closed: bool,

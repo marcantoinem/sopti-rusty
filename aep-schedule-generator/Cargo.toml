@@ -18,5 +18,6 @@ opt-level = 3
 debug = true
 
 [dependencies]
-compact_str = "0.7.1"
-smallvec = "1.11.2"
+compact_str = { version = "0.7.1", features = ["serde"] }
+smallvec = { version = "1.11.2", features = ["serde"] }
+serde = { version = "1.0", features = ["derive", "rc"] }

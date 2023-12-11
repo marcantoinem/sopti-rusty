@@ -1,60 +1,36 @@
-use crate::backend::routes::get_schedules;
-use leptos::ev::SubmitEvent;
-use leptos::html::*;
+use aep_schedule_generator::{algorithm::schedule::Schedule, data::courses::SchedulesOptions};
 use leptos::*;
 use leptos_router::*;
 
-#[derive(Default)]
-struct SchedulesOptions {
-    courses_to_take: Vec<String>,
-}
+use crate::backend::routes::get_schedules;
 
-impl SchedulesOptions {
-    fn new(courses_to_take: String) -> Self {
-        let courses_to_take = courses_to_take
-            .split(",")
-            .map(|s| s.trim().to_string())
-            .collect();
-        SchedulesOptions { courses_to_take }
-    }
-    // fn courses_to_take(self) -> String {
-    //     self.courses_to_take[0]
-    // }
+pub fn create_options() -> SchedulesOptions {
+    let courses = use_query_map()().get("cours").cloned().unwrap_or_default();
+    let courses_to_take = courses.split(",").map(|s| s.trim().to_string()).collect();
+    SchedulesOptions { courses_to_take }
 }
 
 #[component]
-pub fn SchedulesOptions() -> impl IntoView {
+pub fn OptionsForms(write_signal: WriteSignal<Vec<(usize, Schedule)>>) -> impl IntoView {
     let query = use_query_map();
+    let cours = move || query().get("cours").cloned().unwrap_or_default();
+    let submit_schedules = move |_| {
+        spawn_local(async move {
+            let options = create_options();
+            let schedules = get_schedules(options).await.unwrap_or_default();
+            let schedules = schedules.into_iter().enumerate().collect();
+            write_signal.set(schedules);
+        });
+    };
 
-    let user = create_resource(|| (), |_| async { get_schedules().await });
-
-    let name = move || query().get("name").cloned().unwrap_or_default();
-    let number = move || query().get("number").cloned().unwrap_or_default();
-    let select = move || query().get("select").cloned().unwrap_or_default();
     view! {
-        <h2>"Manual Submission"</h2>
-        <Form method="GET" action="" on:submit=move |_| { spawn_local(async { let _ = get_schedules().await; })}>
+        <h2>"Schedule Generation"</h2>
+        <Form method="GET" action="" on:submit=submit_schedules>
             // input names determine query string key
-            <input type="text" name="name" value=name/>
-            <input type="number" name="number" value=number/>
-            <select name="select">
-                // `selected` will set which starts as selected
-                <option selected=move || select() == "A">
-                    "A"
-                </option>
-                <option selected=move || select() == "B">
-                    "B"
-                </option>
-                <option selected=move || select() == "C">
-                    "C"
-                </option>
-            </select>
+            <input type="text" name="cours" value=cours/>
             // submitting should cause a client-side
             // navigation, not a full reload
             <input type="submit"/>
         </Form>
-        <Suspense fallback=move || view! {<p>"Loading User"</p> }>
-            <p>test</p>
-        </Suspense>
     }
 }

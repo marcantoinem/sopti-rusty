@@ -1,11 +1,12 @@
 // Hour start at 8 and stop and include 22
 // Each 1 represent an occupied 15min
+use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Deref};
 
 pub const NO_HOUR: Hours = Hours(0);
 
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default)]
+#[derive(Serialize, Deserialize, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct Hours(pub u64);
 
 impl Debug for Hours {

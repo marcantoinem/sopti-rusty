@@ -1,10 +1,11 @@
 use crate::data::course::Course;
 use crate::data::group::Group;
 use compact_str::CompactString;
+use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use std::sync::Arc;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq)]
 pub struct TakenCourse {
     pub sigle: CompactString,
     pub name: Arc<str>,
