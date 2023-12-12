@@ -1,3 +1,5 @@
+@import 'schedule.scss';
+
 body {
 	font-family: sans-serif;
 	text-align: center;
@@ -22,7 +24,6 @@ body {
 
 .right-panel {
 	left: 40%;
-	// left: 0%;
 	position: absolute;
 	width: 60%;
 	display: flex;
@@ -30,11 +31,6 @@ body {
 	align-items: center;
 	gap: 10px;
 	background-color: white;
-}
-
-.schedule-container {
-	background-color: lightcoral;
-	width: 80%;
 }
 
 h2 {

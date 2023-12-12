@@ -22,6 +22,21 @@ impl Deref for Hours {
     }
 }
 
+impl Hours {
+    pub fn starting_hour(&self) -> u8 {
+        (self.0).trailing_zeros() as u8 / 4 + 1
+    }
+
+    pub fn last_hour(&self) -> u8 {
+        (self.0).ilog2() as u8 / 4 + 1
+    }
+
+    /// Only use on single block of time!
+    pub fn len_hour(&self) -> u8 {
+        self.last_hour() - self.starting_hour()
+    }
+}
+
 impl From<&str> for Hours {
     fn from(value: &str) -> Self {
         let value = value.parse::<u64>().unwrap();

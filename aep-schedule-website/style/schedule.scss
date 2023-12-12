@@ -1,0 +1,85 @@
+.schedule-container {
+	width: 80%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+    border-collapse: collapse;
+}
+
+// Calendar inspired by https://codepen.io/kjellmf/pen/qgxyVJ
+
+$days-height: 2em;
+$time-width: 2em;
+$hours: repeat(14, 2em);
+$header-color: black;
+$grid-color: grey;
+$days: $time-width 10px repeat(5, 1fr);
+
+body {
+  background: #fff;
+}
+
+.schedule {
+  width: 100%;
+  display: grid;
+  grid-template-rows: $days-height auto;
+}
+
+.days {
+  background: black;
+  color:white;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  grid-template-columns: $days;
+  top: 0;
+  z-index: 10;
+  border-bottom: 2px solid $grid-color;
+}
+
+.day {
+  border-left: 1px solid $grid-color;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: $days;
+  grid-template-rows: $hours;
+}
+
+.time {
+  grid-column: 1;
+  text-align: right;
+  align-self: end;
+  font-size: 80%;
+  position: relative;
+  bottom: -1ex;
+  color: black;
+  padding-right: 2px;
+}
+
+.col {
+  border-right: 1px solid $grid-color;
+  grid-row: 1 / span 24;
+  grid-column: span 1;
+}
+
+.filler-col {
+  grid-row: 1 / -1;
+  grid-column: 2;
+  border-right: 1px solid $grid-color;
+}
+
+.row {
+  grid-column: 2 / -1;
+  border-bottom: 1px solid $grid-color;
+}
+
+.event {
+  border-radius: 5px;
+  padding: 5px;
+  margin-right: 5px;
+  font-weight: bold;
+  font-size: 70%;
+  background-color: #b3e1f7;
+}
