@@ -18,21 +18,23 @@ RUN rustup target add wasm32-unknown-unknown
 RUN mkdir -p /app
 WORKDIR /app
 COPY . .
+WORKDIR /app/aep-schedule-website
 
 # Build the app
 RUN cargo leptos build --release -vv
 
 FROM rustlang/rust:nightly-bullseye as runner
 # Copy the server binary to the /app directory
-COPY --from=builder /app/target/release/leptos-start /app/
+COPY --from=builder /app/aep-schedule-website/target/release/aep-schedule-website /app/
 # /target/site contains our JS/WASM/CSS, etc.
-COPY --from=builder /app/target/site /app/site
-WORKDIR /app
+COPY --from=builder /app/aep-schedule-website/target/site /app/site
+COPY --from=builder /app/aep-schedule-website/*.csv /app
 
+WORKDIR /app
 # Set any required env variables and
 ENV RUST_LOG="info"
 ENV LEPTOS_SITE_ADDR="0.0.0.0:6942"
 ENV LEPTOS_SITE_ROOT="site"
 EXPOSE 6942
 # Run the server
-CMD ["/app/leptos_start"]
+CMD ["/app/aep-schedule-website"]

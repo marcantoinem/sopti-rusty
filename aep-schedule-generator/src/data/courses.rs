@@ -102,7 +102,7 @@ impl Courses {
             .filter_map(|name| self.courses.get(name.as_str()))
             .collect();
         let mut schedules = Schedules::new(50);
-        self.get_schedules_rec(
+        Self::get_schedules_rec(
             Schedule::default(),
             &courses_to_take,
             &mut schedules,
@@ -112,7 +112,6 @@ impl Courses {
         schedules
     }
     fn get_schedules_rec(
-        &self,
         courses_taken: Schedule,
         courses: &[&Course],
         schedules: &mut Schedules,
@@ -129,7 +128,7 @@ impl Courses {
                 let course = TakenCourse::new(course, None, Some(lab_group.clone()));
                 if rule(&courses_taken, &course) {
                     let courses_taken = courses_taken.clone().add(course);
-                    self.get_schedules_rec(
+                    Self::get_schedules_rec(
                         courses_taken,
                         &courses[1..],
                         schedules,
@@ -144,7 +143,7 @@ impl Courses {
                 let course = TakenCourse::new(course, Some(theo_group.clone()), None);
                 if rule(&courses_taken, &course) {
                     let courses_taken = courses_taken.clone().add(course);
-                    self.get_schedules_rec(
+                    Self::get_schedules_rec(
                         courses_taken,
                         &courses[1..],
                         schedules,
@@ -158,7 +157,7 @@ impl Courses {
                     TakenCourse::new(course, Some(theo_group.clone()), Some(lab_group.clone()));
                 if rule(&courses_taken, &course) {
                     let courses_taken = courses_taken.clone().add(course);
-                    self.get_schedules_rec(
+                    Self::get_schedules_rec(
                         courses_taken,
                         &courses[1..],
                         schedules,

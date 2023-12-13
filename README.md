@@ -10,3 +10,8 @@ Leptos is a great frontend framework in Rust with web assembly to make a respons
 
 ## Programming Languages used to make this
 - Rust
+
+## Credit
+Marc-Antoine Manningham for the backend and the frontend
+
+Raphael Salvas, Achille Saint-Hillier, Sunnee Chevalier and Gabriel Billard have made a figma that's the inspiration for the style
