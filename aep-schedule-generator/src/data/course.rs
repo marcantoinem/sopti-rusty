@@ -1,5 +1,6 @@
 use super::groups::Groups;
 use compact_str::CompactString;
+use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9,6 +10,23 @@ pub struct Course {
     pub theo_groups: Groups,
     pub lab_groups: Groups,
     pub nb_credit: usize,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+pub struct CourseName {
+    pub sigle: String,
+    pub name: String,
+    pub nb_credit: u8,
+}
+
+impl From<&Course> for CourseName {
+    fn from(value: &Course) -> Self {
+        Self {
+            sigle: value.sigle.to_string(),
+            name: value.name.to_string(),
+            nb_credit: value.nb_credit as u8,
+        }
+    }
 }
 
 impl Course {

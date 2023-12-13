@@ -34,6 +34,7 @@ impl Schedules {
             .into_sorted_vec()
             .into_iter()
             .map(|r| r.0)
+            .rev()
             .collect()
     }
 }

@@ -17,13 +17,14 @@ pub fn OptionsForms(action: Action<SchedulesOptions, Vec<Schedule>>) -> impl Int
     let on_submit = move |_| action.dispatch(create_options(cours_ref));
 
     view! {
-        <h2>"Schedule Generation"</h2>
+        <h2>"Options de générations"</h2>
         <Form method="GET" action="" on:formdata=on_submit>
             // input names determine query string key
             <input type="text" name="cours" value=cours node_ref=cours_ref/>
             // submitting should cause a client-side
             // navigation, not a full reload
-            <input type="submit"/>
+            <br/>
+            <input type="submit" value="Générer les horaires"/>
         </Form>
     }
 }

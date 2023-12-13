@@ -1,6 +1,6 @@
 use crate::{
     backend::routes::get_schedules,
-    frontend::components::{options::OptionsForms, schedules::SchedulesComponent},
+    frontend::components::{options::form::OptionsForms, schedules::SchedulesComponent},
 };
 use aep_schedule_generator::data::courses::SchedulesOptions;
 use leptos::*;

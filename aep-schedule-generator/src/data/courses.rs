@@ -1,4 +1,4 @@
-use super::course::Course;
+use super::course::{Course, CourseName};
 use super::group::Group;
 use super::time::period::Period;
 use crate::algorithm::{schedule::Schedule, schedules::Schedules, taken_course::TakenCourse};
@@ -87,6 +87,12 @@ impl Courses {
             };
             groups.get_mut(number).and_then(|g| Some(g.closed = true));
         }
+    }
+
+    pub fn get_courses_name(&self) -> Vec<CourseName> {
+        let mut courses_name: Vec<_> = self.courses.values().map(|c| c.into()).collect();
+        courses_name.sort_unstable();
+        courses_name
     }
 
     pub fn get_schedules(&self, schedules_options: SchedulesOptions) -> Schedules {
