@@ -106,8 +106,8 @@ impl Courses {
             Schedule::default(),
             &courses_to_take,
             &mut schedules,
-            &Schedule::forbid_conflicts,
-            &Schedule::more_morning,
+            &Schedule::allow_n_conflicts(1),
+            &Schedule::more_day_off,
         );
         schedules
     }

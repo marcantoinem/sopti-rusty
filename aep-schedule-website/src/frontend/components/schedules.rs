@@ -5,7 +5,7 @@ use leptos::*;
 #[component]
 pub fn SchedulesComponent(read_signal: RwSignal<Option<Vec<Schedule>>>) -> impl IntoView {
     view! {
-        {move || read_signal.get().unwrap_or_default().into_iter().map(|s| {
+        {move || read_signal.get().unwrap_or_default().into_iter().rev().map(|s| {
                 view! {
                     <ScheduleComponent schedule=s/>
                 }

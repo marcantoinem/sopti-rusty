@@ -39,6 +39,7 @@ pub fn ScheduleComponent(schedule: Schedule) -> impl IntoView {
     view! {
         <div class="schedule-container">
             // {schedule.courses.iter().map(|c| view!{<Course course=c/>}).collect_view()}
+            <p>"score:" {schedule.value}</p>
             <div class="schedule">
                 <div class="days">
                     <div></div>
