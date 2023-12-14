@@ -1,6 +1,5 @@
 use crate::frontend::pages::home::HomePage;
 
-use super::error_template::{AppError, ErrorTemplate};
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
@@ -21,15 +20,7 @@ pub fn App() -> impl IntoView {
         <Title text="Générateur d'horaire de l'AEP"/>
 
         // content for this welcome page
-        <Router fallback=|| {
-            use_router();
-            let mut outside_errors = Errors::default();
-            outside_errors.insert_with_default_key(AppError::NotFound);
-            view! {
-                <ErrorTemplate outside_errors/>
-            }
-            .into_view()
-        }>
+        <Router>
             <main>
                 <Routes>
                     <Route path="" view=HomePage/>
