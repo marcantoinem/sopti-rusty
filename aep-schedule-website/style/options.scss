@@ -37,6 +37,15 @@
   flex-direction: row;
 }
 
-.checkbox-container p {
+.row-center {
+  justify-content: space-evenly;
+}
+
+p {
   margin: 2px;
+}
+
+h3 {
+  margin: 0px;
+  padding: 0px;
 }

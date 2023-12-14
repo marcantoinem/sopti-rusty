@@ -77,9 +77,15 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
                 <button class="top-left" on:click=move |_| {
                     set_selections.update(|courses| courses.retain(|c| c.sigle != course.sigle.to_string()))
                 }>"🗑️"</button>
-                <div class="row-container">
-                    <Groups groups=course.lab_groups.0 set_groups=course.lab_groups.1/>
-                    <Groups groups=course.theo_groups.0 set_groups=course.theo_groups.1/>
+                <div class="row-container row-center">
+                    <div>
+                        <h3>"Théorie"</h3>
+                        <Groups groups=course.theo_groups.0 set_groups=course.theo_groups.1/>
+                    </div>
+                    <div>
+                        <h3>"Laboratoire"</h3>
+                        <Groups groups=course.lab_groups.0 set_groups=course.lab_groups.1/>
+                    </div>
                 </div>
             </div>
 

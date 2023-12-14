@@ -10,6 +10,9 @@ pub struct SchedulesOptions {
 impl SchedulesOptions {
     pub fn get_schedules(&self) -> Schedules {
         let mut schedules = Schedules::new(50);
+        if self.courses_to_take.len() == 0 {
+            return schedules;
+        }
         Self::get_schedules_rec(
             Schedule::default(),
             &self.courses_to_take,
