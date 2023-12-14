@@ -1,4 +1,3 @@
-use aep_schedule_generator::algorithm::{generation::SchedulesOptions, schedule::Schedule};
 use aep_schedule_generator::data::course::{Course, CourseName};
 use leptos::*;
 

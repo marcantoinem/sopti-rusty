@@ -1,6 +1,6 @@
 # Sample configuration taken from leptos
 # Get started with a build env with Rust nightly
-FROM rustlang/rust:nightly-bullseye as builder
+FROM rustlang/rust:nightly-alpine as builder
 
 # Install cargo-binstall, which makes it easier to install other
 # cargo extensions like cargo-leptos
@@ -23,7 +23,7 @@ WORKDIR /app/aep-schedule-website
 # Build the app
 RUN cargo leptos build --release -vv
 
-FROM rustlang/rust:nightly-bullseye as runner
+FROM rustlang/rust:nightly-alpine as runner
 # Copy the server binary to the /app directory
 COPY --from=builder /app/aep-schedule-website/target/release/aep-schedule-website /app/
 # /target/site contains our JS/WASM/CSS, etc.
