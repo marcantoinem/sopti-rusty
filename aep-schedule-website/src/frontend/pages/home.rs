@@ -8,17 +8,14 @@ pub fn HomePage() -> impl IntoView {
     // Creates a reactive value to update the button
     let action = create_action(|s: &SchedulesOptions| {
         let s = s.clone();
-        logging::log!("{:?}", s);
         async move { s.get_schedules().into_sorted_vec() }
     });
     view! {
-        <div class="main-panel">
-            <div class="left-panel">
-                <OptionsForms action=action/>
-            </div>
-            <div class="right-panel">
-                <SchedulesComponent read_signal=action.value()/>
-            </div>
-        </div>
+        <aside class="left-panel">
+            <OptionsForms action=action/>
+        </aside>
+        <section class="right-panel">
+            <SchedulesComponent read_signal=action.value()/>
+        </section>
     }
 }

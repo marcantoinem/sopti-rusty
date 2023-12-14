@@ -49,3 +49,19 @@ h3 {
   margin: 0px;
   padding: 0px;
 }
+
+.tab-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.35s;
+}
+
+.accordion {
+  position: absolute;
+  top: 4px;
+  right: 30px;
+}
+
+.accordion:checked ~ .tab-content {
+  max-height: 10rem;
+}

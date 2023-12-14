@@ -72,12 +72,13 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
             key=|c| c.sigle.clone()
             let:course
         >
-            <div class="relative card">
+            <div class="relative card tab">
                 <p>{course.sigle.to_string()} " - " {course.name}</p>
                 <button class="top-left" on:click=move |_| {
                     set_selections.update(|courses| courses.retain(|c| c.sigle != course.sigle.to_string()))
                 }>"🗑️"</button>
-                <div class="row-container row-center">
+                <input type="checkbox" name="accordion" class="accordion" checked/>
+                <div class="row-container row-center tab-content">
                     <div>
                         <h3>"Théorie"</h3>
                         <Groups groups=course.theo_groups.0 set_groups=course.theo_groups.1/>
