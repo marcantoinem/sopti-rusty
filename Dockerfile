@@ -23,7 +23,7 @@ WORKDIR /app/aep-schedule-website
 # Build the app
 RUN cargo leptos build --release -vv
 
-FROM rustlang/rust:nightly-alpine as runner
+FROM alpine as runner
 # Copy the server binary to the /app directory
 COPY --from=builder /app/aep-schedule-website/target/release/aep-schedule-website /app/
 # /target/site contains our JS/WASM/CSS, etc.
