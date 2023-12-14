@@ -27,7 +27,6 @@ dependencies = [
  "compact_str",
  "console_error_panic_hook",
  "console_log",
- "fuzzy-matcher",
  "http",
  "leptos",
  "leptos_axum",
@@ -37,7 +36,6 @@ dependencies = [
  "reqwest",
  "serde",
  "simple_logger",
- "smallvec",
  "thiserror",
  "tokio",
  "tower",
@@ -717,15 +715,6 @@ dependencies = [
  "pin-project-lite",
  "pin-utils",
  "slab",
-]
-
-[[package]]
-name = "fuzzy-matcher"
-version = "0.3.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "54614a3312934d066701a80f20f15fa3b56d67ac7722b39eea5b4c9dd1d66c94"
-dependencies = [
- "thread_local",
 ]
 
 [[package]]
@@ -2248,16 +2237,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.39",
-]
-
-[[package]]
-name = "thread_local"
-version = "1.1.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3fdd6f064ccff2d6567adcb3873ca630700f00b5ad3f060c25b5dcfd9a4ce152"
-dependencies = [
- "cfg-if",
- "once_cell",
 ]
 
 [[package]]

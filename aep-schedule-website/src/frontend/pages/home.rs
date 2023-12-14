@@ -8,6 +8,7 @@ pub fn HomePage() -> impl IntoView {
     // Creates a reactive value to update the button
     let action = create_action(|s: &SchedulesOptions| {
         let s = s.clone();
+        logging::log!("{:?}", s);
         async move { s.get_schedules().into_sorted_vec() }
     });
     view! {

@@ -15,10 +15,12 @@ pub fn Course<'a>(course: &'a TakenCourse) -> impl IntoView {
         .as_ref()
         .and_then(|g| Some(format!("C: {}", g.number)));
     view! {
-        <h2>{course.sigle.to_string()}</h2>
-        <h3>{course.name.to_string()}</h3>
-        <p>{lab_group}</p>
-        <p>{theo_group}</p>
+        <tr>
+            <td>{course.sigle.to_string()}</td>
+            <td>{course.name.to_string()}</td>
+            <td>{lab_group}</td>
+            <td>{theo_group}</td>
+        </tr>
     }
 }
 
@@ -38,7 +40,9 @@ pub fn ScheduleComponent(schedule: Schedule) -> impl IntoView {
     const DAY_WEEK: [&str; 5] = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
     view! {
         <div class="schedule-container">
-            {schedule.courses.iter().map(|c| view!{<Course course=c/>}).collect_view()}
+            <table class="cours">
+                {schedule.courses.iter().map(|c| view!{<Course course=c/>}).collect_view()}
+            </table>
             <div class="schedule">
                 <div class="days">
                     <div></div>

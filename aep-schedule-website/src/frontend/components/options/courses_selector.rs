@@ -1,10 +1,27 @@
+use super::state::OptionState;
 use crate::backend::routes::get_course;
 use crate::backend::routes::get_courses;
-use aep_schedule_generator::data::course::Course;
+use crate::frontend::components::options::state::ReactiveCourse;
+use aep_schedule_generator::data::groups::Groups;
 use leptos::html::Input;
 use leptos::*;
 
-use super::state::OptionState;
+#[component]
+pub fn Groups(groups: ReadSignal<Groups>, set_groups: WriteSignal<Groups>) -> impl IntoView {
+    view! {
+        {move || groups.get().into_iter().enumerate().map(|(i, g)| {
+                    view!{
+                        <div class="row-container">
+                            <p>{move || g.number}</p>
+                            <input type="checkbox" prop:checked={g.open} on:click=move |_| {
+                                set_groups.update(|groups| groups[i].open = !groups[i].open);
+                            }/>
+                        </div>
+                    }
+            }).collect_view()
+        }
+    }
+}
 
 #[component]
 pub fn CoursesSelector(state: OptionState) -> impl IntoView {
@@ -20,19 +37,21 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
     );
 
     let course_sigle: NodeRef<Input> = create_node_ref();
-    let add_course = create_action(|(c, set): &(NodeRef<Input>, WriteSignal<Vec<Course>>)| {
-        let sigle = c().unwrap().value();
-        let set = set.clone();
-        async move {
-            if let Ok(c) = get_course(sigle).await {
-                set.update(|s| {
-                    if !s.contains(&c) {
-                        s.push(c)
-                    }
-                });
+    let add_course = create_action(
+        |(c, set): &(NodeRef<Input>, WriteSignal<Vec<ReactiveCourse>>)| {
+            let sigle = c().unwrap().value();
+            let set = set.clone();
+            async move {
+                if let Ok(c) = get_course(sigle).await {
+                    set.update(|s| {
+                        if !s.iter().any(|react_c| react_c.sigle == c.sigle) {
+                            s.push(c.into())
+                        }
+                    });
+                }
             }
-        }
-    });
+        },
+    );
 
     view! {
         <div>
@@ -54,12 +73,16 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
             let:course
         >
             <div class="relative card">
-                <p>{course.sigle.to_string()}</p>
-                <p>{course.name}</p>
+                <p>{course.sigle.to_string()} " - " {course.name}</p>
                 <button class="top-left" on:click=move |_| {
                     set_selections.update(|courses| courses.retain(|c| c.sigle != course.sigle.to_string()))
                 }>"🗑️"</button>
+                <div class="row-container">
+                    <Groups groups=course.lab_groups.0 set_groups=course.lab_groups.1/>
+                    <Groups groups=course.theo_groups.0 set_groups=course.theo_groups.1/>
+                </div>
             </div>
+
         </For>
     }
 }

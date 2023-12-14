@@ -15,10 +15,10 @@ impl Schedules {
         }
     }
 
-    pub fn push(&mut self, mut schedule: Schedule, evaluation: impl Fn(&Schedule) -> f64) {
-        let evaluation = evaluation(&schedule);
+    pub fn push(&mut self, mut schedule: Schedule) {
+        let evaluation = schedule.more_day_off();
         if let Some(Reverse(schedule)) = self.schedules.peek() {
-            if evaluation < schedule.value {
+            if evaluation < schedule.value && self.schedules.len() == self.max_size {
                 return;
             }
         }

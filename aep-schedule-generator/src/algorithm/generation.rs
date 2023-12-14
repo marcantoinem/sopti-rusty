@@ -14,8 +14,7 @@ impl SchedulesOptions {
             Schedule::default(),
             &self.courses_to_take,
             &mut schedules,
-            &Schedule::allow_n_conflicts(1),
-            &Schedule::more_day_off,
+            100,
         );
         schedules
     }
@@ -23,57 +22,48 @@ impl SchedulesOptions {
         courses_taken: Schedule,
         courses: &[Course],
         schedules: &mut Schedules,
-        rule: &impl Fn(&Schedule, &TakenCourse) -> bool,
-        evaluation: &impl Fn(&Schedule) -> f64,
+        n: u8,
     ) {
         let Some(course) = courses.first() else {
-            schedules.push(courses_taken, evaluation);
+            schedules.push(courses_taken);
             return;
         };
 
-        if course.theo_groups.is_empty() {
-            for lab_group in course.lab_groups.iter() {
-                let course = TakenCourse::new(course, None, Some(lab_group.clone()));
-                if rule(&courses_taken, &course) {
-                    let courses_taken = courses_taken.clone().add(course);
-                    Self::get_schedules_rec(
-                        courses_taken,
-                        &courses[1..],
-                        schedules,
-                        rule,
-                        evaluation,
-                    );
+        match (course.theo_groups.is_empty(), course.lab_groups.is_empty()) {
+            (false, false) => {
+                for theo_group in course.theo_groups.iter().filter(|g| g.open) {
+                    for lab_group in course.lab_groups.iter().filter(|g| g.open) {
+                        let course = TakenCourse::new(
+                            course,
+                            Some(theo_group.clone()),
+                            Some(lab_group.clone()),
+                        );
+                        if courses_taken.allow_n_conflicts(n, &course) {
+                            let courses_taken = courses_taken.clone().add(course);
+                            Self::get_schedules_rec(courses_taken, &courses[1..], schedules, n);
+                        }
+                    }
                 }
             }
-        }
-        for theo_group in course.theo_groups.iter() {
-            if course.lab_groups.is_empty() {
-                let course = TakenCourse::new(course, Some(theo_group.clone()), None);
-                if rule(&courses_taken, &course) {
-                    let courses_taken = courses_taken.clone().add(course);
-                    Self::get_schedules_rec(
-                        courses_taken,
-                        &courses[1..],
-                        schedules,
-                        rule,
-                        evaluation,
-                    );
+            (false, true) => {
+                for theo_group in course.theo_groups.iter().filter(|g| g.open) {
+                    let course = TakenCourse::new(course, Some(theo_group.clone()), None);
+                    if courses_taken.allow_n_conflicts(n, &course) {
+                        let courses_taken = courses_taken.clone().add(course);
+                        Self::get_schedules_rec(courses_taken, &courses[1..], schedules, n);
+                    }
                 }
             }
-            for lab_group in course.lab_groups.iter() {
-                let course =
-                    TakenCourse::new(course, Some(theo_group.clone()), Some(lab_group.clone()));
-                if rule(&courses_taken, &course) {
-                    let courses_taken = courses_taken.clone().add(course);
-                    Self::get_schedules_rec(
-                        courses_taken,
-                        &courses[1..],
-                        schedules,
-                        rule,
-                        evaluation,
-                    );
+            (true, false) => {
+                for lab_group in course.lab_groups.iter().filter(|g| g.open) {
+                    let course = TakenCourse::new(course, None, Some(lab_group.clone()));
+                    if courses_taken.allow_n_conflicts(n, &course) {
+                        let courses_taken = courses_taken.clone().add(course);
+                        Self::get_schedules_rec(courses_taken, &courses[1..], schedules, n);
+                    }
                 }
             }
+            _ => (),
         }
     }
 }

@@ -106,45 +106,16 @@ impl Schedule {
         self.courses.push(course);
         self
     }
-    pub fn allow_conflicts(&self, _new_course: &TakenCourse) -> bool {
-        true
-    }
-    /// This is just a nice functor, it did nothing wrong!
-    pub fn allow_n_conflicts(n: u8) -> impl Fn(&Schedule, &TakenCourse) -> bool {
-        move |schedule, new_course| {
-            let mut conflicts = 0;
-            let mut new_week = schedule.week.clone();
-            if let Some(theo_group) = &new_course.theo_group {
-                for period in &theo_group.periods {
-                    if new_week.conflict_in_day(period) {
-                        conflicts += 1;
-                        if conflicts > n {
-                            return false;
-                        }
-                    }
-                    new_week.add_period(period);
-                }
-            }
-            if let Some(lab_group) = &new_course.lab_group {
-                for period in &lab_group.periods {
-                    if new_week.conflict_in_day(period) {
-                        conflicts += 1;
-                        if conflicts > n {
-                            return false;
-                        }
-                    }
-                    new_week.add_period(period);
-                }
-            }
-            true
-        }
-    }
-    pub fn forbid_conflicts(&self, new_course: &TakenCourse) -> bool {
+    pub fn allow_n_conflicts(&self, n: u8, new_course: &TakenCourse) -> bool {
+        let mut conflicts = 0;
         let mut new_week = self.week.clone();
         if let Some(theo_group) = &new_course.theo_group {
             for period in &theo_group.periods {
                 if new_week.conflict_in_day(period) {
-                    return false;
+                    conflicts += 1;
+                    if conflicts > n {
+                        return false;
+                    }
                 }
                 new_week.add_period(period);
             }
@@ -152,7 +123,10 @@ impl Schedule {
         if let Some(lab_group) = &new_course.lab_group {
             for period in &lab_group.periods {
                 if new_week.conflict_in_day(period) {
-                    return false;
+                    conflicts += 1;
+                    if conflicts > n {
+                        return false;
+                    }
                 }
                 new_week.add_period(period);
             }

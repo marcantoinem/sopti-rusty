@@ -5,7 +5,7 @@ use smallvec::{smallvec, SmallVec};
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
 pub struct Group {
     pub number: u8,
-    pub closed: bool,
+    pub open: bool,
     pub periods: SmallVec<[Period; 2]>,
 }
 
@@ -14,7 +14,7 @@ impl Group {
         let number = number.parse().unwrap_or(0);
         Self {
             number,
-            closed: false,
+            open: true,
             periods: smallvec![period],
         }
     }

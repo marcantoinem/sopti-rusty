@@ -1,5 +1,6 @@
 use super::group::Group;
 use serde::{Deserialize, Serialize};
+use std::ops::{Index, IndexMut};
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub struct Groups(Vec<Group>);
@@ -29,5 +30,28 @@ impl Groups {
 
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
+    }
+}
+
+impl Index<usize> for Groups {
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.0[index]
+    }
+
+    type Output = Group;
+}
+
+impl IndexMut<usize> for Groups {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        &mut self.0[index]
+    }
+}
+
+impl IntoIterator for Groups {
+    type Item = Group;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
     }
 }
