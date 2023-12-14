@@ -4,6 +4,8 @@ FROM rustlang/rust:nightly-alpine as builder
 
 #Install libc equivalent
 RUN apk add --no-cache musl-dev
+RUN apk add --no-cache pkgconfig
+RUN apk add --no-cache libressl-dev
 
 # Install cargo-binstall, which makes it easier to install other
 # cargo extensions like cargo-leptos
