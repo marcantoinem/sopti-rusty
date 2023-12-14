@@ -2,6 +2,9 @@
 # Get started with a build env with Rust nightly
 FROM rustlang/rust:nightly-alpine as builder
 
+#Install libc equivalent
+RUN apk add --no-cache musl-dev
+
 # Install cargo-binstall, which makes it easier to install other
 # cargo extensions like cargo-leptos
 RUN wget https://github.com/cargo-bins/cargo-binstall/releases/latest/download/cargo-binstall-x86_64-unknown-linux-musl.tgz
