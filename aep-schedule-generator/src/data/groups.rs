@@ -1,6 +1,7 @@
 use super::group::Group;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub struct Groups(Vec<Group>);
 
 impl Default for Groups {

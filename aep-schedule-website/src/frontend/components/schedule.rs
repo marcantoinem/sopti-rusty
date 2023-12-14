@@ -38,8 +38,7 @@ pub fn ScheduleComponent(schedule: Schedule) -> impl IntoView {
     const DAY_WEEK: [&str; 5] = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
     view! {
         <div class="schedule-container">
-            // {schedule.courses.iter().map(|c| view!{<Course course=c/>}).collect_view()}
-            <p>"score:" {schedule.value}</p>
+            {schedule.courses.iter().map(|c| view!{<Course course=c/>}).collect_view()}
             <div class="schedule">
                 <div class="days">
                     <div></div>

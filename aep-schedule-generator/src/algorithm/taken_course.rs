@@ -3,12 +3,11 @@ use crate::data::group::Group;
 use compact_str::CompactString;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
-use std::sync::Arc;
 
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq)]
 pub struct TakenCourse {
     pub sigle: CompactString,
-    pub name: Arc<str>,
+    pub name: String,
     pub theo_group: Option<Group>,
     pub lab_group: Option<Group>,
     pub nb_credit: usize,

@@ -1,18 +1,17 @@
 use super::groups::Groups;
 use compact_str::CompactString;
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub struct Course {
     pub sigle: CompactString,
-    pub name: Arc<str>,
+    pub name: String,
     pub theo_groups: Groups,
     pub lab_groups: Groups,
     pub nb_credit: usize,
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct CourseName {
     pub sigle: String,
     pub name: String,
@@ -30,10 +29,10 @@ impl From<&Course> for CourseName {
 }
 
 impl Course {
-    pub fn new(sigle: &str, name: Arc<str>, nb_credit: usize) -> Self {
+    pub fn new(sigle: &str, name: &str, nb_credit: usize) -> Self {
         Course {
             sigle: sigle.into(),
-            name,
+            name: name.to_string(),
             theo_groups: Groups::default(),
             lab_groups: Groups::default(),
             nb_credit,

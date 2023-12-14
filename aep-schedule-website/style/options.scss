@@ -1,6 +1,6 @@
 @import 'constant.scss';
 
-input[type=submit] {
+.submit {
   background-color: $highlight-color;
   border: none;
   color: white;
@@ -11,4 +11,22 @@ input[type=submit] {
   cursor: pointer;
   font-size: 20pt;
   font-weight: 500;
+}
+
+.relative {
+  position: relative;
+}
+
+.card {
+  background-color: $highlight-color;
+  border-radius: 5px;
+  width: 80%;
+  margin: 5px;
+  font-weight: bold;
+}
+
+.top-left {
+  position: absolute;
+  top: 2px;
+  right: 2px;
 }
