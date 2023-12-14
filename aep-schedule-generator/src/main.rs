@@ -8,6 +8,7 @@ fn main() {
     let inf1900 = courses.get_course("INF1900").unwrap();
     let options = SchedulesOptions {
         courses_to_take: vec![inf1900],
+        max_nb_conflicts: 0,
     };
     println!("{:#?}", options.get_schedules().into_sorted_vec());
 }

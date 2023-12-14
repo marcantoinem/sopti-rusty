@@ -11,6 +11,7 @@ pub struct OptionState {
         ReadSignal<Vec<ReactiveCourse>>,
         WriteSignal<Vec<ReactiveCourse>>,
     ),
+    pub max_nb_conflicts: (ReadSignal<u8>, WriteSignal<u8>),
 }
 
 #[derive(Clone)]
@@ -26,6 +27,7 @@ impl Default for OptionState {
     fn default() -> Self {
         Self {
             selections: create_signal(vec![]),
+            max_nb_conflicts: create_signal(0),
         }
     }
 }
@@ -63,6 +65,10 @@ impl From<&OptionState> for SchedulesOptions {
             .into_iter()
             .map(|c| c.into())
             .collect();
-        Self { courses_to_take }
+        let max_nb_conflicts = state.max_nb_conflicts.0.get();
+        Self {
+            courses_to_take,
+            max_nb_conflicts,
+        }
     }
 }

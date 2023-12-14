@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Default, Debug, Clone, PartialEq)]
 pub struct SchedulesOptions {
     pub courses_to_take: Vec<Course>,
+    pub max_nb_conflicts: u8,
 }
 
 impl SchedulesOptions {
@@ -17,7 +18,7 @@ impl SchedulesOptions {
             Schedule::default(),
             &self.courses_to_take,
             &mut schedules,
-            100,
+            self.max_nb_conflicts,
         );
         schedules
     }
