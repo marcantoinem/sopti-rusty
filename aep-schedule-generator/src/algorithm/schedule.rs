@@ -10,6 +10,7 @@ use std::{cmp::Ordering, fmt::Display};
 pub struct Schedule {
     pub value: f64,
     pub week: Week,
+    pub conflicts: u8,
     pub courses: Vec<TakenCourse>,
 }
 
@@ -18,6 +19,7 @@ impl Default for Schedule {
         Self {
             value: 0.0,
             week: Week::default(),
+            conflicts: 0,
             courses: Vec::with_capacity(8),
         }
     }
@@ -106,32 +108,35 @@ impl Schedule {
         self.courses.push(course);
         self
     }
-    pub fn allow_n_conflicts(&self, n: u8, new_course: &TakenCourse) -> bool {
-        let mut conflicts = 0;
-        let mut new_week = self.week.clone();
-        if let Some(theo_group) = &new_course.theo_group {
+    pub fn add_check_conflicts(&self, n: u8, new_course: &TakenCourse) -> Option<Schedule> {
+        let mut new_schedule = self.clone();
+        let mut new_course = new_course.clone();
+        if let Some(theo_group) = &mut new_course.theo_group {
             for period in &theo_group.periods {
-                if new_week.conflict_in_day(period) {
-                    conflicts += 1;
-                    if conflicts > n {
-                        return false;
+                if new_schedule.week.conflict_in_day(period) {
+                    new_schedule.conflicts += 1;
+                    theo_group.conflict = true;
+                    if new_schedule.conflicts > n {
+                        return None;
                     }
                 }
-                new_week.add_period(period);
+                new_schedule.week.add_period(period);
             }
         }
-        if let Some(lab_group) = &new_course.lab_group {
+        if let Some(lab_group) = &mut new_course.lab_group {
             for period in &lab_group.periods {
-                if new_week.conflict_in_day(period) {
-                    conflicts += 1;
-                    if conflicts > n {
-                        return false;
+                if new_schedule.week.conflict_in_day(period) {
+                    new_schedule.conflicts += 1;
+                    lab_group.conflict = true;
+                    if new_schedule.conflicts > n {
+                        return None;
                     }
                 }
-                new_week.add_period(period);
+                new_schedule.week.add_period(period);
             }
         }
-        true
+        new_schedule.courses.push(new_course);
+        Some(new_schedule)
     }
     pub fn more_morning(&self) -> f64 {
         let mut sum = 0;

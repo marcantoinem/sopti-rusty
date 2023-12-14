@@ -1,5 +1,5 @@
+use crate::frontend::pages::generator::GeneratorPage;
 use crate::frontend::pages::home::HomePage;
-
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
@@ -11,7 +11,6 @@ pub fn App() -> impl IntoView {
 
     view! {
 
-
         // injects a stylesheet into the document <head>
         // id=leptos means cargo-leptos will hot-reload this stylesheet
         <Stylesheet id="leptos" href="/pkg/aep-schedule-website.css"/>
@@ -21,9 +20,14 @@ pub fn App() -> impl IntoView {
 
         // content for this welcome page
         <Router>
+            <nav>
+                <a href="/">"Accueil"</a>
+                <a href="/generateur">"Générateur d'horaire"</a>
+            </nav>
             <main>
                 <Routes>
-                    <Route path="" view=HomePage/>
+                    <Route path="/" view=HomePage/>
+                    <Route path="/generateur" view=GeneratorPage/>
                 </Routes>
             </main>
         </Router>

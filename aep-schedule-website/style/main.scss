@@ -4,15 +4,35 @@
 
 body {
 	font-family: sans-serif;
-	text-align: center;
 	margin: 0;
+}
+
+nav {
+	position: sticky;
+	background-color: white;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	padding: 2px 20px;
+	height: 40px;
+	gap: 42px;
+	border-bottom: 5px solid $highlight-color;
+	z-index: 20;
+}
+
+main {
+	display: flex;
+	justify-content: flex-end;
 }
 
 .left-panel {
 	flex-basis: 40%;
 	width: 40%;
 	position: fixed;
-	top: 0%;
+	left: 0;
+	top: 49px;
 	height: 100%;
 	background-color: $background-color;
 	color: white;
@@ -22,8 +42,6 @@ body {
 }
 
 .right-panel {
-	left: 40%;
-	position: absolute;
 	width: 60%;
 	display: flex;
 	flex-direction: column;

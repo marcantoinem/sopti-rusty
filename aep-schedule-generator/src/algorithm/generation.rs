@@ -42,9 +42,8 @@ impl SchedulesOptions {
                             Some(theo_group.clone()),
                             Some(lab_group.clone()),
                         );
-                        if courses_taken.allow_n_conflicts(n, &course) {
-                            let courses_taken = courses_taken.clone().add(course);
-                            Self::get_schedules_rec(courses_taken, &courses[1..], schedules, n);
+                        if let Some(schedule) = courses_taken.add_check_conflicts(n, &course) {
+                            Self::get_schedules_rec(schedule, &courses[1..], schedules, n);
                         }
                     }
                 }
@@ -52,18 +51,16 @@ impl SchedulesOptions {
             (false, true) => {
                 for theo_group in course.theo_groups.iter().filter(|g| g.open) {
                     let course = TakenCourse::new(course, Some(theo_group.clone()), None);
-                    if courses_taken.allow_n_conflicts(n, &course) {
-                        let courses_taken = courses_taken.clone().add(course);
-                        Self::get_schedules_rec(courses_taken, &courses[1..], schedules, n);
+                    if let Some(schedule) = courses_taken.add_check_conflicts(n, &course) {
+                        Self::get_schedules_rec(schedule, &courses[1..], schedules, n);
                     }
                 }
             }
             (true, false) => {
                 for lab_group in course.lab_groups.iter().filter(|g| g.open) {
                     let course = TakenCourse::new(course, None, Some(lab_group.clone()));
-                    if courses_taken.allow_n_conflicts(n, &course) {
-                        let courses_taken = courses_taken.clone().add(course);
-                        Self::get_schedules_rec(courses_taken, &courses[1..], schedules, n);
+                    if let Some(schedule) = courses_taken.add_check_conflicts(n, &course) {
+                        Self::get_schedules_rec(schedule, &courses[1..], schedules, n);
                     }
                 }
             }
