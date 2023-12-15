@@ -11,18 +11,20 @@ pub struct OptionState {
         ReadSignal<Vec<ReactiveCourse>>,
         WriteSignal<Vec<ReactiveCourse>>,
     ),
-    pub max_nb_conflicts: (ReadSignal<u8>, WriteSignal<u8>),
-    pub day_off: (ReadSignal<u8>, WriteSignal<u8>),
-    pub morning: (ReadSignal<i8>, WriteSignal<i8>),
-    pub finish_early: (ReadSignal<u8>, WriteSignal<u8>),
+    pub max_nb_conflicts: RwSignal<u8>,
+    pub day_off: RwSignal<u8>,
+    pub morning: RwSignal<i8>,
+    pub finish_early: RwSignal<u8>,
 }
 
 #[derive(Clone)]
 pub struct ReactiveCourse {
     pub sigle: CompactString,
     pub name: String,
-    pub theo_groups: (ReadSignal<Groups>, WriteSignal<Groups>),
-    pub lab_groups: (ReadSignal<Groups>, WriteSignal<Groups>),
+    pub theo_groups: Groups,
+    pub lab_groups: Groups,
+    pub theo_open: Vec<RwSignal<bool>>,
+    pub lab_open: Vec<RwSignal<bool>>,
     pub nb_credit: usize,
 }
 
@@ -30,21 +32,27 @@ impl Default for OptionState {
     fn default() -> Self {
         Self {
             selections: create_signal(vec![]),
-            max_nb_conflicts: create_signal(0),
-            day_off: create_signal(0),
-            morning: create_signal(0),
-            finish_early: create_signal(0),
+            max_nb_conflicts: create_rw_signal(0),
+            day_off: create_rw_signal(0),
+            morning: create_rw_signal(0),
+            finish_early: create_rw_signal(0),
         }
     }
 }
 
 impl From<ReactiveCourse> for Course {
-    fn from(value: ReactiveCourse) -> Self {
+    fn from(mut value: ReactiveCourse) -> Self {
+        for (i, open) in value.theo_open.iter().enumerate() {
+            value.theo_groups[i].open = open.get();
+        }
+        for (i, open) in value.lab_open.iter().enumerate() {
+            value.lab_groups[i].open = open.get();
+        }
         Self {
             sigle: value.sigle,
             name: value.name,
-            theo_groups: value.theo_groups.0.get(),
-            lab_groups: value.lab_groups.0.get(),
+            theo_groups: value.theo_groups,
+            lab_groups: value.lab_groups,
             nb_credit: value.nb_credit,
         }
     }
@@ -52,11 +60,23 @@ impl From<ReactiveCourse> for Course {
 
 impl From<Course> for ReactiveCourse {
     fn from(value: Course) -> Self {
+        let theo_open = value
+            .theo_groups
+            .iter()
+            .map(|g| create_rw_signal(g.open))
+            .collect();
+        let lab_open = value
+            .lab_groups
+            .iter()
+            .map(|g| create_rw_signal(g.open))
+            .collect();
         Self {
             sigle: value.sigle,
             name: value.name,
-            theo_groups: create_signal(value.theo_groups),
-            lab_groups: create_signal(value.lab_groups),
+            theo_groups: value.theo_groups,
+            lab_groups: value.lab_groups,
+            theo_open,
+            lab_open,
             nb_credit: value.nb_credit,
         }
     }
@@ -71,11 +91,11 @@ impl From<&OptionState> for SchedulesOptions {
             .into_iter()
             .map(|c| c.into())
             .collect();
-        let max_nb_conflicts = state.max_nb_conflicts.0.get();
+        let max_nb_conflicts = state.max_nb_conflicts.get();
         let evaluation = EvaluationOption {
-            day_off: state.day_off.0.get(),
-            morning: state.morning.0.get(),
-            finish_early: state.finish_early.0.get(),
+            day_off: state.day_off.get(),
+            morning: state.morning.get(),
+            finish_early: state.finish_early.get(),
         };
         Self {
             courses_to_take,

@@ -6,25 +6,23 @@ use aep_schedule_generator::data::groups::Groups;
 use leptos::*;
 use phosphor_leptos::IconWeight;
 use phosphor_leptos::Trash;
+use thaw::Checkbox;
 
 #[component]
-pub fn Groups(groups: ReadSignal<Groups>, set_groups: WriteSignal<Groups>) -> impl IntoView {
+pub fn Groups(groups: Groups, open: Vec<RwSignal<bool>>) -> impl IntoView {
     let row_class = |g: &Group| {
         let mut row_class = "row-container".to_string();
-        if !g.initially_open {
+        if !g.open {
             row_class.push_str(" closed-group");
         }
         row_class
     };
     view! {
-        {move || groups.get().into_iter().enumerate().map(|(i, g)| {
+        {groups.into_iter().enumerate().map(|(i, g)| {
+                let open = open.clone();
                 view!{
-
-                    <div class=row_class(&groups.get_untracked()[i])>
-                        <p>{move || g.number}</p>
-                        <input type="checkbox" prop:checked={g.open} on:click=move |_| {
-                            set_groups.update(|groups| groups[i].open = !groups[i].open);
-                        }/>
+                    <div class=row_class(&g)>
+                        <Checkbox value=open[i]>{g.number}</Checkbox>
                     </div>
                 }
             }).collect_view()
@@ -59,11 +57,11 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
                 <div class="row-container row-center tab-content">
                     <div>
                         <h3>"Théorie"</h3>
-                        <Groups groups=course.theo_groups.0 set_groups=course.theo_groups.1/>
+                        <Groups groups=course.theo_groups open=course.theo_open/>
                     </div>
                     <div>
                         <h3>"Laboratoire"</h3>
-                        <Groups groups=course.lab_groups.0 set_groups=course.lab_groups.1/>
+                        <Groups groups=course.lab_groups open=course.lab_open/>
                     </div>
                 </div>
             </div>

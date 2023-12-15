@@ -62,6 +62,6 @@ pub fn SearchCourse(
         .collect()
     });
     Some(view! {
-        <AutoComplete value=sigle options placeholder="Cours"/>
+        <AutoComplete value=sigle options placeholder="Cours" class="input-item"/>
     })
 }
