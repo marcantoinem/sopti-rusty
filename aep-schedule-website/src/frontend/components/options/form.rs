@@ -1,4 +1,6 @@
-use crate::frontend::components::options::{courses_selector::CoursesSelector, state::OptionState};
+use crate::frontend::components::options::{
+    courses_selector::CoursesSelector, optimizations::SelectOptimizations, state::OptionState,
+};
 use aep_schedule_generator::algorithm::{generation::SchedulesOptions, schedule::Schedule};
 use leptos::*;
 
@@ -17,6 +19,7 @@ pub fn OptionsForms(action: Action<SchedulesOptions, Vec<Schedule>>) -> impl Int
             set_conflicts(event_target_value(&ev).parse::<u8>().unwrap())
         }/>
         <br/>
+        <SelectOptimizations state=state/>
         <button on:click=on_submit class="submit">"Générer les horaires"</button>
     }
 }

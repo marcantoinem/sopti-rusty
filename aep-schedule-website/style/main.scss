@@ -22,6 +22,15 @@ nav {
 	z-index: 20;
 }
 
+@keyframes slideInFromLeft {
+	0% {
+	  transform: translateX(-100%);
+	}
+	100% {
+	  transform: translateX(0);
+	}
+}
+
 main {
 	display: flex;
 	justify-content: flex-end;
@@ -29,7 +38,7 @@ main {
 
 .left-panel {
 	flex-basis: 40%;
-	width: 40%;
+	width: 38%;
 	position: fixed;
 	left: 0;
 	top: 49px;
@@ -39,6 +48,10 @@ main {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	border-right: 100px solid rgb(154, 20, 20);
+	border-image: url('../haikei.svg') 200 stretch;
+	border-image-outset: 42px;
+	animation: 0.5s ease-out 0s 1 slideInFromLeft;
 }
 
 .right-panel {

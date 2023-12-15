@@ -1,4 +1,7 @@
-use super::schedule::Schedule;
+use super::{
+    schedule::Schedule,
+    scores::{EvaluationOption, Score},
+};
 use std::{cmp::Reverse, collections::BinaryHeap};
 
 #[derive(Debug)]
@@ -15,17 +18,17 @@ impl Schedules {
         }
     }
 
-    pub fn push(&mut self, mut schedule: Schedule) {
-        let evaluation = schedule.more_day_off();
+    pub fn push(&mut self, mut schedule: Schedule, evaluation: EvaluationOption) {
+        let evaluation = Score::evaluate(&schedule, evaluation);
+        schedule.score = evaluation;
         if let Some(Reverse(schedule)) = self.schedules.peek() {
-            if evaluation < schedule.value && self.schedules.len() == self.max_size {
+            if evaluation < schedule.score && self.schedules.len() == self.max_size {
                 return;
             }
         }
         if self.schedules.len() >= self.max_size {
             self.schedules.pop();
         }
-        schedule.value = evaluation;
         self.schedules.push(Reverse(schedule));
     }
 

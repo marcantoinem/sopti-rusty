@@ -1,4 +1,4 @@
-use super::taken_course::TakenCourse;
+use super::{scores::Score, taken_course::TakenCourse};
 use crate::data::time::{
     hours::{Hours, NO_HOUR},
     week::Week,
@@ -8,7 +8,7 @@ use std::{cmp::Ordering, fmt::Display};
 
 #[derive(Deserialize, Serialize, PartialEq, Debug, Clone)]
 pub struct Schedule {
-    pub value: f64,
+    pub score: Score,
     pub week: Week,
     pub conflicts: u8,
     pub courses: Vec<TakenCourse>,
@@ -17,7 +17,7 @@ pub struct Schedule {
 impl Default for Schedule {
     fn default() -> Self {
         Self {
-            value: 0.0,
+            score: Score::default(),
             week: Week::default(),
             conflicts: 0,
             courses: Vec::with_capacity(8),
@@ -57,10 +57,9 @@ impl Display for Schedule {
         writeln!(f, "{}", to_print)
     }
 }
-
 impl PartialOrd for Schedule {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.value.partial_cmp(&other.value)
+        self.score.partial_cmp(&other.score)
     }
 }
 
@@ -71,7 +70,7 @@ impl Eq for Schedule {
 
 impl Ord for Schedule {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.value.partial_cmp(&other.value).unwrap()
+        self.score.partial_cmp(&other.score).unwrap()
     }
 }
 
@@ -138,22 +137,30 @@ impl Schedule {
         new_schedule.courses.push(new_course);
         Some(new_schedule)
     }
+    /// This check course up to 13h
     pub fn more_morning(&self) -> f64 {
+        const BEST_MORNING: u32 = 4 * 5;
         let mut sum = 0;
         let mut non_zero_day = 0;
-        for day in 0..7 {
-            if self.week[day] != NO_HOUR {
+        let mut min = u32::MAX;
+        for day in self.week.iter() {
+            if *day != NO_HOUR {
+                let morning_hours = day.trailing_zeros();
                 non_zero_day += 1;
-                sum += self.week[day].trailing_zeros();
+                sum += morning_hours;
+                min = std::cmp::min(min, morning_hours);
             }
         }
-        sum as f64 / non_zero_day as f64
+        let average = sum as f64 / (non_zero_day * BEST_MORNING) as f64;
+        let min = min as f64 / BEST_MORNING as f64;
+        0.5 * average + 0.5 * min
     }
-    pub fn more_day_off(&self) -> f64 {
+    pub fn day_off(&self) -> f64 {
         self.week
             .iter()
             .map(|d| if d == &NO_HOUR { 1.0 } else { 0.0 })
-            .sum()
+            .sum::<f64>()
+            / 6.0
     }
     pub fn finish_early(&self) -> f64 {
         let mut sum = 0;

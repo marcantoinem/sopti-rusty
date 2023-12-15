@@ -1,5 +1,5 @@
 use aep_schedule_generator::{
-    algorithm::generation::SchedulesOptions,
+    algorithm::{generation::SchedulesOptions, scores::EvaluationOption},
     data::{course::Course, groups::Groups},
 };
 use compact_str::CompactString;
@@ -12,6 +12,9 @@ pub struct OptionState {
         WriteSignal<Vec<ReactiveCourse>>,
     ),
     pub max_nb_conflicts: (ReadSignal<u8>, WriteSignal<u8>),
+    pub day_off: (ReadSignal<u8>, WriteSignal<u8>),
+    pub morning: (ReadSignal<i8>, WriteSignal<i8>),
+    pub finish_early: (ReadSignal<u8>, WriteSignal<u8>),
 }
 
 #[derive(Clone)]
@@ -28,6 +31,9 @@ impl Default for OptionState {
         Self {
             selections: create_signal(vec![]),
             max_nb_conflicts: create_signal(0),
+            day_off: create_signal(0),
+            morning: create_signal(0),
+            finish_early: create_signal(0),
         }
     }
 }
@@ -66,9 +72,15 @@ impl From<&OptionState> for SchedulesOptions {
             .map(|c| c.into())
             .collect();
         let max_nb_conflicts = state.max_nb_conflicts.0.get();
+        let evaluation = EvaluationOption {
+            day_off: state.day_off.0.get(),
+            morning: state.morning.0.get(),
+            finish_early: state.finish_early.0.get(),
+        };
         Self {
             courses_to_take,
             max_nb_conflicts,
+            evaluation,
         }
     }
 }

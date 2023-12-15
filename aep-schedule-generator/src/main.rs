@@ -1,4 +1,7 @@
-use aep_schedule_generator::{algorithm::generation::SchedulesOptions, data::courses::Courses};
+use aep_schedule_generator::{
+    algorithm::{generation::SchedulesOptions, scores::EvaluationOption},
+    data::courses::Courses,
+};
 use std::{fs::File, io::BufReader};
 
 fn main() {
@@ -9,6 +12,7 @@ fn main() {
     let options = SchedulesOptions {
         courses_to_take: vec![inf1900],
         max_nb_conflicts: 0,
+        evaluation: EvaluationOption::default(),
     };
     println!("{:#?}", options.get_schedules().into_sorted_vec());
 }

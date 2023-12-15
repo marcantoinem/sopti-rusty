@@ -1,4 +1,6 @@
-use super::{schedule::Schedule, schedules::Schedules, taken_course::TakenCourse};
+use super::{
+    schedule::Schedule, schedules::Schedules, scores::EvaluationOption, taken_course::TakenCourse,
+};
 use crate::data::course::Course;
 use serde::{Deserialize, Serialize};
 
@@ -6,6 +8,7 @@ use serde::{Deserialize, Serialize};
 pub struct SchedulesOptions {
     pub courses_to_take: Vec<Course>,
     pub max_nb_conflicts: u8,
+    pub evaluation: EvaluationOption,
 }
 
 impl SchedulesOptions {
@@ -19,6 +22,7 @@ impl SchedulesOptions {
             &self.courses_to_take,
             &mut schedules,
             self.max_nb_conflicts,
+            self.evaluation,
         );
         schedules
     }
@@ -27,9 +31,10 @@ impl SchedulesOptions {
         courses: &[Course],
         schedules: &mut Schedules,
         n: u8,
+        evaluation: EvaluationOption,
     ) {
         let Some(course) = courses.first() else {
-            schedules.push(courses_taken);
+            schedules.push(courses_taken, evaluation);
             return;
         };
 
@@ -43,7 +48,13 @@ impl SchedulesOptions {
                             Some(lab_group.clone()),
                         );
                         if let Some(schedule) = courses_taken.add_check_conflicts(n, &course) {
-                            Self::get_schedules_rec(schedule, &courses[1..], schedules, n);
+                            Self::get_schedules_rec(
+                                schedule,
+                                &courses[1..],
+                                schedules,
+                                n,
+                                evaluation,
+                            );
                         }
                     }
                 }
@@ -52,7 +63,7 @@ impl SchedulesOptions {
                 for theo_group in course.theo_groups.iter().filter(|g| g.open) {
                     let course = TakenCourse::new(course, Some(theo_group.clone()), None);
                     if let Some(schedule) = courses_taken.add_check_conflicts(n, &course) {
-                        Self::get_schedules_rec(schedule, &courses[1..], schedules, n);
+                        Self::get_schedules_rec(schedule, &courses[1..], schedules, n, evaluation);
                     }
                 }
             }
@@ -60,7 +71,7 @@ impl SchedulesOptions {
                 for lab_group in course.lab_groups.iter().filter(|g| g.open) {
                     let course = TakenCourse::new(course, None, Some(lab_group.clone()));
                     if let Some(schedule) = courses_taken.add_check_conflicts(n, &course) {
-                        Self::get_schedules_rec(schedule, &courses[1..], schedules, n);
+                        Self::get_schedules_rec(schedule, &courses[1..], schedules, n, evaluation);
                     }
                 }
             }
