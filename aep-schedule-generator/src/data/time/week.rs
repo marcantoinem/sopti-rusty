@@ -5,7 +5,7 @@ use super::{
 use serde::{Deserialize, Serialize};
 use std::ops::Deref;
 
-#[derive(Deserialize, Serialize, Debug, PartialEq, Eq, Clone, Default)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Eq, Clone, Copy, Default)]
 pub struct Week([Hours; 7]);
 
 impl Deref for Week {

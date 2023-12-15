@@ -1,4 +1,4 @@
-use super::{day::Day, hours::Hours};
+use super::{day::Day, hours::Hours, week_number::WeekNumber};
 use compact_str::CompactString;
 use serde::{Deserialize, Serialize};
 
@@ -7,14 +7,16 @@ pub struct Period {
     pub day: Day,
     pub room: CompactString,
     pub hours: Hours,
+    pub week_nb: WeekNumber,
 }
 
 impl Period {
-    pub fn new(day: &str, room: &str, hours: &str) -> Self {
+    pub fn new(day: &str, room: &str, hours: &str, week_nb: &str) -> Self {
         Self {
             day: day.into(),
             room: room.into(),
             hours: hours.into(),
+            week_nb: week_nb.into(),
         }
     }
 }

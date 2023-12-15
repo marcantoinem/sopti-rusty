@@ -1,6 +1,9 @@
 use aep_schedule_generator::{
     algorithm::{schedule::Schedule, taken_course::TakenCourse},
-    data::{group::Group, time::period::Period},
+    data::{
+        group::Group,
+        time::{period::Period, week_number::WeekNumber},
+    },
 };
 use leptos::*;
 
@@ -31,10 +34,15 @@ fn style_p(period: &Period) -> String {
     format!("grid-column:{};grid-row:{} / span {};", column, hour, len)
 }
 
-fn group_style(group: &Group) -> String {
+fn group_style(group: &Group, period: &Period) -> String {
     let mut class = "event".to_string();
     if group.conflict {
         class.push_str(" conflict");
+    }
+    match period.week_nb {
+        WeekNumber::B1 => class.push_str(" b1"),
+        WeekNumber::B2 => class.push_str(" b2"),
+        _ => (),
     }
     class
 }
@@ -65,10 +73,10 @@ pub fn ScheduleComponent(schedule: Schedule) -> impl IntoView {
                     {schedule.courses.iter().map(|c| {
                         view!{
                             {c.theo_group.as_ref().map(|g| Some(g.periods.iter().map(|p| {
-                                view!{<div class={group_style(g)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Théorie " {g.number}</p></div>}
+                                view!{<div class={group_style(g, p)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Theo. Gr: " {g.number} " " {p.week_nb.to_string()}</p></div>}
                             }).collect_view()))}
                             {c.lab_group.as_ref().map(|g| Some(g.periods.iter().map(|p| {
-                                view!{<div class={group_style(g)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Laboratoire " {g.number}</p></div>}
+                                view!{<div class={group_style(g, p)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Lab. Gr: " {g.number} " " {p.week_nb.to_string()}</p></div>}
                             }).collect_view()))}
                         }
                     }).collect_view()}

@@ -48,7 +48,7 @@ main {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	border-right: 100px solid rgb(154, 20, 20);
+	border-right: 100px solid;
 	border-image: url('../haikei.svg') 200 stretch;
 	border-image-outset: 42px;
 	animation: 0.5s ease-out 0s 1 slideInFromLeft;

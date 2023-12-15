@@ -87,6 +87,7 @@ body {
   font-weight: bold;
   font-size: 70%;
   background-color: $highlight-color;
+  text-align: center;
 }
 
 .event p {
@@ -97,4 +98,14 @@ body {
   background-color: rgba(255, 69, 69, 0.69);
   margin: 3px 3px 3px 30%;
   z-index: 10;
+}
+
+.b1 {
+  width: 50%;
+  margin-right: 50%;
+}
+
+.b2 {
+  width: 50%;
+  margin-left: 50%;
 }

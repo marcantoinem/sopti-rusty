@@ -1,7 +1,7 @@
 use super::{scores::Score, taken_course::TakenCourse};
 use crate::data::time::{
     hours::{Hours, NO_HOUR},
-    week::Week,
+    weeks::Weeks,
 };
 use serde::{Deserialize, Serialize};
 use std::{cmp::Ordering, fmt::Display};
@@ -9,7 +9,7 @@ use std::{cmp::Ordering, fmt::Display};
 #[derive(Deserialize, Serialize, PartialEq, Debug, Clone)]
 pub struct Schedule {
     pub score: Score,
-    pub week: Week,
+    pub week: Weeks,
     pub conflicts: u8,
     pub courses: Vec<TakenCourse>,
 }
@@ -18,7 +18,7 @@ impl Default for Schedule {
     fn default() -> Self {
         Self {
             score: Score::default(),
-            week: Week::default(),
+            week: Weeks::default(),
             conflicts: 0,
             courses: Vec::with_capacity(8),
         }
@@ -144,7 +144,7 @@ impl Schedule {
         let mut non_zero_day = 0;
         let mut min = u32::MAX;
         for day in self.week.iter() {
-            if *day != NO_HOUR {
+            if day != NO_HOUR {
                 let morning_hours = day.trailing_zeros();
                 non_zero_day += 1;
                 sum += morning_hours;
@@ -158,19 +158,19 @@ impl Schedule {
     pub fn day_off(&self) -> f64 {
         self.week
             .iter()
-            .map(|d| if d == &NO_HOUR { 1.0 } else { 0.0 })
+            .map(|d| if d == NO_HOUR { 1.0 } else { 0.0 })
             .sum::<f64>()
-            / 6.0
+            / 12.0
     }
-    pub fn finish_early(&self) -> f64 {
-        let mut sum = 0;
-        let mut non_zero_day = 0;
-        for day in 0..7 {
-            if self.week[day] != NO_HOUR {
-                non_zero_day += 1;
-                sum += self.week[day].leading_zeros();
-            }
-        }
-        sum as f64 / non_zero_day as f64
-    }
+    // pub fn finish_early(&self) -> f64 {
+    //     let mut sum = 0;
+    //     let mut non_zero_day = 0;
+    //     for day in 0..7 {
+    //         if self.week[day] != NO_HOUR {
+    //             non_zero_day += 1;
+    //             sum += self.week[day].leading_zeros();
+    //         }
+    //     }
+    //     sum as f64 / non_zero_day as f64
+    // }
 }
