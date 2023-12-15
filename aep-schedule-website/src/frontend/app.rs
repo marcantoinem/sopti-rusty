@@ -16,7 +16,7 @@ pub fn App() -> impl IntoView {
         <Stylesheet id="leptos" href="/pkg/aep-schedule-website.css"/>
 
         // sets the document title
-        <Title text="Générateur d'horaire de l'AEP"/>
+        <Title text="Générateur d'horaire"/>
 
         // content for this welcome page
         <Router>

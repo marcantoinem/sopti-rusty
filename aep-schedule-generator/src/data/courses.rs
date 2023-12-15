@@ -78,7 +78,11 @@ impl Courses {
                 "C" => &mut course.theo_groups,
                 _ => continue,
             };
-            groups.get_mut(number).and_then(|g| Some(g.open = false));
+            groups.get_mut(number).and_then(|g| {
+                g.open = false;
+                g.initially_open = false;
+                Some(())
+            });
         }
     }
 

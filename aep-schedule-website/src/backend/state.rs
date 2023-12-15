@@ -48,7 +48,7 @@ cfg_if::cfg_if! { if #[cfg(feature = "ssr")] {
                 .unwrap();
 
             loop {
-                tokio::time::sleep(Duration::from_secs(60 * 60)).await;
+                tokio::time::sleep(Duration::from_secs(5*60)).await;
                 let Ok(horsage) = client.get("https://cours.polymtl.ca/Horaire/public/horsage.csv").send().await
                     else {continue};
                 let Ok(horsage) = horsage.text().await else {continue};

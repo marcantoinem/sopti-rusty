@@ -6,6 +6,7 @@ use smallvec::{smallvec, SmallVec};
 pub struct Group {
     pub number: u8,
     pub open: bool,
+    pub initially_open: bool,
     pub conflict: bool,
     pub periods: SmallVec<[Period; 2]>,
 }
@@ -16,6 +17,7 @@ impl Group {
         Self {
             number,
             open: true,
+            initially_open: true,
             conflict: false,
             periods: smallvec![period],
         }
