@@ -31,7 +31,8 @@ build_image:
   only:
   - main
 
-test:
+sast:
   stage: test
 include:
-  - template: Security/SAST.gitlab-ci.yml
+- template: Security/SAST.gitlab-ci.yml
+
