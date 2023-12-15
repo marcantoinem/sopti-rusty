@@ -6,8 +6,32 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
-- test
-sast:
+  - build
+  - test
+
+build_image:
+  image: docker
+  services:
+  - name: docker:dind
+    alias: docker
+    command: ["--tls=false"]
+
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  
+  stage: build
+  before_script:
+  - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+  - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_BRANCH .
+  - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_BRANCH
+  only:
+  - main
+
+test:
   stage: test
 include:
-- template: Security/SAST.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
