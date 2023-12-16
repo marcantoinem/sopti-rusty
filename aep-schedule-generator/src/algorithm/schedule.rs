@@ -4,7 +4,10 @@ use crate::data::time::{
     weeks::Weeks,
 };
 use serde::{Deserialize, Serialize};
-use std::{cmp::Ordering, fmt::Display};
+use std::{
+    cmp::{self, Ordering},
+    fmt::Display,
+};
 
 #[derive(Deserialize, Serialize, PartialEq, Debug, Clone)]
 pub struct Schedule {
@@ -145,7 +148,7 @@ impl Schedule {
         let mut min = u32::MAX;
         for day in self.week.iter() {
             if day != NO_HOUR {
-                let morning_hours = day.trailing_zeros();
+                let morning_hours = cmp::min(BEST_MORNING, day.trailing_zeros());
                 non_zero_day += 1;
                 sum += morning_hours;
                 min = std::cmp::min(min, morning_hours);
@@ -164,16 +167,16 @@ impl Schedule {
     }
 
     pub fn finish_early(&self) -> f64 {
-        const BEST_AFTERNOON: u32 = 64 - 4 * 5;
+        const BEST_AFTERNOON: u32 = 64 - 5 * 4;
         let mut sum = 0;
         let mut non_zero_day = 0;
         let mut min = u32::MAX;
         for day in self.week.iter() {
             if day != NO_HOUR {
-                let afternoon_hours = day.leading_zeros();
+                let afternoon_hours = cmp::min(BEST_AFTERNOON, day.leading_zeros());
                 non_zero_day += 1;
                 sum += afternoon_hours;
-                min = std::cmp::min(min, afternoon_hours);
+                min = cmp::min(min, afternoon_hours);
             }
         }
         let average = sum as f64 / (non_zero_day * BEST_AFTERNOON) as f64;

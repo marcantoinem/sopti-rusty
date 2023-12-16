@@ -16,7 +16,7 @@ nav {
 	justify-content: flex-start;
 	align-items: center;
 	padding: 2px 20px;
-	height: 40px;
+	height: 4vh;
 	gap: 42px;
 	border-bottom: 5px solid $highlight-color;
 	z-index: 20;
@@ -46,13 +46,14 @@ section {
 	width: 38%;
 	position: fixed;
 	left: 0;
-	top: 49px;
-	height: 100%;
+	top: 4vh;
+	height: 100vh - 4vh;
 	background-color: $background-color;
 	color: white;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	justify-items: center;
 	border-right: 69px solid transparent;
 	border-image: url('../haikei.svg') 200;
 	border-image-outset: 42px;

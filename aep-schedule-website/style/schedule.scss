@@ -1,5 +1,14 @@
 @import 'constant.scss';
 
+@keyframes fadeIn {
+	0% {
+	  opacity: 0;
+	}
+	100% {
+	  opacity: 1;
+	}
+}
+
 .schedule-container {
 	width: 70%;
 	display: flex;
@@ -7,6 +16,7 @@
 	align-items: center;
   margin: 10pt;
   border-collapse: collapse;
+  animation: 0.1s ease-out 1 fadeIn;
 }
 
 // Calendar inspired by https://codepen.io/kjellmf/pen/qgxyVJ

@@ -20,7 +20,7 @@ pub fn SelectOptimizations(state: OptionState) -> impl IntoView {
     let weight_morning = create_memo(move |_| weight(cmp::max(0, state.morning.get()) as u8));
     let weight_finish = create_memo(move |_| weight(state.finish_early.get()));
     view! {
-        <div class="row-container">
+        <div class="three-col">
             <div class="col-container">
                 <House weight=weight_house size="96px"/>
                 <p>"Plus de congés"</p>
@@ -28,7 +28,7 @@ pub fn SelectOptimizations(state: OptionState) -> impl IntoView {
                     state.day_off.set(event_target_value(&ev).parse::<u8>().unwrap())
                 }/>
             </div>
-            <div class="col-container large">
+            <div class="col-container">
                 <div class="row-container">
                     <SunHorizon weight=weight_early size="96px"/>
                     <Sun weight=weight_morning size="96px"/>

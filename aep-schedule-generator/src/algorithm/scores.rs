@@ -16,11 +16,17 @@ pub struct EvaluationOption {
 impl Score {
     pub fn evaluate(schedule: &Schedule, options: EvaluationOption) -> Self {
         let mut score = Score::default();
-        let sum =
-            (2 * options.day_off) as f64 + options.morning as f64 + options.finish_early as f64;
-        score.global += (2 * options.day_off) as f64 * schedule.day_off() / sum;
-        score.global += options.morning as f64 * schedule.more_morning() / sum;
-        score.global += options.finish_early as f64 * schedule.finish_early() / sum;
+        let day_off = 2.0 * options.day_off as f64;
+        let morning = options.morning as f64;
+        let finish_early = options.finish_early as f64;
+        let sum = day_off + morning.abs() + finish_early;
+        score.global += day_off * schedule.day_off() / sum;
+        if morning.is_sign_positive() {
+            score.global += morning * schedule.more_morning() / sum;
+        } else {
+            score.global += -morning * (1.0 - schedule.more_morning()) / sum;
+        }
+        score.global += finish_early * schedule.finish_early() / sum;
         score
     }
 }

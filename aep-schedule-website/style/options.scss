@@ -40,12 +40,21 @@
 .col-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
 .row-center {
   justify-content: space-evenly;
+}
+
+.three-col {
+  display: grid;
+  margin: 10px;
+  grid-template-columns: 1fr 2fr 1fr;
+}
+
+.bottom {
+  margin-top: auto;
 }
 
 .card p {
@@ -67,6 +76,10 @@
   position: absolute;
   top: 4px;
   right: 30px;
+}
+
+.opti-slider {
+  width: 70%;
 }
 
 .accordion:checked ~ .tab-content {

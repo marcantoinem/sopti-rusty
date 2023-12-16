@@ -57,6 +57,7 @@ pub fn ScheduleComponent(schedule: Schedule) -> impl IntoView {
     view! {
         <div class="schedule-container">
             <table class="cours">
+                <tr><td>"Score: " {schedule.score.global}</td></tr>
                 {schedule.courses.iter().map(|c| view!{<Course course=c/>}).collect_view()}
             </table>
             <div class="schedule">
@@ -72,11 +73,11 @@ pub fn ScheduleComponent(schedule: Schedule) -> impl IntoView {
                     {(1..=HOURS.len()).map(|i| view!{<div class="row" style={format!("grid-row:{i}")}></div>}).collect_view()}
                     {schedule.courses.iter().map(|c| {
                         view!{
-                            {c.theo_group.as_ref().map(|g| Some(g.periods.iter().map(|p| {
-                                view!{<div class={group_style(g, p)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Theo. Gr: " {g.number} " " {p.week_nb.to_string()}</p></div>}
-                            }).collect_view()))}
                             {c.lab_group.as_ref().map(|g| Some(g.periods.iter().map(|p| {
                                 view!{<div class={group_style(g, p)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Lab. Gr: " {g.number} " " {p.week_nb.to_string()}</p></div>}
+                            }).collect_view()))}
+                            {c.theo_group.as_ref().map(|g| Some(g.periods.iter().map(|p| {
+                                view!{<div class={group_style(g, p)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Theo. Gr: " {g.number} " " {p.week_nb.to_string()}</p></div>}
                             }).collect_view()))}
                         }
                     }).collect_view()}

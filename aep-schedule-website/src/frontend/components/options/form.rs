@@ -14,10 +14,11 @@ pub fn OptionsForms(action: Action<SchedulesOptions, Vec<Schedule>>) -> impl Int
     view! {
         <h1>"Options de générations"</h1>
         <CoursesSelector state=state/>
-        <label for="conflicts">"Nombre de conflits maximum"</label>
-        <div class="input-item"><InputNumber value=state.max_nb_conflicts step=1/></div>
-        <br/>
-        <SelectOptimizations state=state/>
-        <button on:click=on_submit class="submit">"Générer les horaires"</button>
+        <div class="bottom col-container">
+            <p>"Nombre de conflits maximum"</p>
+            <div class="input-item"><InputNumber value=state.max_nb_conflicts step=1/></div>
+            <SelectOptimizations state=state/>
+            <button on:click=on_submit class="submit">"Générer les horaires"</button>
+        </div>
     }
 }
