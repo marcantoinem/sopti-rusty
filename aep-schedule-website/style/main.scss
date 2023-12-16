@@ -53,10 +53,11 @@ section {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	border-right: 100px solid;
-	border-image: url('../haikei.svg') 200 stretch;
+	border-right: 69px solid transparent;
+	border-image: url('../haikei.svg') 200;
 	border-image-outset: 42px;
 	animation: 0.5s ease-out 0s 1 slideInFromLeft;
+	border-image-outset: 0px;
 }
 
 .right-panel {
@@ -82,6 +83,10 @@ a:active {
 
 a:hover {
 	text-decoration: underline;
+}
+
+.home {
+	padding: 20px;
 }
 
 a {

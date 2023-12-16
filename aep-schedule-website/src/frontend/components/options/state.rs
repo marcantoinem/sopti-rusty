@@ -33,9 +33,9 @@ impl Default for OptionState {
         Self {
             selections: create_signal(vec![]),
             max_nb_conflicts: create_rw_signal(0),
-            day_off: create_rw_signal(0),
+            day_off: create_rw_signal(3),
             morning: create_rw_signal(0),
-            finish_early: create_rw_signal(0),
+            finish_early: create_rw_signal(1),
         }
     }
 }

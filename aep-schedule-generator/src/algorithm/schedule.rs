@@ -162,15 +162,22 @@ impl Schedule {
             .sum::<f64>()
             / 12.0
     }
-    // pub fn finish_early(&self) -> f64 {
-    //     let mut sum = 0;
-    //     let mut non_zero_day = 0;
-    //     for day in 0..7 {
-    //         if self.week[day] != NO_HOUR {
-    //             non_zero_day += 1;
-    //             sum += self.week[day].leading_zeros();
-    //         }
-    //     }
-    //     sum as f64 / non_zero_day as f64
-    // }
+
+    pub fn finish_early(&self) -> f64 {
+        const BEST_AFTERNOON: u32 = 64 - 4 * 5;
+        let mut sum = 0;
+        let mut non_zero_day = 0;
+        let mut min = u32::MAX;
+        for day in self.week.iter() {
+            if day != NO_HOUR {
+                let afternoon_hours = day.leading_zeros();
+                non_zero_day += 1;
+                sum += afternoon_hours;
+                min = std::cmp::min(min, afternoon_hours);
+            }
+        }
+        let average = sum as f64 / (non_zero_day * BEST_AFTERNOON) as f64;
+        let min = min as f64 / BEST_AFTERNOON as f64;
+        0.5 * average + 0.5 * min
+    }
 }
