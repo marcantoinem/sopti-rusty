@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::ops::{Index, IndexMut};
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
-pub struct Groups(Vec<Group>);
+pub struct Groups(pub Vec<Group>);
 
 impl Default for Groups {
     fn default() -> Self {

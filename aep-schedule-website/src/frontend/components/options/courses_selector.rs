@@ -9,7 +9,7 @@ use phosphor_leptos::Trash;
 use thaw::Checkbox;
 
 #[component]
-pub fn Groups(groups: Groups, open: Vec<RwSignal<bool>>) -> impl IntoView {
+fn GroupsSettings(groups: Groups, open: Vec<RwSignal<bool>>) -> impl IntoView {
     let row_class = |g: &Group| {
         let mut row_class = "row-container".to_string();
         if !g.open {
@@ -57,11 +57,11 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
                 <div class="row-container row-center tab-content">
                     <div>
                         <h3>"Théorie"</h3>
-                        <Groups groups=course.theo_groups open=course.theo_open/>
+                        <GroupsSettings groups=course.theo_groups open=course.theo_open/>
                     </div>
                     <div>
                         <h3>"Laboratoire"</h3>
-                        <Groups groups=course.lab_groups open=course.lab_open/>
+                        <GroupsSettings groups=course.lab_groups open=course.lab_open/>
                     </div>
                 </div>
             </div>

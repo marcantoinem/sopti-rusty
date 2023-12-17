@@ -1,13 +1,14 @@
-use super::{scores::Score, taken_course::TakenCourse};
+use super::{
+    scores::{EvaluationOption, Score},
+    taken_course::TakenCourse,
+};
 use crate::data::time::{
     hours::{Hours, NO_HOUR},
+    period::Period,
     weeks::Weeks,
 };
 use serde::{Deserialize, Serialize};
-use std::{
-    cmp::{self, Ordering},
-    fmt::Display,
-};
+use std::{cmp::Ordering, fmt::Display};
 
 #[derive(Deserialize, Serialize, PartialEq, Debug, Clone)]
 pub struct Schedule {
@@ -110,7 +111,13 @@ impl Schedule {
         self.courses.push(course);
         self
     }
-    pub fn add_check_conflicts(&self, n: u8, new_course: &TakenCourse) -> Option<Schedule> {
+    pub fn add_check_conflicts(
+        &self,
+        n: u8,
+        min: f64,
+        options: EvaluationOption,
+        new_course: &TakenCourse,
+    ) -> Option<Schedule> {
         let mut new_schedule = self.clone();
         let mut new_course = new_course.clone();
         if let Some(theo_group) = &mut new_course.theo_group {
@@ -122,7 +129,7 @@ impl Schedule {
                         return None;
                     }
                 }
-                new_schedule.week.add_period(period);
+                new_schedule.add_update_score(period);
             }
         }
         if let Some(lab_group) = &mut new_course.lab_group {
@@ -134,53 +141,24 @@ impl Schedule {
                         return None;
                     }
                 }
-                new_schedule.week.add_period(period);
+                new_schedule.add_update_score(period)
             }
+        }
+        if new_schedule.score.evaluate(options) < min {
+            return None;
         }
         new_schedule.courses.push(new_course);
         Some(new_schedule)
     }
-    /// This check course up to 13h
-    pub fn more_morning(&self) -> f64 {
-        const BEST_MORNING: u32 = 4 * 5;
-        let mut sum = 0;
-        let mut non_zero_day = 0;
-        let mut min = u32::MAX;
-        for day in self.week.iter() {
-            if day != NO_HOUR {
-                let morning_hours = cmp::min(BEST_MORNING, day.trailing_zeros());
-                non_zero_day += 1;
-                sum += morning_hours;
-                min = std::cmp::min(min, morning_hours);
-            }
-        }
-        let average = sum as f64 / (non_zero_day * BEST_MORNING) as f64;
-        let min = min as f64 / BEST_MORNING as f64;
-        0.5 * average + 0.5 * min
-    }
-    pub fn day_off(&self) -> f64 {
-        self.week
-            .iter()
-            .map(|d| if d == NO_HOUR { 1.0 } else { 0.0 })
-            .sum::<f64>()
-            / 12.0
-    }
-
-    pub fn finish_early(&self) -> f64 {
-        const BEST_AFTERNOON: u32 = 64 - 5 * 4;
-        let mut sum = 0;
-        let mut non_zero_day = 0;
-        let mut min = u32::MAX;
-        for day in self.week.iter() {
-            if day != NO_HOUR {
-                let afternoon_hours = cmp::min(BEST_AFTERNOON, day.leading_zeros());
-                non_zero_day += 1;
-                sum += afternoon_hours;
-                min = cmp::min(min, afternoon_hours);
-            }
-        }
-        let average = sum as f64 / (non_zero_day * BEST_AFTERNOON) as f64;
-        let min = min as f64 / BEST_AFTERNOON as f64;
-        0.5 * average + 0.5 * min
+    fn add_update_score(&mut self, period: &Period) {
+        let day_off = self.week.get_day_off(period);
+        let morning_hours = self.week.get_morning(period);
+        self.score.day_off -= day_off;
+        self.score.morning_hours -= morning_hours;
+        self.score.afternoon_hours -= self.week.get_finish_early(period);
+        self.week.add_period(period);
+        self.score.day_off += self.week.get_day_off(period);
+        self.score.morning_hours += self.week.get_morning(period);
+        self.score.afternoon_hours += self.week.get_finish_early(period);
     }
 }

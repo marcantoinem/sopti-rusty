@@ -13,7 +13,7 @@ pub struct SchedulesOptions {
 
 impl SchedulesOptions {
     pub fn get_schedules(&self) -> Schedules {
-        let mut schedules = Schedules::new(50);
+        let mut schedules = Schedules::new(69);
         if self.courses_to_take.len() == 0 {
             return schedules;
         }
@@ -31,13 +31,13 @@ impl SchedulesOptions {
         courses: &[Course],
         schedules: &mut Schedules,
         n: u8,
-        evaluation: EvaluationOption,
+        e: EvaluationOption,
     ) {
         let Some(course) = courses.first() else {
-            schedules.push(courses_taken, evaluation);
+            schedules.push(courses_taken);
             return;
         };
-
+        let min = schedules.get_min();
         match (course.theo_groups.is_empty(), course.lab_groups.is_empty()) {
             (false, false) => {
                 for theo_group in course.theo_groups.iter().filter(|g| g.open) {
@@ -47,14 +47,10 @@ impl SchedulesOptions {
                             Some(theo_group.clone()),
                             Some(lab_group.clone()),
                         );
-                        if let Some(schedule) = courses_taken.add_check_conflicts(n, &course) {
-                            Self::get_schedules_rec(
-                                schedule,
-                                &courses[1..],
-                                schedules,
-                                n,
-                                evaluation,
-                            );
+                        if let Some(schedule) =
+                            courses_taken.add_check_conflicts(n, min, e, &course)
+                        {
+                            Self::get_schedules_rec(schedule, &courses[1..], schedules, n, e);
                         }
                     }
                 }
@@ -62,16 +58,16 @@ impl SchedulesOptions {
             (false, true) => {
                 for theo_group in course.theo_groups.iter().filter(|g| g.open) {
                     let course = TakenCourse::new(course, Some(theo_group.clone()), None);
-                    if let Some(schedule) = courses_taken.add_check_conflicts(n, &course) {
-                        Self::get_schedules_rec(schedule, &courses[1..], schedules, n, evaluation);
+                    if let Some(schedule) = courses_taken.add_check_conflicts(n, min, e, &course) {
+                        Self::get_schedules_rec(schedule, &courses[1..], schedules, n, e);
                     }
                 }
             }
             (true, false) => {
                 for lab_group in course.lab_groups.iter().filter(|g| g.open) {
                     let course = TakenCourse::new(course, None, Some(lab_group.clone()));
-                    if let Some(schedule) = courses_taken.add_check_conflicts(n, &course) {
-                        Self::get_schedules_rec(schedule, &courses[1..], schedules, n, evaluation);
+                    if let Some(schedule) = courses_taken.add_check_conflicts(n, min, e, &course) {
+                        Self::get_schedules_rec(schedule, &courses[1..], schedules, n, e);
                     }
                 }
             }

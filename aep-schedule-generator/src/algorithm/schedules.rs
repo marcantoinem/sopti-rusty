@@ -1,7 +1,4 @@
-use super::{
-    schedule::Schedule,
-    scores::{EvaluationOption, Score},
-};
+use super::schedule::Schedule;
 use std::{cmp::Reverse, collections::BinaryHeap};
 
 #[derive(Debug)]
@@ -18,9 +15,15 @@ impl Schedules {
         }
     }
 
-    pub fn push(&mut self, mut schedule: Schedule, evaluation: EvaluationOption) {
-        let evaluation = Score::evaluate(&schedule, evaluation);
-        schedule.score = evaluation;
+    pub fn get_min(&self) -> f64 {
+        if self.schedules.len() < self.max_size {
+            return 0.0;
+        }
+        self.schedules.peek().unwrap().0.score.global
+    }
+
+    pub fn push(&mut self, schedule: Schedule) {
+        let evaluation = schedule.score;
         if let Some(Reverse(schedule)) = self.schedules.peek() {
             if evaluation < schedule.score && self.schedules.len() == self.max_size {
                 return;
