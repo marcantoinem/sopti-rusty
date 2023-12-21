@@ -19,6 +19,7 @@
 
 .card {
   background-color: $highlight-color;
+  text-align: center;
   border-radius: 5px;
   width: 80%;
   margin: 5px;
@@ -40,10 +41,16 @@
 .col-container {
   display: flex;
   flex-direction: column;
+  width: 100%;
   align-items: center;
 }
 
 .row-center {
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.row-evenly {
   justify-content: space-evenly;
 }
 
@@ -66,24 +73,8 @@
   padding: 0px;
 }
 
-.tab-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: all 0.35s;
-}
-
-.accordion {
-  position: absolute;
-  top: 4px;
-  right: 30px;
-}
-
 .opti-slider {
   width: 70%;
-}
-
-.accordion:checked ~ .tab-content {
-  max-height: 50rem;
 }
 
 .closed-group {
@@ -91,5 +82,41 @@
 }
 
 .input-item {
-  width: 16vw;
+  width: 50%
+}
+
+.hidden {
+  display: none;
+}
+
+.tab-button {
+  background-color: $secondary-color;
+  border: none;
+  color: #556960;
+  padding: 5px 8px;
+  border-radius: 15px;
+  margin-right: 5px;
+  margin-top: 5px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.tab-width {
+  width: 80%;
+}
+
+.tab-selected {
+  background-color: $highlight-color;
+  color: white;
+}
+
+.close {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
 }

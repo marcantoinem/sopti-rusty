@@ -57,7 +57,6 @@ pub fn ScheduleComponent(schedule: Schedule) -> impl IntoView {
     view! {
         <div class="schedule-container">
             <table class="cours">
-                <tr><td>"Score: " {schedule.score.global}</td></tr>
                 {schedule.courses.iter().map(|c| view!{<Course course=c/>}).collect_view()}
             </table>
             <div class="schedule">

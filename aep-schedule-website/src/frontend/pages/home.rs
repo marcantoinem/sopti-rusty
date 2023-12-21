@@ -10,7 +10,7 @@ pub fn HomePage() -> impl IntoView {
             </p>
             <h2>"Auteurs"</h2>
             <ul>
-                <li>"Marc-Antoine Manningham - Création de la frontend et du backend entièrement en Rust"</li>
+                <li>"Marc-Antoine Manningham - Création du frontend et du backend entièrement en Rust"</li>
                 <li>"Raphael Salvas, Achille Saint-Hillier, Sunnee Chevalier et Gabriel Billard - Inspiration de leur TP3 de LOG2420 pour le design du générateur"</li>
             </ul>
         </section>

@@ -8,15 +8,16 @@ body {
 }
 
 nav {
+	box-sizing: border-box;
 	position: sticky;
-	background-color: white;
+	background-color: $white;
 	top: 0;
 	left: 0;
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
 	padding: 2px 20px;
-	height: 4vh;
+	height: 5vh;
 	gap: 42px;
 	border-bottom: 5px solid $highlight-color;
 	z-index: 20;
@@ -42,32 +43,39 @@ section {
 }
 
 .left-panel {
-	flex-basis: 40%;
-	width: 38%;
+	@media screen and (max-width: 1000px) {
+		width: 100%;
+		background-position: top -10vh right -2.69vh;
+	}
+	@media screen and (min-width: 1000px) {
+		width: 42%;
+		padding-right: 4vh;
+		background-position: top -10vh right 0vh;
+	}
+	z-index: 20;
 	position: fixed;
 	left: 0;
-	top: 4vh;
-	height: 100vh - 4vh;
+	top: 5vh;
+	height: 100vh - 5vh;
 	background-color: $background-color;
 	color: white;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-items: center;
-	border-right: 69px solid transparent;
-	border-image: url('../haikei.svg') 200;
-	border-image-outset: 42px;
+	background-image: url('../haikei.svg');
+	background-size: 8vh 142vh;
+	background-repeat: no-repeat;
 	animation: 0.5s ease-out 0s 1 slideInFromLeft;
-	border-image-outset: 0px;
 }
 
 .right-panel {
-	width: 60%;
+	width: 58%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 10px;
-	background-color: white;
+	background-color: $white;
 }
 
 a:link { 

@@ -27,6 +27,7 @@ fn binary_search_start(
 pub fn SearchCourse(
     courses: Result<Vec<CourseName>, ServerFnError>,
     set_selections: WriteSignal<Vec<ReactiveCourse>>,
+    set_active_tab: WriteSignal<String>,
 ) -> impl IntoView {
     let Ok(courses) = courses else {
         return None;
@@ -35,6 +36,8 @@ pub fn SearchCourse(
     let add_course = create_action(
         |(c, set): &(RwSignal<String>, WriteSignal<Vec<ReactiveCourse>>)| {
             let sigle = c.get_untracked();
+            let sigle = sigle.trim();
+            let sigle = sigle.to_uppercase();
             c.set("".to_string());
             let set = set.clone();
             async move {
@@ -52,6 +55,9 @@ pub fn SearchCourse(
     let sigle = create_rw_signal(String::new());
     let options = create_memo(move |_| {
         binary_search_start(&courses, sigle.get(), move || {
+            let active_tab = sigle.get_untracked();
+            let active_tab = active_tab.trim().to_uppercase();
+            set_active_tab.set(active_tab);
             add_course.dispatch((sigle, set_selections))
         })
         .iter()
