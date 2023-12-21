@@ -15,7 +15,7 @@ fn GroupsSettings(groups: Groups, open: Vec<RwSignal<bool>>) -> impl IntoView {
                 let open = open.clone();
                 view!{
                     <div class="row-container" class=("closed-group", !g.open)>
-                        <Checkbox value=open[i]>{g.number} "  " {g.periods.iter().map(|p| p.).collect_view}</Checkbox>
+                        <Checkbox value=open[i]>{g.number}</Checkbox>
                     </div>
                 }
             }).collect_view()
