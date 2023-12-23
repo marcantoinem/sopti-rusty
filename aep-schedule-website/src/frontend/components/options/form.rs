@@ -6,10 +6,16 @@ use leptos::*;
 use thaw::InputNumber;
 
 #[component]
-pub fn OptionsForms(action: Action<SchedulesOptions, Vec<Schedule>>) -> impl IntoView {
+pub fn OptionsForms(
+    action: Action<SchedulesOptions, Vec<Schedule>>,
+    set_hide: WriteSignal<bool>,
+) -> impl IntoView {
     let state = OptionState::default();
 
-    let on_submit = move |_| action.dispatch((&state).into());
+    let on_submit = move |_| {
+        set_hide(true);
+        action.dispatch((&state).into())
+    };
 
     view! {
         <h1>"Options de générations"</h1>

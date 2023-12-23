@@ -1,4 +1,13 @@
 $background-color: #001220;
 $highlight-color: #6cc96a; 
 $secondary-color: #a9d3c1;
-$white: #f9f9f9;
+$white: white;
+
+@keyframes fadeIn {
+	0% {
+	  opacity: 0;
+	}
+	100% {
+	  opacity: 1;
+	}
+}
