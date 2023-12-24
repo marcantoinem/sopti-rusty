@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use serde::{Deserialize, Serialize};
 
 // There is no course the saturday at Poly, but knowing them, it wouldn't be far
@@ -25,6 +27,20 @@ impl From<&str> for Day {
             "SAM" => Self::Sunday,
             "DIM" => Self::Saturday,
             _ => panic!("CSV de Poly est sus"),
+        }
+    }
+}
+
+impl Display for Day {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Day::Monday => f.write_str("lundi"),
+            Day::Tuesday => f.write_str("mardi"),
+            Day::Wednesday => f.write_str("mercredi"),
+            Day::Thursday => f.write_str("jeudi"),
+            Day::Friday => f.write_str("vendredi"),
+            Day::Sunday => f.write_str("samedi"),
+            Day::Saturday => f.write_str("dimanche"),
         }
     }
 }

@@ -29,7 +29,7 @@ pub fn Course<'a>(course: &'a TakenCourse) -> impl IntoView {
 
 fn style_p(period: &Period) -> String {
     let column = period.day as u8 + 3;
-    let hour = period.hours.starting_hour() + 1;
+    let hour = period.hours.starting_hour() - 7;
     let len = period.hours.len_hour();
     format!("grid-column:{};grid-row:{} / span {};", column, hour, len)
 }

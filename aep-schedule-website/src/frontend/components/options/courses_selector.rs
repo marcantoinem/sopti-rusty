@@ -16,7 +16,12 @@ fn GroupsSettings(groups: Groups, open: Vec<RwSignal<bool>>) -> impl IntoView {
                 let open_style = if g.open {"group-chip"} else {"group-chip closed-group"};
                 view!{
                     <CheckboxChip value=open class=open_style>
-                        <span>{g.number}</span>
+                        <span>{g.number}</span> <div class="col-container group-text-col">{g.periods.iter().map(|p| {
+                            view!{<div class="row-container group-text">
+                                <span>{p.day.to_string()}</span>
+                                <span class="period-group">{p.hours.to_string()}</span>
+                            </div>}
+                        }).collect_view()}</div>
                     </CheckboxChip>
                 }
             }).collect_view()
@@ -33,6 +38,8 @@ fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl Int
                 <div>
                     <h3>"Théorie"</h3>
                     <GroupsSettings groups=course.theo_groups open=course.theo_open/>
+                </div>
+                <div class="vertical-bar">
                 </div>
                 <div>
                     <h3>"Laboratoire"</h3>

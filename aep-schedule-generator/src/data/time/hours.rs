@@ -1,7 +1,7 @@
 // Hour start at 8 and stop and include 22
 // Each 1 represent an occupied 15min
 use serde::{Deserialize, Serialize};
-use std::fmt::Debug;
+use std::fmt::{Debug, Display};
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Deref};
 
 pub const NO_HOUR: Hours = Hours(0);
@@ -22,13 +22,41 @@ impl Deref for Hours {
     }
 }
 
+impl Display for Hours {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} à {}", self.starting_text(), self.end_text())
+    }
+}
+
 impl Hours {
+    pub fn start_minutes(&self) -> u8 {
+        self.0.trailing_zeros() as u8
+    }
+
+    pub fn last_minutes(&self) -> u8 {
+        self.0.ilog2() as u8
+    }
+
     pub fn starting_hour(&self) -> u8 {
-        (self.0).trailing_zeros() as u8 / 4 + 1
+        self.0.trailing_zeros() as u8 / 4 + 8
+    }
+
+    pub fn starting_text(&self) -> String {
+        let mut hour = self.starting_hour().to_string();
+        let minute = (self.start_minutes() & 0b11) * 15;
+        hour.push_str(&format!("h{:0>2}", minute));
+        hour
+    }
+
+    pub fn end_text(&self) -> String {
+        let mut hour = self.last_hour().to_string();
+        let minute = (self.last_minutes() & 0b11) * 15;
+        hour.push_str(&format!("h{:0>2}", minute));
+        hour
     }
 
     pub fn last_hour(&self) -> u8 {
-        (self.0).ilog2() as u8 / 4 + 1
+        self.0.ilog2() as u8 / 4 + 8
     }
 
     /// Only use on single block of time!

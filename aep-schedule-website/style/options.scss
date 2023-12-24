@@ -18,7 +18,8 @@
 }
 
 .card {
-  background-color: $highlight-color;
+  background-color: white;
+  color: black;
   text-align: center;
   border-radius: 5px;
   width: 80%;
@@ -56,7 +57,6 @@
 
 .three-col {
   display: grid;
-  margin: 10px;
   grid-template-columns: 1fr 2fr 1fr;
 }
 
@@ -78,9 +78,33 @@
 }
 
 .group-chip {
-  background-color: white;
+  background-color: $highlight-color;
   color: black;
   margin: 4px;
+  gap: 7px;
+  font-weight: normal;
+  overflow: hidden;
+}
+
+.group-text-col {
+  justify-content: space-between;
+  max-height: 22px;
+  flex-wrap: nowrap;
+}
+
+.group-text-col:hover {
+  max-height: fit-content;
+}
+
+.group-text {
+  gap: 5px;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.period-group {
+  margin-left: auto;
 }
 
 .closed-group {
@@ -89,6 +113,14 @@
 
 .input-item {
   width: 50%
+}
+
+.vertical-bar {
+  max-height: 100%;
+  width: 2px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  background-color: black;
 }
 
 .chips {

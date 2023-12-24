@@ -23,11 +23,13 @@ impl Group {
 
     pub fn add_period(&mut self, new_group: Group) {
         for new_period in new_group.periods {
-            if let Some(period) = self
-                .periods
-                .iter_mut()
-                .find(|p| p.day == new_period.day && p.room == new_period.room)
-            {
+            if let Some(period) = self.periods.iter_mut().find(|p| {
+                let new_hour = new_period.hours | p.hours;
+                p.day == new_period.day
+                    && p.room == new_period.room
+                    && (p.hours.start_minutes() + 4 == new_hour.start_minutes()
+                        || p.hours.last_minutes() + 4 == new_hour.last_minutes())
+            }) {
                 period.hours |= new_period.hours;
             } else {
                 self.periods.push(new_period);
