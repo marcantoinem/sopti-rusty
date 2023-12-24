@@ -1,9 +1,11 @@
-use crate::frontend::components::options::{
-    courses_selector::CoursesSelector, optimizations::SelectOptimizations, state::OptionState,
+use crate::frontend::components::{
+    common::number_input::NumberInput,
+    options::{
+        courses_selector::CoursesSelector, optimizations::SelectOptimizations, state::OptionState,
+    },
 };
 use aep_schedule_generator::algorithm::{generation::SchedulesOptions, schedule::Schedule};
 use leptos::*;
-use thaw::InputNumber;
 
 #[component]
 pub fn OptionsForms(
@@ -21,8 +23,7 @@ pub fn OptionsForms(
         <h1>"Options de générations"</h1>
         <CoursesSelector state=state/>
         <div class="bottom col-container">
-            <p>"Nombre de conflits maximum"</p>
-            <div class="input-item"><InputNumber value=state.max_nb_conflicts step=1/></div>
+            <div class="row-container input-item"><p>"Nombre de conflits maximum"</p><NumberInput value=state.max_nb_conflicts max=127/></div>
             <SelectOptimizations state=state/>
             <button on:click=on_submit class="submit">"Générer les horaires"</button>
         </div>

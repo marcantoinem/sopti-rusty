@@ -18,8 +18,9 @@
 }
 
 .card {
-  background-color: white;
-  color: black;
+  background-color: #003c4c;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  color: white;
   text-align: center;
   border-radius: 5px;
   width: 80%;
@@ -79,7 +80,7 @@
 
 .group-chip {
   background-color: $highlight-color;
-  color: black;
+  color: white;
   margin: 4px;
   gap: 7px;
   font-weight: normal;
@@ -112,7 +113,10 @@
 }
 
 .input-item {
-  width: 50%
+  width: 60%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .vertical-bar {
@@ -120,12 +124,13 @@
   width: 2px;
   border-radius: 10px;
   margin-bottom: 5px;
-  background-color: black;
+  background-color: white;
 }
 
 .chips {
   padding: 5px 8px;
   border-radius: 15px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   font-size: 16px;
   display: flex;
   align-items: center;
@@ -157,4 +162,9 @@
   border: none;
   display: flex;
   align-items: center;
+}
+
+.number-input {
+  height: 22pt;
+  margin-left: auto;
 }
