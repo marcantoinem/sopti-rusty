@@ -1,6 +1,7 @@
 @import 'schedule.scss';
 @import 'options.scss';
 @import 'constant.scss';
+@import 'common.scss';
 
 body {
 	font-family: sans-serif;
@@ -102,8 +103,8 @@ section {
 
 #go-back {
 	position: fixed;
-	top: 8vh;
-	left: 2vh;
+	top: 7vh;
+	left: 0.5vh;
 	width: 5vh;
 	height: 5vh;
 	background-color: $background-color;

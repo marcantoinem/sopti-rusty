@@ -1,0 +1,46 @@
+.search-container {
+    position: relative;
+}
+
+.hidden {
+    display: none;
+}
+
+.search-container > input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 4pt;
+}
+
+input:focus ~ .result-box {
+    display: block;
+}
+
+.result-box:hover {
+    display: block;
+}
+
+.result-box {
+    color: black;
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    max-height: 100pt;
+    display: none;
+    left: 0;
+    right: 0;
+    padding: 0;
+    overflow-y: scroll;
+    z-index: 69;
+}
+
+.result-box > div {
+    cursor: pointer;
+    background-color: #fff;
+    padding: 4pt;
+    border-bottom: 1px solid #d4d4d4; 
+}
+
+.result-box > div:hover {
+    background-color: #d4d4d4;
+}
