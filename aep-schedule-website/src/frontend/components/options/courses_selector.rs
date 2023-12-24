@@ -1,22 +1,23 @@
 use super::state::OptionState;
 use super::state::ReactiveCourse;
 use crate::backend::routes::get_courses;
+use crate::frontend::components::common::checkbox::CheckboxChip;
 use crate::frontend::components::options::search::SearchCourse;
 use aep_schedule_generator::data::groups::Groups;
 use leptos::*;
 use phosphor_leptos::IconWeight;
 use phosphor_leptos::X;
-use thaw::Checkbox;
 
 #[component]
 fn GroupsSettings(groups: Groups, open: Vec<RwSignal<bool>>) -> impl IntoView {
     view! {
         {groups.into_iter().enumerate().map(|(i, g)| {
-                let open = open.clone();
+                let open = open[i];
+                let open_style = if g.open {"group-chip"} else {"group-chip closed-group"};
                 view!{
-                    <div class="row-container" class=("closed-group", !g.open)>
-                        <Checkbox value=open[i]>{g.number}</Checkbox>
-                    </div>
+                    <CheckboxChip value=open class=open_style>
+                        <span>{g.number}</span>
+                    </CheckboxChip>
                 }
             }).collect_view()
         }
@@ -62,7 +63,7 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
                     let add_hidden = move || sigle == active_tab.get();
                     let sigle = course.sigle.to_string();
                     view!{
-                        <button class="tab-button" class=("tab-selected", add_hidden) id=&sigle on:click={
+                        <button class="tab-button chips" class=("tab-selected", add_hidden) id=&sigle on:click={
                             let sigle = sigle.clone();
                             move |_| set_active_tab.set(sigle.clone())
                         }>

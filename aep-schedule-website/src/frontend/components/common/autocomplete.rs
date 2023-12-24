@@ -41,6 +41,7 @@ pub fn AutoComplete<F: FnMut(String) -> () + Copy + Clone + 'static>(
     suggestion_list: Vec<AutoCompleteOption>,
     #[prop(optional, into)] placeholder: String,
     #[prop(optional, into)] class: String,
+    id: &'static str,
     mut submit: F,
 ) -> impl IntoView {
     let input = create_rw_signal(String::new());
@@ -56,7 +57,7 @@ pub fn AutoComplete<F: FnMut(String) -> () + Copy + Clone + 'static>(
 
     view! {
         <div class="search-container" class=class>
-            <input type="text" on:input=on_input placeholder=placeholder prop:value=input/>
+            <input type="text" on:input=on_input placeholder=placeholder prop:value=input id=id/>
             <div class="result-box">
                 {suggestions.into_iter().enumerate().map(|(i, autocomplete)| view!{
                     <div
