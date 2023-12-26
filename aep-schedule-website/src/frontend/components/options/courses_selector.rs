@@ -2,6 +2,7 @@ use super::state::OptionState;
 use super::state::ReactiveCourse;
 use crate::backend::routes::get_courses;
 use crate::frontend::components::common::checkbox::CheckboxChip;
+use crate::frontend::components::common::tab::Tab;
 use crate::frontend::components::options::search::SearchCourse;
 use aep_schedule_generator::data::groups::Groups;
 use leptos::*;
@@ -32,7 +33,7 @@ fn GroupsSettings(groups: Groups, open: Vec<RwSignal<bool>>) -> impl IntoView {
 #[component]
 fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl IntoView {
     view! {
-        <div class="relative card tab tab-width" class=("hidden", {let sigle = course.sigle.to_string(); move || sigle.clone() != active_tab.get()})>
+        <Tab active_tab tab_id=course.sigle.to_string()>
             <p>{course.name}</p>
             <div class="row-container row-evenly">
                 <div>
@@ -46,7 +47,7 @@ fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl Int
                     <GroupsSettings groups=course.lab_groups open=course.lab_open/>
                 </div>
             </div>
-        </div>
+        </Tab>
     }
 }
 
