@@ -34,7 +34,7 @@ impl Hours {
     }
 
     pub fn last_minutes(&self) -> u8 {
-        self.0.ilog2() as u8
+        self.0.ilog2() as u8 + 1
     }
 
     pub fn starting_hour(&self) -> u8 {
@@ -56,7 +56,7 @@ impl Hours {
     }
 
     pub fn last_hour(&self) -> u8 {
-        self.0.ilog2() as u8 / 4 + 8
+        self.last_minutes() / 4 + 8
     }
 
     /// Only use on single block of time!
