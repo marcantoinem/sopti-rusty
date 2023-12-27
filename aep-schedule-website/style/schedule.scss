@@ -1,7 +1,7 @@
 @import 'constant.scss';
 
 .schedule-container {
-width: 83%;
+  width: 83%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -14,7 +14,7 @@ width: 83%;
 
 $days-height: 2em;
 $time-width: 2em;
-$hours: repeat(14, 2em);
+$hours: repeat(28, 1em);
 $days: $time-width 10px repeat(5, 1fr);
 
 body {
@@ -43,10 +43,6 @@ body {
   width: 100%;
 }
 
-.day {
-  border-left: 1px solid $highlight-color;
-}
-
 .content {
   display: grid;
   grid-template-columns: $days;
@@ -66,7 +62,7 @@ body {
 
 .col {
   border-right: 1px solid black;
-  grid-row: 1 / span 24;
+  grid-row: 1 / span 32;
   grid-column: span 1;
 }
 

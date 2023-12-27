@@ -6,6 +6,7 @@ use crate::frontend::components::common::tab::Tab;
 use crate::frontend::components::options::search::SearchCourse;
 use aep_schedule_generator::data::groups::Groups;
 use leptos::*;
+use phosphor_leptos::CalendarX;
 use phosphor_leptos::IconWeight;
 use phosphor_leptos::X;
 
@@ -63,6 +64,12 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
             <SearchCourse courses=courses.clone() set_selections set_active_tab/>
         </Await>
         <div class="row-container row-center tab-width">
+            <button class="tab-button chips" class=("tab-selected", move || active_tab.get() == "") id="personal" on:click={
+                move |_| set_active_tab.set("".to_string())
+            }>
+                <CalendarX weight=IconWeight::Regular size="16px"/>
+                {"Horaire personnel"}
+            </button>
             <For
                 each=selections
                 key=|c| c.sigle.clone()
@@ -87,14 +94,15 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
                 }
             />
         </div>
+        <Tab active_tab tab_id="".to_string()>
+            <p>"Schedule will be put there."</p>
+        </Tab>
         <For
             each=selections
             key=|c| c.sigle.clone()
-            children=move |course| {
-                view!{
-                    <CourseTab course active_tab/>
-                }
-            }
-        />
+            let:course
+        >
+            <CourseTab course active_tab/>
+        </For>
     }
 }

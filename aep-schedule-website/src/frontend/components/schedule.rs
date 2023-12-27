@@ -29,9 +29,14 @@ pub fn Course<'a>(course: &'a TakenCourse) -> impl IntoView {
 
 fn style_p(period: &Period) -> String {
     let column = period.day as u8 + 3;
-    let hour = period.hours.starting_hour() - 7;
+    let hour = 2 * (period.hours.starting_hour() - 6);
     let len = period.hours.len_hour();
-    format!("grid-column:{};grid-row:{} / span {};", column, hour, len)
+    format!(
+        "grid-column:{};grid-row:{} / span {};",
+        column,
+        hour,
+        len * 2
+    )
 }
 
 fn group_style(group: &Group, period: &Period) -> String {
@@ -50,7 +55,7 @@ fn group_style(group: &Group, period: &Period) -> String {
 #[component]
 pub fn ScheduleComponent(schedule: Schedule) -> impl IntoView {
     const HOURS: [&str; 14] = [
-        "8:30", "9:30", "10:30", "11:30", "12:45", "13:45", "14:45", "15:45", "16:45", "17:45",
+        "8:30", "9:30", "10:30", "11:30", "12:30", "13:30", "14:30", "15:30", "16:30", "17:30",
         "18:30", "19:30", "20:30", "21:30",
     ];
     const DAY_WEEK: [&str; 5] = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
@@ -66,10 +71,10 @@ pub fn ScheduleComponent(schedule: Schedule) -> impl IntoView {
                     {DAY_WEEK.map(|d| view!{<div class="day">{d}</div>})}
                 </div>
                 <div class="content">
-                    {HOURS.map(|h| view!{<div class="time">{h}</div>})}
+                    {HOURS.into_iter().enumerate().map(|(i, h)| view!{<div class="time" style={format!("grid-row:{}", 2 * i + 2)}>{h}</div>}).collect_view()}
                     <div class="filler-col"></div>
                     {(3..(DAY_WEEK.len()+2)).map(|i| view!{<div class="col" style={format!("grid-column:{i}")}></div>}).collect_view()}
-                    {(1..=HOURS.len()).map(|i| view!{<div class="row" style={format!("grid-row:{i}")}></div>}).collect_view()}
+                    {(1..=HOURS.len()).map(|i| view!{<div class="row" style={format!("grid-row:{}/ span 2", 2 * i - 1)}></div>}).collect_view()}
                     {schedule.courses.iter().map(|c| {
                         view!{
                             {c.lab_group.as_ref().map(|g| Some(g.periods.iter().map(|p| {
