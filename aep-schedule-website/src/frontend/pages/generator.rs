@@ -1,7 +1,7 @@
 use crate::frontend::components::{options::form::OptionsForms, schedules::SchedulesComponent};
 use aep_schedule_generator::algorithm::generation::SchedulesOptions;
 use leptos::*;
-use phosphor_leptos::{CaretDoubleRight, IconWeight};
+use phosphor_leptos::{CaretDoubleRight, IconWeight, Bug};
 
 #[component]
 pub fn GeneratorPage() -> impl IntoView {
@@ -12,12 +12,13 @@ pub fn GeneratorPage() -> impl IntoView {
     });
     let (hide, set_hide) = create_signal(false);
     view! {
-            <aside class="left-panel" class=("hide-left-panel", hide)>
-                <OptionsForms action=action set_hide/>
-            </aside>
-            <section class="right-panel">
-                <SchedulesComponent read_signal=action.value()/>
-            </section>
-            <button on:click=move |_| {set_hide(false)} id="go-back"><CaretDoubleRight weight=IconWeight::Regular size="3vh"/></button>
+        <aside class="left-panel" class=("hide-left-panel", hide)>
+            <OptionsForms action=action set_hide/>
+        </aside>
+        <section class="right-panel">
+            <SchedulesComponent read_signal=action.value()/>
+        </section>
+        <button on:click=move |_| {set_hide(false)} id="go-back"><CaretDoubleRight weight=IconWeight::Regular size="3vh"/></button>
+        <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty/-/issues/new" target="_blank" id="bug-report"><Bug weight=IconWeight::Regular size="3vh"/><span>"Reporter un bug"</span></a>
     }
 }
