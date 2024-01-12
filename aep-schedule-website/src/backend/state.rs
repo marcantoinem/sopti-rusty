@@ -30,7 +30,21 @@ cfg_if::cfg_if! { if #[cfg(feature = "ssr")] {
     }
 
     impl AppState {
-        pub fn new(leptos_options: LeptosOptions, routes: Vec<RouteListing>) -> Self {
+        pub async fn new(leptos_options: LeptosOptions, routes: Vec<RouteListing>) -> Self {
+            let client = reqwest::Client::builder()
+                .user_agent("NCSA Mosaic/1.0 (X11;SunOS 4.1.4 sun4m)")
+                .build()
+                .unwrap();
+
+            let horsage = client.get("https://cours.polymtl.ca/Horaire/public/horsage.csv").send().await.unwrap();
+            let horsage = horsage.text().await.unwrap();
+
+
+            let fermes = client.get("https://cours.polymtl.ca/Horaire/public/fermes.csv").send().await.unwrap();
+            let fermes = fermes.text().await.unwrap();
+
+            fs::write("horsage.csv", horsage).expect("Unable to write file");
+            fs::write("fermes.csv", fermes).expect("Unable to write file");
             let horsage = BufReader::new(File::open("horsage.csv").unwrap());
             let fermes = BufReader::new(File::open("fermes.csv").unwrap());
             let courses = Arc::new(RwLock::new(Courses::from_csv(horsage, fermes)));
