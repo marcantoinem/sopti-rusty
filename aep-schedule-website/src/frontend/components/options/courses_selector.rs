@@ -57,7 +57,7 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
     let (active_tab, set_active_tab) = create_signal("".to_string());
     view! {
         <Await
-            future=|| get_courses()
+            future=get_courses
             let:courses
         >
             <SearchCourse courses=courses.clone() set_selections set_active_tab/>
