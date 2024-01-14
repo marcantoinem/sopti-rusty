@@ -27,8 +27,8 @@ impl Group {
                 let new_hour = new_period.hours | p.hours;
                 p.day == new_period.day
                     && p.room == new_period.room
-                    && (p.hours.start_minutes() + 4 == new_hour.start_minutes()
-                        || p.hours.last_minutes() + 4 == new_hour.last_minutes())
+                    && (p.hours.start() + 4 == new_hour.start()
+                        || p.hours.end() + 4 == new_hour.end())
             }) {
                 period.hours |= new_period.hours;
             } else {

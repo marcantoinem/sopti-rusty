@@ -22,8 +22,8 @@ impl Display for WeekNumber {
 impl From<&str> for WeekNumber {
     fn from(week_nb: &str) -> Self {
         match week_nb {
-            "I" => WeekNumber::B1,
-            "P" => WeekNumber::B2,
+            "I" | "B1" => WeekNumber::B1,
+            "P" | "B2" => WeekNumber::B2,
             _ => WeekNumber::Both,
         }
     }

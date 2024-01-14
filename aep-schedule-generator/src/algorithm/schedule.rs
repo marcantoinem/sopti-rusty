@@ -61,6 +61,7 @@ impl Display for Schedule {
         writeln!(f, "{}", to_print)
     }
 }
+
 impl PartialOrd for Schedule {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         self.score.partial_cmp(&other.score)

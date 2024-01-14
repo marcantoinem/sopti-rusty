@@ -29,38 +29,46 @@ impl Display for Hours {
 }
 
 impl Hours {
-    pub fn start_minutes(&self) -> u8 {
+    pub fn start(self) -> u8 {
         self.0.trailing_zeros() as u8
     }
 
-    pub fn last_minutes(&self) -> u8 {
-        self.0.ilog2() as u8 + 1
+    pub fn end(self) -> u8 {
+        (self.0.ilog2() + 1) as u8
     }
 
-    pub fn starting_hour(&self) -> u8 {
-        self.0.trailing_zeros() as u8 / 4 + 8
+    pub fn start_minutes(self) -> u8 {
+        (self.start() & 0b11) * 15
     }
 
-    pub fn starting_text(&self) -> String {
+    pub fn last_minutes(self) -> u8 {
+        (self.end() & 0b11) * 15
+    }
+
+    pub fn starting_hour(self) -> u8 {
+        (self.start() >> 2) + 8
+    }
+
+    pub fn last_hour(self) -> u8 {
+        (self.end() >> 2) + 8
+    }
+
+    pub fn starting_text(self) -> String {
         let mut hour = self.starting_hour().to_string();
         let minute = (self.start_minutes() & 0b11) * 15;
         hour.push_str(&format!("h{:0>2}", minute));
         hour
     }
 
-    pub fn end_text(&self) -> String {
+    pub fn end_text(self) -> String {
         let mut hour = self.last_hour().to_string();
         let minute = (self.last_minutes() & 0b11) * 15;
         hour.push_str(&format!("h{:0>2}", minute));
         hour
     }
 
-    pub fn last_hour(&self) -> u8 {
-        self.last_minutes() / 4 + 8
-    }
-
     /// Only use on single block of time!
-    pub fn len_hour(&self) -> u8 {
+    pub fn len_hour(self) -> u8 {
         self.last_hour() - self.starting_hour()
     }
 }
