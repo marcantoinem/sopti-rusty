@@ -35,6 +35,7 @@ input:focus ~ .result-box {
 }
 
 .result-box > div {
+    z-index: 70;
     cursor: pointer;
     background-color: #fff;
     padding: 4pt;

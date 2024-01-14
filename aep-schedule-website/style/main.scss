@@ -24,6 +24,10 @@ nav {
 	z-index: 20;
 }
 
+nav > a {
+	display: block;
+}
+
 @keyframes slideInFromLeft {
 	0% {
 	  transform: translateX(-100%);
@@ -118,6 +122,24 @@ section {
 	cursor: pointer;
 }
 
+#bug-report {
+	position: fixed;
+	bottom: 1vh;
+	padding: 0px 10px;
+	right: 4vh;
+	height: 5vh;
+	background-color: $highlight-color;
+	z-index: 100;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	color: white;
+	font-weight: bolder;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
 a:link { 
 	text-decoration: none;
 }
@@ -140,4 +162,12 @@ a:hover {
 
 a {
 	color: black;
+}
+
+.sources {
+	display: flex;
+	height: 100%;
+	gap: 4px;
+	margin-left: auto;
+	align-items: center;
 }

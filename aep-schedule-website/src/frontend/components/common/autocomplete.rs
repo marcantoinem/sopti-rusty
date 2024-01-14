@@ -13,7 +13,7 @@ impl AutoCompleteOption {
     }
 }
 
-fn get_suggestions<F: FnMut(String) -> () + 'static>(
+fn get_suggestions<F: FnMut(String) + 'static>(
     sorted_possibilities: Vec<AutoCompleteOption>,
     input: RwSignal<String>,
     input_value: String,
@@ -37,7 +37,7 @@ fn get_suggestions<F: FnMut(String) -> () + 'static>(
 }
 
 #[component]
-pub fn AutoComplete<F: FnMut(String) -> () + Copy + Clone + 'static>(
+pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
     suggestion_list: Vec<AutoCompleteOption>,
     #[prop(optional, into)] placeholder: String,
     #[prop(optional, into)] class: String,

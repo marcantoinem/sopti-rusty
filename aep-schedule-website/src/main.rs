@@ -20,7 +20,7 @@ cfg_if::cfg_if!(if #[cfg(feature = "ssr")] {
         let conf = get_configuration(None).await.unwrap();
         let leptos_options = conf.leptos_options;
         let routes = generate_route_list(App);
-        let state = AppState::new(leptos_options.clone(), routes.clone());
+        let state = AppState::new(leptos_options.clone(), routes.clone()).await;
         let addr = leptos_options.site_addr;
         // build our application with a route
         let app = Router::new()

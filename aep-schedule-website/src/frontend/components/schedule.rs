@@ -12,11 +12,11 @@ pub fn Course<'a>(course: &'a TakenCourse) -> impl IntoView {
     let lab_group = course
         .lab_group
         .as_ref()
-        .and_then(|g| Some(format!("L: {}", g.number)));
+        .map(|g| format!("L: {}", g.number));
     let theo_group = course
         .theo_group
         .as_ref()
-        .and_then(|g| Some(format!("C: {}", g.number)));
+        .map(|g| format!("C: {}", g.number));
     view! {
         <tr>
             <td>{course.sigle.to_string()}</td>
