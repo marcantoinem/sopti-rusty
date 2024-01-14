@@ -3,12 +3,19 @@ use super::{
     taken_course::TakenCourse,
 };
 use crate::data::time::{
+    calendar::{date_to_timestamp, Calendar},
     hours::{Hours, NO_HOUR},
     period::Period,
     weeks::Weeks,
 };
+use ical::{generator::IcalEventBuilder, ical_property};
+use ical::{
+    generator::{Emitter, IcalCalendarBuilder},
+    property::Property,
+};
 use serde::{Deserialize, Serialize};
 use std::{cmp::Ordering, fmt::Display};
+use uuid::Uuid;
 
 #[derive(Deserialize, Serialize, PartialEq, Debug, Clone)]
 pub struct Schedule {
@@ -161,5 +168,51 @@ impl Schedule {
         self.score.day_off += self.week.get_day_off(period);
         self.score.morning_hours += self.week.get_morning(period);
         self.score.afternoon_hours += self.week.get_finish_early(period);
+    }
+    pub fn generate_ics(&self, calendar: &Calendar) -> String {
+        let mut cal = IcalCalendarBuilder::version("2.0")
+            .gregorian()
+            .prodid("-//ical-rs//github.com//")
+            .build();
+
+        for course in &self.courses {
+            if let Some(lab) = &course.lab_group {
+                for p in lab.periods.iter() {
+                    calendar.iter_apply(p.week_nb, p.day, |d| {
+                        let start =
+                            date_to_timestamp(&d, p.hours.starting_hour(), p.hours.start_minutes());
+                        let end =
+                            date_to_timestamp(&d, p.hours.last_hour(), p.hours.last_minutes());
+                        let event = IcalEventBuilder::tzid("America/New_York")
+                            .uid(Uuid::new_v4())
+                            .changed(chrono::Local::now().format("%Y%m%dT%H%M%S").to_string())
+                            .start(start)
+                            .end(end)
+                            .set(ical_property!("SUMMARY", format!("{} - L", course.sigle)))
+                            .build();
+                        cal.events.push(event);
+                    });
+                }
+            }
+            if let Some(theo) = &course.theo_group {
+                for p in theo.periods.iter() {
+                    calendar.iter_apply(p.week_nb, p.day, |d| {
+                        let start =
+                            date_to_timestamp(&d, p.hours.starting_hour(), p.hours.start_minutes());
+                        let end =
+                            date_to_timestamp(&d, p.hours.last_hour(), p.hours.last_minutes());
+                        let event = IcalEventBuilder::tzid("America/New_York")
+                            .uid(Uuid::new_v4())
+                            .changed(chrono::Local::now().format("%Y%m%dT%H%M%S").to_string())
+                            .start(start)
+                            .end(end)
+                            .set(ical_property!("SUMMARY", format!("{} - T", course.sigle)))
+                            .build();
+                        cal.events.push(event);
+                    });
+                }
+            }
+        }
+        cal.generate()
     }
 }

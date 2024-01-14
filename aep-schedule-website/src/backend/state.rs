@@ -26,6 +26,7 @@ cfg_if::cfg_if! { if #[cfg(feature = "ssr")] {
     pub struct AppState {
         pub leptos_options: LeptosOptions,
         pub courses: Arc<RwLock<Courses>>,
+        pub calendar: Arc<RwLock<Calendar>>,
         pub routes: Vec<RouteListing>,
     }
 
