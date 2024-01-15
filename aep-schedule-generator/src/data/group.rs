@@ -28,8 +28,8 @@ impl Group {
                 let new_hour = new_period.hours | p.hours;
                 let is_mergeable = p.day == new_period.day
                     && p.room == new_period.room
-                    && (p.hours.start_minutes() == new_hour.start_minutes() + 4
-                        || p.hours.last_minutes() + 4 == new_hour.last_minutes());
+                    && (p.hours.start() == new_hour.start() + 4
+                        || p.hours.end() + 4 == new_hour.end());
                 let keep = !is_mergeable || new_hours == Hours::default();
                 if is_mergeable {
                     new_hours |= new_hour;
@@ -46,8 +46,8 @@ impl Group {
                         let new_hour = new_period.hours | p.hours;
                         p.day == new_period.day
                             && p.room == new_period.room
-                            && (p.hours.start_minutes() == new_hour.start_minutes() + 4
-                                || p.hours.last_minutes() + 4 == new_hour.last_minutes())
+                            && (p.hours.start() == new_hour.start() + 4
+                                || p.hours.end() + 4 == new_hour.end())
                     })
                     .unwrap();
                 first_period.hours |= new_hours;
