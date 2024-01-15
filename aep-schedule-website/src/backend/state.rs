@@ -9,6 +9,7 @@ cfg_if::cfg_if! { if #[cfg(feature = "ssr")] {
     use std::fs::File;
     use std::fs;
     use aep_schedule_generator::data::courses::Courses;
+    use aep_schedule_generator::data::time::calendar::Calendar;
     use axum::{
         response::{IntoResponse},
         extract::{Path, State, RawQuery},
@@ -49,9 +50,14 @@ cfg_if::cfg_if! { if #[cfg(feature = "ssr")] {
             let horsage = BufReader::new(File::open("horsage.csv").unwrap());
             let fermes = BufReader::new(File::open("fermes.csv").unwrap());
             let courses = Arc::new(RwLock::new(Courses::from_csv(horsage, fermes)));
+
+            let alternance = BufReader::new(File::open("alternance.csv").unwrap());
+            let calendar = Arc::new(RwLock::new(Calendar::from_csv(alternance)));
+
             Self {
                 routes,
                 leptos_options,
+                calendar,
                 courses,
             }
         }
@@ -84,6 +90,9 @@ cfg_if::cfg_if! { if #[cfg(feature = "ssr")] {
         }
         pub async fn courses() -> Result<Arc<RwLock<Courses>>, ServerFnError> {
             Ok(use_context::<Arc<RwLock<Courses>>>().ok_or(ServerFnError::ServerError("Courses not available".to_string()))?)
+        }
+        pub async fn calendar() -> Result<Arc<RwLock<Calendar>>, ServerFnError> {
+            Ok(use_context::<Arc<RwLock<Calendar>>>().ok_or(ServerFnError::ServerError("Courses not available".to_string()))?)
         }
     }
 

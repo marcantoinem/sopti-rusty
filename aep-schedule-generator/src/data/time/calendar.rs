@@ -1,10 +1,12 @@
 use std::{array, io::BufRead};
 
+use serde::{Deserialize, Serialize};
+
 use super::{day::Day, week_number::WeekNumber};
 
 type Date = String;
 
-#[derive(Default)]
+#[derive(Clone, Default, Debug, Serialize, Deserialize)]
 pub struct Calendar {
     weeks: [[Vec<Date>; 7]; 2],
 }
