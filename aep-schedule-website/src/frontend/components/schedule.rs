@@ -2,10 +2,11 @@ use aep_schedule_generator::{
     algorithm::{schedule::Schedule, taken_course::TakenCourse},
     data::{
         group::Group,
-        time::{period::Period, week_number::WeekNumber},
+        time::{calendar::Calendar, period::Period, week_number::WeekNumber},
     },
 };
-use leptos::*;
+use leptos::{html::A, *};
+use url::form_urlencoded;
 
 #[component]
 pub fn Course<'a>(course: &'a TakenCourse) -> impl IntoView {
@@ -53,13 +54,25 @@ fn group_style(group: &Group, period: &Period) -> String {
 }
 
 #[component]
-pub fn ScheduleComponent(schedule: Schedule) -> impl IntoView {
+pub fn ScheduleComponent(schedule: Schedule, calendar: Calendar) -> impl IntoView {
     const HOURS: [&str; 14] = [
         "8:30", "9:30", "10:30", "11:30", "12:30", "13:30", "14:30", "15:30", "16:30", "17:30",
         "18:30", "19:30", "20:30", "21:30",
     ];
     const DAY_WEEK: [&str; 5] = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
+
+    let schedule2 = schedule.clone();
+    let (download, set_download) = create_signal("".to_string());
+    let link: NodeRef<A> = create_node_ref();
+
     view! {
+        <button on:click=move |_| {
+            let ics = schedule2.generate_ics(&calendar);
+            let url: String = form_urlencoded::byte_serialize(ics.as_bytes()).collect();
+            set_download("data:text/plain;charset=utf-8,".to_string() + &url);
+            link().unwrap().click();
+        }>"Générer calendrier"</button>
+        <a class="hidden" download="cours.ics" href=move || download.get() node_ref=link></a>
         <div class="schedule-container">
             <table class="cours">
                 {schedule.courses.iter().map(|c| view!{<Course course=c/>}).collect_view()}

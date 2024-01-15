@@ -92,13 +92,14 @@ cfg_if::cfg_if! { if #[cfg(feature = "ssr")] {
             Ok(use_context::<Arc<RwLock<Courses>>>().ok_or(ServerFnError::ServerError("Courses not available".to_string()))?)
         }
         pub async fn calendar() -> Result<Arc<RwLock<Calendar>>, ServerFnError> {
-            Ok(use_context::<Arc<RwLock<Calendar>>>().ok_or(ServerFnError::ServerError("Courses not available".to_string()))?)
+            Ok(use_context::<Arc<RwLock<Calendar>>>().ok_or(ServerFnError::ServerError("Calendar not available".to_string()))?)
         }
     }
 
     pub async fn server_fn_handler(State(app_state): State<AppState>, path: Path<String>, headers: HeaderMap, raw_query: RawQuery, request: Request<AxumBody>) -> impl IntoResponse {
         handle_server_fns_with_context(path, headers, raw_query, move || {
             provide_context(app_state.courses.clone());
+            provide_context(app_state.calendar.clone());
         }, request).await
     }
 
@@ -107,6 +108,7 @@ cfg_if::cfg_if! { if #[cfg(feature = "ssr")] {
             app_state.routes.clone(),
             move || {
                 provide_context(app_state.courses.clone());
+                provide_context(app_state.calendar.clone());
             },
             App
         );
