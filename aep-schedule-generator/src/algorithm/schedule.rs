@@ -188,7 +188,11 @@ impl Schedule {
                             .changed(chrono::Local::now().format("%Y%m%dT%H%M%S").to_string())
                             .start(start)
                             .end(end)
-                            .set(ical_property!("SUMMARY", format!("{} - L", course.sigle)))
+                            .set(ical_property!(
+                                "SUMMARY",
+                                format!("Laboratoire {}", course.sigle)
+                            ))
+                            .set(ical_property!("DESCRIPTION", p.room.to_string()))
                             .build();
                         cal.events.push(event);
                     });
@@ -206,7 +210,11 @@ impl Schedule {
                             .changed(chrono::Local::now().format("%Y%m%dT%H%M%S").to_string())
                             .start(start)
                             .end(end)
-                            .set(ical_property!("SUMMARY", format!("{} - T", course.sigle)))
+                            .set(ical_property!(
+                                "SUMMARY",
+                                format!("Théorie {}", course.sigle)
+                            ))
+                            .set(ical_property!("DESCRIPTION", p.room.to_string()))
                             .build();
                         cal.events.push(event);
                     });

@@ -29,7 +29,7 @@ http = "0.2.8"
 serde = { version = "1.0.193", features = ["derive"] }
 reqwest = { version = "0.11.22", optional = true }
 phosphor-leptos = "0.2.0"
-url = "1.2.1"
+url-escape = "0.1.1"
 
 [features]
 hydrate = ["leptos/hydrate", "leptos_meta/hydrate", "leptos_router/hydrate"]

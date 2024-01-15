@@ -6,7 +6,7 @@ use aep_schedule_generator::{
     },
 };
 use leptos::{html::A, *};
-use url::form_urlencoded;
+use phosphor_leptos::{Download, IconWeight};
 
 #[component]
 pub fn Course<'a>(course: &'a TakenCourse) -> impl IntoView {
@@ -66,12 +66,6 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Calendar) -> impl IntoVie
     let link: NodeRef<A> = create_node_ref();
 
     view! {
-        <button on:click=move |_| {
-            let ics = schedule2.generate_ics(&calendar);
-            let url: String = form_urlencoded::byte_serialize(ics.as_bytes()).collect();
-            set_download("data:text/plain;charset=utf-8,".to_string() + &url);
-            link().unwrap().click();
-        }>"Générer calendrier"</button>
         <a class="hidden" download="cours.ics" href=move || download.get() node_ref=link></a>
         <div class="schedule-container">
             <table class="cours">
@@ -101,5 +95,14 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Calendar) -> impl IntoVie
                 </div>
             </div>
         </div>
+        <button class="button-download" on:click=move |_| {
+            let ics = schedule2.generate_ics(&calendar);
+            let url = url_escape::encode_fragment(&ics);
+            set_download("data:text/plain;charset=utf-8,".to_string() + &url);
+            link().unwrap().click();
+        }>
+            <Download weight=IconWeight::Regular size="3vh"/>
+            <span>"Télécharger le calendrier de cet horaire"</span>
+        </button>
     }
 }

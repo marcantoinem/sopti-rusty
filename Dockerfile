@@ -33,6 +33,7 @@ FROM alpine as runner
 COPY --from=builder /app/aep-schedule-website/target/release/aep-schedule-website /app/
 # /target/site contains our JS/WASM/CSS, etc.
 COPY --from=builder /app/aep-schedule-website/target/site /app/site
+COPY --from=builder /app/aep-schedule-website/alternance.csv /app/
 
 WORKDIR /app
 # Set any required env variables and
