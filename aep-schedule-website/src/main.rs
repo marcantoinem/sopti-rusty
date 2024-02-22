@@ -34,8 +34,9 @@ cfg_if::cfg_if!(if #[cfg(feature = "ssr")] {
         // run our app with hyper
         // `axum::Server` is a re-export of `hyper::Server`
         log::info!("listening on http://{}", &addr);
+        let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
         let _ = tokio::join!(
-            axum::Server::bind(&addr).serve(app.into_make_service()),
+            axum::serve(listener, app.into_make_service()),
             state.update_courses()
         );
     }
