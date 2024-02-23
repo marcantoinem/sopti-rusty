@@ -3,9 +3,10 @@ cfg_if::cfg_if!(if #[cfg(feature = "ssr")] {
         routing::get,
         Router,
     };
+    use std::future::IntoFuture;
     use leptos_axum::{generate_route_list, LeptosRoutes};
-    use leptos::{get_configuration};
-    use aep_schedule_website::fileserv::file_and_error_handler;
+    use leptos::*;
+    use aep_schedule_website::backend::fileserv::file_and_error_handler;
     use aep_schedule_website::frontend::app::App;
     use aep_schedule_website::backend::state::{AppState, server_fn_handler, leptos_routes_handler};
 
@@ -36,7 +37,7 @@ cfg_if::cfg_if!(if #[cfg(feature = "ssr")] {
         log::info!("listening on http://{}", &addr);
         let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
         let _ = tokio::join!(
-            axum::serve(listener, app.into_make_service()),
+            axum::serve(listener, app.into_make_service()).into_future(),
             state.update_courses()
         );
     }

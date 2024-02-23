@@ -1,14 +1,15 @@
 use crate::frontend::app::App;
 use aep_schedule_generator::data::courses::Courses;
 use aep_schedule_generator::data::time::calendar::Calendar;
-use axum::extract::FromRef;
-use axum::response::Response;
 use axum::{
     body::Body as AxumBody,
-    extract::{Path, RawQuery, State},
-    http::{header::HeaderMap, Request},
+    extract::FromRef,
+    extract::State,
+    http::Request,
+    response::{IntoResponse, Response},
 };
 use leptos::*;
+use leptos_axum::handle_server_fns_with_context;
 use leptos_router::RouteListing;
 use std::fs;
 use std::fs::File;
@@ -95,4 +96,46 @@ impl AppState {
             *self.courses.write().await = courses;
         }
     }
+
+    pub async fn courses() -> Result<Arc<RwLock<Courses>>, ServerFnError> {
+        use_context::<Arc<RwLock<Courses>>>().ok_or(ServerFnError::ServerError(
+            "Courses not available".to_string(),
+        ))
+    }
+
+    pub async fn calendar() -> Result<Arc<RwLock<Calendar>>, ServerFnError> {
+        use_context::<Arc<RwLock<Calendar>>>().ok_or(ServerFnError::ServerError(
+            "Calendar not available".to_string(),
+        ))
+    }
+}
+
+pub async fn server_fn_handler(
+    State(app_state): State<AppState>,
+    request: Request<AxumBody>,
+) -> impl IntoResponse {
+    handle_server_fns_with_context(
+        move || {
+            provide_context(app_state.calendar.clone());
+            provide_context(app_state.courses.clone());
+        },
+        request,
+    )
+    .await
+}
+
+pub async fn leptos_routes_handler(
+    State(app_state): State<AppState>,
+    req: Request<AxumBody>,
+) -> Response {
+    let handler = leptos_axum::render_route_with_context(
+        app_state.leptos_options.clone(),
+        app_state.routes.clone(),
+        move || {
+            provide_context(app_state.calendar.clone());
+            provide_context(app_state.courses.clone());
+        },
+        App,
+    );
+    handler(req).await.into_response()
 }
