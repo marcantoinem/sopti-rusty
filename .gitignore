@@ -7,3 +7,5 @@ pkg
 **/*.rs.bk
 **/fermes.csv
 **/horsage.csv
+**/flamegraph.svg
+**/perf.data*

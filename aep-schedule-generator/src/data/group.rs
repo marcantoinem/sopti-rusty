@@ -3,14 +3,13 @@ use super::{
     time::{hours::Hours, period::Period},
 };
 use serde::{Deserialize, Serialize};
-use smallvec::{smallvec, SmallVec};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
 pub struct Group {
     pub number: GroupIndex,
     pub open: bool,
     pub conflict: bool,
-    pub periods: SmallVec<[Period; 2]>,
+    pub periods: Vec<Period>,
 }
 
 impl Group {
@@ -20,7 +19,7 @@ impl Group {
             number,
             open: true,
             conflict: false,
-            periods: smallvec![period],
+            periods: vec![period],
         }
     }
 

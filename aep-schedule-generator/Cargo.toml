@@ -10,7 +10,7 @@ crate-type = ["rlib"]
 [profile.release]
 lto = true
 codegen-units = 1
-strip = true
+# strip = true
 debug = true
 
 [profile.dev]
@@ -18,7 +18,7 @@ opt-level = 3
 debug = true
 
 [dev-dependencies]
-divan = "0.1.14"
+criterion = { version = "0.5", features = ["html_reports"] }
 
 [[bench]]
 name = "generator"
@@ -26,7 +26,6 @@ harness = false
 
 [dependencies]
 compact_str = { version = "0.7.1", features = ["serde"] }
-smallvec = { version = "1.11.2", features = ["serde"] }
 serde = { version = "1.0.187", features = ["derive", "rc"] }
 ical = { version = "0.10.0", features = ["ical", "vcard", "generator"] }
 chrono = "0.4.31"

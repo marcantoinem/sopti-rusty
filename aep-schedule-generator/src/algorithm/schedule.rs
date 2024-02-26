@@ -36,6 +36,7 @@ impl<'a> Ord for Schedule<'a> {
 }
 
 impl<'a> Schedule<'a> {
+    #[inline(always)]
     pub fn new(courses: &'a [Course]) -> Self {
         Self {
             score: Score::default(),
@@ -45,6 +46,7 @@ impl<'a> Schedule<'a> {
             courses,
         }
     }
+    #[inline(always)]
     pub fn add(mut self, course: TakenCourse) -> Self {
         if let Some(theo_group) = &course.get_theo_group(self.courses) {
             for period in &theo_group.periods {
@@ -59,6 +61,7 @@ impl<'a> Schedule<'a> {
         self.taken_courses.push(course);
         self
     }
+    #[inline(always)]
     pub fn add_check_conflicts(
         &self,
         n: u8,
@@ -86,7 +89,7 @@ impl<'a> Schedule<'a> {
                         return None;
                     }
                 }
-                new_schedule.add_update_score(period)
+                new_schedule.add_update_score(period);
             }
         }
         if new_schedule.score.evaluate(options) < min {
@@ -95,6 +98,7 @@ impl<'a> Schedule<'a> {
         new_schedule.taken_courses.push(new_course);
         Some(new_schedule)
     }
+    #[inline(always)]
     fn add_update_score(&mut self, period: &Period) {
         let day_off = self.week.get_day_off(period);
         let morning_hours = self.week.get_morning(period);
