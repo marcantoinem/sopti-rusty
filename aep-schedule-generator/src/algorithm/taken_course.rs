@@ -1,44 +1,37 @@
 use crate::data::course::Course;
 use crate::data::group::Group;
-use compact_str::CompactString;
-use serde::{Deserialize, Serialize};
-use std::fmt::Display;
+use crate::data::group_index::GroupIndex;
 
-#[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct TakenCourse {
-    pub sigle: CompactString,
-    pub name: String,
-    pub theo_group: Option<Group>,
-    pub lab_group: Option<Group>,
-    pub nb_credit: usize,
-}
-
-impl Display for TakenCourse {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut to_print = String::new();
-        to_print.push_str(&self.sigle);
-        to_print.push_str(": ");
-        to_print.push_str(&format!("{: <30}", self.name));
-        if let Some(theo_group) = &self.theo_group {
-            to_print.push_str(" theo: ");
-            to_print.push_str(&theo_group.number.to_string());
-        }
-        if let Some(lab_group) = &self.lab_group {
-            to_print.push_str(" lab: ");
-            to_print.push_str(&lab_group.number.to_string());
-        }
-        writeln!(f, "{}", to_print)
-    }
+    index: u8,
+    theo_group: GroupIndex,
+    lab_group: GroupIndex,
 }
 
 impl TakenCourse {
-    pub fn new(course: &Course, theo_group: Option<Group>, lab_group: Option<Group>) -> Self {
+    pub fn new(index: u8, theo_group: GroupIndex, lab_group: GroupIndex) -> Self {
         Self {
-            sigle: course.sigle.clone(),
-            name: course.name.clone(),
+            index,
             theo_group,
             lab_group,
-            nb_credit: course.nb_credit,
+        }
+    }
+    pub fn get_course<'a>(&self, courses: &'a [Course]) -> &'a Course {
+        &courses[self.index as usize]
+    }
+    pub fn get_lab_group<'a>(&self, courses: &'a [Course]) -> Option<&'a Group> {
+        let course = self.get_course(courses);
+        match self.lab_group.value() {
+            Some(_) => course.lab_groups[self.lab_group].as_ref(),
+            None => None,
+        }
+    }
+    pub fn get_theo_group<'a>(&self, courses: &'a [Course]) -> Option<&'a Group> {
+        let course = self.get_course(courses);
+        match self.lab_group.value() {
+            Some(_) => course.lab_groups[self.theo_group].as_ref(),
+            None => None,
         }
     }
 }

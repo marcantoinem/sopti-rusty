@@ -1,6 +1,6 @@
 use aep_schedule_generator::{
     algorithm::{generation::SchedulesOptions, scores::EvaluationOption},
-    data::{course::Course, courses::Courses, time::calendar::Calendar},
+    data::{course::Course, courses::Courses},
 };
 use std::{fs::File, io::BufReader};
 
@@ -14,10 +14,10 @@ fn main() {
         .map(|sigle| courses.get_course(sigle).unwrap())
         .collect();
     for course in courses_to_take.iter_mut() {
-        for g in course.lab_groups.0.iter_mut() {
+        for g in course.lab_groups.iter_mut() {
             g.open = true;
         }
-        for g in course.theo_groups.0.iter_mut() {
+        for g in course.theo_groups.iter_mut() {
             g.open = true;
         }
     }
@@ -31,14 +31,15 @@ fn main() {
         courses_to_take,
         max_nb_conflicts: 0,
         evaluation,
+        max_size: 69,
     };
 
     let result = options.get_schedules().into_sorted_vec();
     let result = result.first().unwrap();
-    println!("{}", result);
+    println!("{:?}", result);
 
-    let days = BufReader::new(File::open("alternance.csv").unwrap());
-    let calendar = Calendar::from_csv(days);
+    // let days = BufReader::new(File::open("alternance.csv").unwrap());
+    // let calendar = Calendar::from_csv(days);
 
-    let _ = std::fs::write("test.ics", result.generate_ics(&calendar));
+    // let _ = std::fs::write("test.ics", result.generate_ics(&calendar));
 }

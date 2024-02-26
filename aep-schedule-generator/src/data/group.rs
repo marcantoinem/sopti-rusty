@@ -1,10 +1,13 @@
-use super::time::{hours::Hours, period::Period};
+use super::{
+    group_index::GroupIndex,
+    time::{hours::Hours, period::Period},
+};
 use serde::{Deserialize, Serialize};
 use smallvec::{smallvec, SmallVec};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
 pub struct Group {
-    pub number: u8,
+    pub number: GroupIndex,
     pub open: bool,
     pub conflict: bool,
     pub periods: SmallVec<[Period; 2]>,
@@ -12,7 +15,7 @@ pub struct Group {
 
 impl Group {
     pub fn new(number: &str, period: Period) -> Self {
-        let number = number.parse().unwrap_or(0);
+        let number = number.parse().unwrap_or(0).into();
         Self {
             number,
             open: true,
