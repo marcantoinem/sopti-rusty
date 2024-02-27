@@ -1,4 +1,4 @@
-use super::{schedule::Schedule, schedules::Schedules, scores::EvaluationOption};
+use super::{schedule::ScheduleBuilder, schedules::Schedules, scores::EvaluationOption};
 use crate::data::course::Course;
 use serde::{Deserialize, Serialize};
 
@@ -17,7 +17,7 @@ impl SchedulesOptions {
             return schedules;
         }
         schedules.get_schedules_rec(
-            Schedule::new(&self.courses_to_take),
+            ScheduleBuilder::new(&self.courses_to_take),
             self.max_nb_conflicts,
             0,
         );

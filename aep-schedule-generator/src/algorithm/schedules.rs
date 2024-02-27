@@ -1,10 +1,14 @@
-use super::{generation::SchedulesOptions, schedule::Schedule, taken_course::TakenCourse};
+use super::{
+    generation::SchedulesOptions,
+    schedule::{Schedule, ScheduleBuilder},
+    taken_course::TakenCourseBuilder,
+};
 use crate::data::group_index::GroupIndex;
 use std::{cmp::Reverse, collections::BinaryHeap};
 
 #[derive(Debug)]
 pub struct Schedules<'a> {
-    schedules: BinaryHeap<Reverse<Schedule<'a>>>,
+    schedules: BinaryHeap<Reverse<ScheduleBuilder<'a>>>,
     options: &'a SchedulesOptions,
     pub number: u64,
 }
@@ -25,16 +29,16 @@ impl<'a> Schedules<'a> {
         self.schedules.peek().unwrap().0.score.global
     }
 
-    pub fn into_sorted_vec(self) -> Vec<Schedule<'a>> {
+    pub fn into_sorted_vec(self) -> Vec<Schedule> {
         self.schedules
             .into_sorted_vec()
             .into_iter()
-            .map(|r| r.0)
+            .map(|r| r.0.build())
             .rev()
             .collect()
     }
 
-    pub(super) fn get_schedules_rec(&mut self, schedule: Schedule<'a>, n: u8, i: u8) {
+    pub(super) fn get_schedules_rec(&mut self, schedule: ScheduleBuilder<'a>, n: u8, i: u8) {
         let Some(course) = schedule.courses.get(i as usize) else {
             self.number += 1;
             self.push(schedule);
@@ -46,7 +50,8 @@ impl<'a> Schedules<'a> {
             (false, false) => {
                 for theo_group in course.theo_groups.iter().filter(|g| g.open) {
                     for lab_group in course.lab_groups.iter().filter(|g| g.open) {
-                        let course = TakenCourse::new(i, theo_group.into(), lab_group.into());
+                        let course =
+                            TakenCourseBuilder::new(i, theo_group.into(), lab_group.into());
                         if let Some(schedule) = schedule.add_check_conflicts(n, min, e, course) {
                             self.get_schedules_rec(schedule, n, i + 1);
                         }
@@ -55,7 +60,7 @@ impl<'a> Schedules<'a> {
             }
             (false, true) => {
                 for theo_group in course.theo_groups.iter().filter(|g| g.open) {
-                    let course = TakenCourse::new(i, theo_group.into(), GroupIndex::none());
+                    let course = TakenCourseBuilder::new(i, theo_group.into(), GroupIndex::none());
                     if let Some(schedule) = schedule.add_check_conflicts(n, min, e, course) {
                         self.get_schedules_rec(schedule, n, i + 1);
                     }
@@ -63,7 +68,7 @@ impl<'a> Schedules<'a> {
             }
             (true, false) => {
                 for lab_group in course.lab_groups.iter().filter(|g| g.open) {
-                    let course = TakenCourse::new(i, GroupIndex::none(), lab_group.into());
+                    let course = TakenCourseBuilder::new(i, GroupIndex::none(), lab_group.into());
                     if let Some(schedule) = schedule.add_check_conflicts(n, min, e, course) {
                         self.get_schedules_rec(schedule, n, i + 1);
                     }
@@ -73,7 +78,7 @@ impl<'a> Schedules<'a> {
         }
     }
 
-    fn push(&mut self, schedule: Schedule<'a>) {
+    fn push(&mut self, schedule: ScheduleBuilder<'a>) {
         let evaluation = schedule.score;
         if let Some(Reverse(schedule)) = self.schedules.peek() {
             if evaluation < schedule.score && self.schedules.len() == self.options.max_size {

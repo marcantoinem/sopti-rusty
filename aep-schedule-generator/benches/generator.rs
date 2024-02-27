@@ -1,5 +1,5 @@
 use aep_schedule_generator::algorithm::generation::SchedulesOptions;
-use aep_schedule_generator::algorithm::schedule::Schedule;
+use aep_schedule_generator::algorithm::schedule::ScheduleBuilder;
 use aep_schedule_generator::algorithm::scores::{EvaluationOption, Score};
 use aep_schedule_generator::algorithm::taken_courses::TakenCourses;
 use aep_schedule_generator::data::course::Course;
@@ -39,7 +39,7 @@ fn clone_schedule(c: &mut Criterion) {
         "INF1900", "INF1015", "INF1600", "INF3405", "SSH3201", "SSH3501",
     ];
     let courses_to_take = get_h24_courses().get_courses(&hellish_session);
-    let schedule = Schedule {
+    let schedule = ScheduleBuilder {
         score: Score::default(),
         week: Weeks::default(),
         conflicts: 0,
@@ -57,7 +57,7 @@ fn evaluate_schedule(c: &mut Criterion) {
         "INF1900", "INF1015", "INF1600", "INF3405", "SSH3201", "SSH3501",
     ];
     let courses_to_take = get_h24_courses().get_courses(&hellish_session);
-    let mut schedule = Schedule {
+    let mut schedule = ScheduleBuilder {
         score: Score::default(),
         week: Weeks::default(),
         conflicts: 0,
