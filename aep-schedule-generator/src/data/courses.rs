@@ -76,7 +76,7 @@ impl Courses {
             let Ok(number) = number.parse::<u8>() else {
                 continue;
             };
-            let number = GroupIndex::from(number);
+            let number = GroupIndex::from(number - 1);
             let groups = match course_type {
                 "L" => &mut course.lab_groups,
                 "C" => &mut course.theo_groups,

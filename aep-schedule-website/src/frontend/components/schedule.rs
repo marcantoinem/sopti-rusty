@@ -13,11 +13,11 @@ pub fn Course<'a>(course: &'a TakenCourse) -> impl IntoView {
     let lab_group = course
         .lab_group
         .as_ref()
-        .map(|g| format!("L: {}", g.number));
+        .map(|g| format!("L: {:?}", g.number));
     let theo_group = course
         .theo_group
         .as_ref()
-        .map(|g| format!("C: {}", g.number));
+        .map(|g| format!("C: {:?}", g.number));
     view! {
         <tr>
             <td>{course.sigle.to_string()}</td>
@@ -69,7 +69,7 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Calendar) -> impl IntoVie
         <a class="hidden" download="cours.ics" href=move || download.get() node_ref=link></a>
         <div class="schedule-container">
             <table class="cours">
-                {schedule.courses.iter().map(|c| view!{<Course course=c/>}).collect_view()}
+                {schedule.taken_courses.iter().map(|c| view!{<Course course=c/>}).collect_view()}
             </table>
             <div class="schedule">
                 <div class="days">
@@ -82,13 +82,13 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Calendar) -> impl IntoVie
                     <div class="filler-col"></div>
                     {(3..(DAY_WEEK.len()+2)).map(|i| view!{<div class="col" style={format!("grid-column:{i}")}></div>}).collect_view()}
                     {(1..=HOURS.len()).map(|i| view!{<div class="row" style={format!("grid-row:{}/ span 2", 2 * i - 1)}></div>}).collect_view()}
-                    {schedule.courses.iter().map(|c| {
+                    {schedule.taken_courses.iter().map(|c| {
                         view!{
                             {c.lab_group.as_ref().map(|g| Some(g.periods.iter().map(|p| {
-                                view!{<div class={group_style(g, p)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Lab. Gr: " {g.number} " " {p.week_nb.to_string()}</p></div>}
+                                view!{<div class={group_style(g, p)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Lab. Gr: " {g.number.to_usize()} " " {p.week_nb.to_string()}</p></div>}
                             }).collect_view()))}
                             {c.theo_group.as_ref().map(|g| Some(g.periods.iter().map(|p| {
-                                view!{<div class={group_style(g, p)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Theo. Gr: " {g.number} " " {p.week_nb.to_string()}</p></div>}
+                                view!{<div class={group_style(g, p)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Theo. Gr: " {g.number.to_usize()} " " {p.week_nb.to_string()}</p></div>}
                             }).collect_view()))}
                         }
                     }).collect_view()}

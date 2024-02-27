@@ -16,6 +16,12 @@ impl From<u8> for GroupIndex {
     }
 }
 
+impl From<usize> for GroupIndex {
+    fn from(value: usize) -> Self {
+        Self(value as u8)
+    }
+}
+
 impl From<&Group> for GroupIndex {
     fn from(value: &Group) -> Self {
         value.number

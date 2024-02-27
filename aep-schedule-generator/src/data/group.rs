@@ -14,7 +14,8 @@ pub struct Group {
 
 impl Group {
     pub fn new(number: &str, period: Period) -> Self {
-        let number = number.parse().unwrap_or(0).into();
+        let number = number.parse::<u8>().unwrap_or(1) - 1;
+        let number = number.into();
         Self {
             number,
             open: true,

@@ -1,10 +1,3 @@
-use ical::{
-    generator::{Emitter, IcalCalendarBuilder, IcalEventBuilder},
-    ical_property,
-    property::Property,
-};
-use uuid::Uuid;
-
 use super::{
     scores::{EvaluationOption, Score},
     taken_course::{TakenCourse, TakenCourseBuilder},
@@ -18,7 +11,13 @@ use crate::data::{
         weeks::Weeks,
     },
 };
+use ical::{
+    generator::{Emitter, IcalCalendarBuilder, IcalEventBuilder},
+    ical_property,
+    property::Property,
+};
 use std::cmp::Ordering;
+use uuid::Uuid;
 
 #[derive(PartialEq, Debug, Clone)]
 pub struct ScheduleBuilder<'a> {
@@ -78,12 +77,13 @@ impl<'a> ScheduleBuilder<'a> {
         n: u8,
         min: f64,
         options: EvaluationOption,
-        new_course: TakenCourseBuilder,
+        mut new_course: TakenCourseBuilder,
     ) -> Option<Self> {
         let mut new_schedule = self.clone();
         if let Some(theo_group) = new_course.get_theo_group(self.courses) {
             for period in &theo_group.periods {
                 if new_schedule.week.conflict_in_day(period) {
+                    new_course.theo_group_conflict = true;
                     new_schedule.conflicts += 1;
                     if new_schedule.conflicts > n {
                         return None;
@@ -95,6 +95,7 @@ impl<'a> ScheduleBuilder<'a> {
         if let Some(lab_group) = new_course.get_lab_group(self.courses) {
             for period in &lab_group.periods {
                 if new_schedule.week.conflict_in_day(period) {
+                    new_course.lab_group_conflict = true;
                     new_schedule.conflicts += 1;
                     if new_schedule.conflicts > n {
                         return None;

@@ -7,25 +7,26 @@ pub struct Groups(Vec<Option<Group>>);
 
 impl Default for Groups {
     fn default() -> Self {
-        Self(vec![None; 5])
+        Self(vec![None; 3])
     }
 }
 
 impl Groups {
     pub fn insert_or_push(&mut self, new_group: Group) {
-        let number = new_group.number;
-        if number.to_usize() >= self.0.len() {
-            self.0.extend(
-                (0..=number.to_usize() - self.0.len())
-                    .into_iter()
-                    .map(|_| None),
-            );
+        let number = new_group.number.to_usize();
+        if number >= self.0.len() {
+            self.0
+                .extend((0..(number - self.0.len() + 4)).into_iter().map(|_| None));
         }
-        if let Some(group) = &mut self.0[number.to_usize()] {
+        if let Some(group) = &mut self.0[number] {
             group.add_period(new_group);
         } else {
-            self.0[number.to_usize()] = Some(new_group);
+            self.0[number] = Some(new_group);
         }
+    }
+
+    pub fn into_iter(self) -> impl Iterator<Item = Group> {
+        self.0.into_iter().filter_map(|g| g)
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &Group> {
@@ -46,7 +47,7 @@ impl Groups {
 }
 
 impl Index<GroupIndex> for Groups {
-    fn index(&self, index: GroupIndex) -> &Option<Group> {
+    fn index(&self, index: GroupIndex) -> &Self::Output {
         &self.0[index.to_usize()]
     }
 
@@ -56,5 +57,19 @@ impl Index<GroupIndex> for Groups {
 impl IndexMut<GroupIndex> for Groups {
     fn index_mut(&mut self, index: GroupIndex) -> &mut Self::Output {
         &mut self.0[index.to_usize()]
+    }
+}
+
+impl Index<usize> for Groups {
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.0[index]
+    }
+
+    type Output = Option<Group>;
+}
+
+impl IndexMut<usize> for Groups {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        &mut self.0[index]
     }
 }

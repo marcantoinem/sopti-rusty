@@ -8,9 +8,7 @@ fn main() {
     let horsage = BufReader::new(File::open("horsage.csv").unwrap());
     let fermes = BufReader::new(File::open("fermes.csv").unwrap());
     let courses = Courses::from_csv(horsage, fermes);
-    let courses_to_take = vec![
-        "INF1900", "LOG1810", "INF1015", "INF1600", "PHS1101", "MTH2302D", "MTH1007", "MTH1101",
-    ];
+    let courses_to_take = vec!["INF1900", "LOG1810", "INF1015", "INF1600", "PHS1101"];
     let mut courses_to_take: Vec<_> = courses_to_take
         .into_iter()
         .map(|sigle| courses.get_course(sigle).unwrap())
@@ -39,9 +37,9 @@ fn main() {
     };
     let options = SchedulesOptions {
         courses_to_take,
-        max_nb_conflicts: 5,
+        max_nb_conflicts: 2,
         evaluation,
-        max_size: 8,
+        max_size: 69,
     };
     let instant = Instant::now();
     let schedules = options.get_schedules();

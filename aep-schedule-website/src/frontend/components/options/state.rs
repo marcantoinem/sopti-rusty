@@ -43,10 +43,10 @@ impl Default for OptionState {
 impl From<ReactiveCourse> for Course {
     fn from(mut value: ReactiveCourse) -> Self {
         for (i, open) in value.theo_open.iter().enumerate() {
-            value.theo_groups[i].open = open.get();
+            value.theo_groups.get_mut(i.into()).unwrap().open = open.get();
         }
         for (i, open) in value.lab_open.iter().enumerate() {
-            value.lab_groups[i].open = open.get();
+            value.lab_groups.get_mut(i.into()).unwrap().open = open.get();
         }
         Self {
             sigle: value.sigle,
@@ -101,6 +101,7 @@ impl From<&OptionState> for SchedulesOptions {
             courses_to_take,
             max_nb_conflicts,
             evaluation,
+            max_size: 50,
         }
     }
 }
