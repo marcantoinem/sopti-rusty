@@ -1,3 +1,4 @@
+use crate::frontend::components::common::schedule::Schedule;
 use aep_schedule_generator::{
     algorithm::{schedule::Schedule, taken_course::TakenCourse},
     data::{
@@ -67,34 +68,9 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Calendar) -> impl IntoVie
 
     view! {
         <a class="hidden" download="cours.ics" href=move || download.get() node_ref=link></a>
-        <div class="schedule-container">
-            <table class="cours">
-                {schedule.taken_courses.iter().map(|c| view!{<Course course=c/>}).collect_view()}
-            </table>
-            <div class="schedule">
-                <div class="days">
-                    <div></div>
-                    <div></div>
-                    {DAY_WEEK.map(|d| view!{<div class="day">{d}</div>})}
-                </div>
-                <div class="content">
-                    {HOURS.into_iter().enumerate().map(|(i, h)| view!{<div class="time" style={format!("grid-row:{}", 2 * i + 2)}>{h}</div>}).collect_view()}
-                    <div class="filler-col"></div>
-                    {(3..(DAY_WEEK.len()+2)).map(|i| view!{<div class="col" style={format!("grid-column:{i}")}></div>}).collect_view()}
-                    {(1..=HOURS.len()).map(|i| view!{<div class="row" style={format!("grid-row:{}/ span 2", 2 * i - 1)}></div>}).collect_view()}
-                    {schedule.taken_courses.iter().map(|c| {
-                        view!{
-                            {c.lab_group.as_ref().map(|g| Some(g.periods.iter().map(|p| {
-                                view!{<div class={group_style(g, p)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Lab. Gr: " {g.number.to_usize()} " " {p.week_nb.to_string()}</p></div>}
-                            }).collect_view()))}
-                            {c.theo_group.as_ref().map(|g| Some(g.periods.iter().map(|p| {
-                                view!{<div class={group_style(g, p)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Theo. Gr: " {g.number.to_usize()} " " {p.week_nb.to_string()}</p></div>}
-                            }).collect_view()))}
-                        }
-                    }).collect_view()}
-                </div>
-            </div>
-        </div>
+        <Schedule>
+            <p></p>
+        </Schedule>
         <button class="button-download" on:click=move |_| {
             let ics = schedule2.generate_ics(&calendar);
             let url = url_escape::encode_fragment(&ics);

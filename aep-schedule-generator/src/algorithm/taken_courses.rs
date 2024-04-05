@@ -3,7 +3,7 @@ use super::taken_course::TakenCourseBuilder;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct TakenCourses {
     len: u8,
-    taken_courses: [TakenCourseBuilder; 9],
+    taken_courses: [TakenCourseBuilder; 11],
 }
 
 impl TakenCourses {

@@ -14,7 +14,7 @@
 
 $days-height: 2em;
 $time-width: 2em;
-$hours: repeat(28, 1em);
+$hours: repeat(56, 0.5em);
 $days: $time-width 10px repeat(5, 1fr);
 
 body {
@@ -33,7 +33,6 @@ body {
   display: grid;
   place-content: center;
   text-align: center;
-  grid-template-columns: $days;
   top: 0;
   z-index: 10;
   border-bottom: 2px solid $highlight-color;
@@ -45,7 +44,6 @@ body {
 
 .content {
   display: grid;
-  grid-template-columns: $days;
   grid-template-rows: $hours;
 }
 
@@ -62,7 +60,7 @@ body {
 
 .col {
   border-right: 1px solid black;
-  grid-row: 1 / span 32;
+  grid-row: 1 / span 56;
   grid-column: span 1;
 }
 
