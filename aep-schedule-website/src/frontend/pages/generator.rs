@@ -1,7 +1,7 @@
 use crate::frontend::components::{options::form::OptionsForms, schedules::SchedulesComponent};
 use aep_schedule_generator::algorithm::generation::SchedulesOptions;
 use leptos::*;
-use phosphor_leptos::{CaretDoubleRight, IconWeight, Bug};
+use phosphor_leptos::{Bug, CaretDoubleRight, IconWeight};
 
 #[component]
 pub fn GeneratorPage() -> impl IntoView {

@@ -18,7 +18,7 @@ fn GroupsSettings(groups: Groups, open: Vec<RwSignal<bool>>) -> impl IntoView {
                 let open_style = if g.open {"group-chip"} else {"group-chip closed-group"};
                 view!{
                     <CheckboxChip value=open class=open_style>
-                        <span>{g.number.to_usize()}</span> <div class="col-container group-text-col">{g.periods.iter().map(|p| {
+                        <span>{g.number.to_string()}</span> <div class="col-container group-text-col">{g.periods.iter().map(|p| {
                             view!{<div class="row-container group-text">
                                 <span>{p.day.to_string()}</span>
                                 <span class="period-group">{p.hours.to_string()}</span>
