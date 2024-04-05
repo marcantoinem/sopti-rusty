@@ -6,6 +6,7 @@ cfg_if::cfg_if!(if #[cfg(feature = "ssr")] {
     use std::future::IntoFuture;
     use leptos_axum::{generate_route_list, LeptosRoutes};
     use leptos::*;
+    use tower_http::compression::CompressionLayer;
     use aep_schedule_website::backend::fileserv::file_and_error_handler;
     use aep_schedule_website::frontend::app::App;
     use aep_schedule_website::backend::state::{AppState, server_fn_handler, leptos_routes_handler};
@@ -31,6 +32,7 @@ cfg_if::cfg_if!(if #[cfg(feature = "ssr")] {
             )
             .leptos_routes_with_handler(routes, get(leptos_routes_handler))
             .fallback(file_and_error_handler)
+            .layer(CompressionLayer::new())
             .with_state(state.clone());
         // run our app with hyper
         // `axum::Server` is a re-export of `hyper::Server`
