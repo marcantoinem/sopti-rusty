@@ -124,24 +124,6 @@ section {
 	cursor: pointer;
 }
 
-#bug-report {
-	position: fixed;
-	top: 3.5em;
-	padding: 0px 0.69em;
-	right: 0.5em;
-	height: 3em;
-	background-color: $highlight-color;
-	z-index: 100;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border: none;
-	color: white;
-	font-weight: bolder;
-	border-radius: 10px;
-	cursor: pointer;
-}
-
 a:link { 
 	text-decoration: none;
 }
@@ -170,6 +152,9 @@ a {
 	display: flex;
 	height: 100%;
 	gap: 4px;
-	margin-left: auto;
 	align-items: center;
+}
+
+.pad-left {
+	margin-left: auto;
 }

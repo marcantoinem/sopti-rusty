@@ -3,7 +3,7 @@ use crate::frontend::pages::home::HomePage;
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
-use phosphor_leptos::{GitlabLogo, IconWeight};
+use phosphor_leptos::{Bug, GitlabLogo, IconWeight};
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -22,8 +22,12 @@ pub fn App() -> impl IntoView {
         // content for this welcome page
         <Router>
             <nav>
-                <a href="/">"Accueil"</a>
-                <a href="/generateur">"Générateur d'horaire"</a>
+                <A href="/">"Accueil"</A>
+                <A href="/generateur">"Générateur d'horaire"</A>
+                <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty/-/issues/new" class="sources pad-left"  target="_blank">
+                    <span>"Reporter un bug"</span>
+                    <Bug weight=IconWeight::Regular size="3vh"/>
+                </a>
                 <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty" class="sources"  target="_blank" ><span>"Sources "</span><GitlabLogo weight=IconWeight::Regular size="3vh"/></a>
             </nav>
             <main>
