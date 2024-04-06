@@ -11,11 +11,11 @@ pub fn Course<'a>(course: &'a TakenCourse) -> impl IntoView {
     let theo_group = course
         .theo_group
         .as_ref()
-        .map(|g| format!("Théorie: {}", g.number));
+        .map(|g| format!("T: {}", g.number));
     let lab_group = course
         .lab_group
         .as_ref()
-        .map(|g| format!("Laboratoire: {}", g.number));
+        .map(|g| format!("L: {}", g.number));
     view! {
         <tr>
             <td>{course.sigle.to_string()}</td>
@@ -48,7 +48,7 @@ fn CoursePeriods<'a>(course: &'a TakenCourse) -> impl IntoView {
         c.periods
             .iter()
             .map(|p| {
-                view! {<PeriodEvent period=&p course=course period_type="Laboratoire"/>}
+                view! {<PeriodEvent period=&p course=course period_type="L"/>}
             })
             .collect_view()
     });
@@ -56,7 +56,7 @@ fn CoursePeriods<'a>(course: &'a TakenCourse) -> impl IntoView {
         c.periods
             .iter()
             .map(|p| {
-                view! {<PeriodEvent period=&p course=course period_type="Théorie"/>}
+                view! {<PeriodEvent period=&p course=course period_type="T"/>}
             })
             .collect_view()
     });

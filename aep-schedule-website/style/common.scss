@@ -45,3 +45,7 @@ input:focus ~ .result-box {
 .result-box > div:hover {
     background-color: #d4d4d4;
 }
+
+.spacer {
+    flex-grow: 1;
+}

@@ -10,6 +10,8 @@ pub fn App() -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context();
 
+    let (is_active, set_active) = create_signal(String::new());
+
     view! {
 
         // injects a stylesheet into the document <head>
@@ -21,15 +23,30 @@ pub fn App() -> impl IntoView {
 
         // content for this welcome page
         <Router>
-            <nav>
-                <A href="/">"Accueil"</A>
-                <A href="/generateur">"Générateur d'horaire"</A>
-                <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty/-/issues/new" class="sources pad-left"  target="_blank">
-                    <span>"Reporter un bug"</span>
-                    <Bug weight=IconWeight::Regular size="3vh"/>
-                </a>
-                <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty" class="sources"  target="_blank" ><span>"Sources "</span><GitlabLogo weight=IconWeight::Regular size="3vh"/></a>
-            </nav>
+            <header>
+                <nav class=is_active>
+                    <A href="/">"Accueil"</A>
+                    <A href="/generateur">"Générateur d'horaire"</A>
+                    <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty/-/issues/new" class="sources pad-left"  target="_blank">
+                        <span>"Reporter un bug"</span>
+                        <Bug weight=IconWeight::Regular size="3vh"/>
+                    </a>
+                    <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty" class="sources"  target="_blank" ><span>"Sources "</span><GitlabLogo weight=IconWeight::Regular size="3vh"/></a>
+                </nav>
+                <div class=move || is_active.get() + " hamburger" on:click=move |_| {
+                    set_active.update(|text| {
+                        if text == "active" {
+                            text.clear();
+                        } else {
+                            text.push_str("active");
+                        }
+                    });
+                }>
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                </div>
+            </header>
             <main>
                 <Routes>
                     <Route path="/" view=HomePage/>
