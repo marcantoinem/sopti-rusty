@@ -7,6 +7,8 @@ use crate::data::{
     course::Course,
     time::{
         calendar::{date_to_timestamp, Calendar},
+        day::Day,
+        hours::NO_HOUR,
         period::Period,
         weeks::Weeks,
     },
@@ -124,18 +126,33 @@ impl<'a> ScheduleBuilder<'a> {
     }
 
     pub fn build(self) -> Schedule {
+        let last_day = if self
+            .week
+            .hours(Day::Sunday)
+            .iter()
+            .chain(self.week.hours(Day::Saturday).iter())
+            .all(|d| *d == NO_HOUR)
+        {
+            5
+        } else {
+            7
+        };
         let taken_courses = self
             .taken_courses
             .iter()
             .map(|c| c.build(self.courses))
             .collect();
-        Schedule { taken_courses }
+        Schedule {
+            taken_courses,
+            last_day,
+        }
     }
 }
 
 #[derive(PartialEq, Debug, Clone)]
 pub struct Schedule {
     pub taken_courses: Vec<TakenCourse>,
+    pub last_day: u8,
 }
 
 impl Schedule {

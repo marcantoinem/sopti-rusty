@@ -8,20 +8,20 @@ use phosphor_leptos::{Download, IconWeight};
 
 #[component]
 pub fn Course<'a>(course: &'a TakenCourse) -> impl IntoView {
-    let lab_group = course
-        .lab_group
-        .as_ref()
-        .map(|g| format!("L: {}", g.number));
     let theo_group = course
         .theo_group
         .as_ref()
-        .map(|g| format!("C: {}", g.number));
+        .map(|g| format!("Théorie: {}", g.number));
+    let lab_group = course
+        .lab_group
+        .as_ref()
+        .map(|g| format!("Laboratoire: {}", g.number));
     view! {
         <tr>
             <td>{course.sigle.to_string()}</td>
             <td>{course.name.to_string()}</td>
-            <td>{lab_group}</td>
             <td>{theo_group}</td>
+            <td>{lab_group}</td>
         </tr>
     }
 }
@@ -68,20 +68,16 @@ fn CoursePeriods<'a>(course: &'a TakenCourse) -> impl IntoView {
 
 #[component]
 pub fn ScheduleComponent(schedule: Schedule, calendar: Calendar) -> impl IntoView {
-    const HOURS: [&str; 14] = [
-        "8:30", "9:30", "10:30", "11:30", "12:30", "13:30", "14:30", "15:30", "16:30", "17:30",
-        "18:30", "19:30", "20:30", "21:30",
-    ];
-    const DAY_WEEK: [&str; 5] = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
-
     let schedule2 = schedule.clone();
     let (download, set_download) = create_signal("".to_string());
     let link: NodeRef<A> = create_node_ref();
 
     view! {
         <a class="hidden" download="cours.ics" href=move || download.get() node_ref=link></a>
-        {schedule.taken_courses.iter().map(|c| view!{<Course course={c} />}).collect_view()}
-        <Schedule>
+        <table class="cours">
+            {schedule.taken_courses.iter().map(|c| view!{<Course course={c} />}).collect_view()}
+        </table>
+        <Schedule last_day=schedule.last_day>
             {schedule.taken_courses.iter().map(|c| view!{<CoursePeriods course=c />}).collect_view()}
         </Schedule>
         <button class="button-download" on:click=move |_| {

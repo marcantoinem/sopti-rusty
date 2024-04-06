@@ -18,7 +18,7 @@ nav {
 	justify-content: flex-start;
 	align-items: center;
 	padding: 2px 20px;
-	height: 5vh;
+	height: 3em;
 	gap: 42px;
 	border-bottom: 5px solid $highlight-color;
 	z-index: 20;
@@ -77,17 +77,18 @@ section {
 	z-index: 20;
 	position: fixed;
 	left: 0;
-	top: 5vh;
+	top: 3em;
 	height: 100vh - 5vh;
 	background-color: $background-color;
 	color: white;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
 	justify-items: center;
 	background-image: url('../haikei.svg');
 	background-size: 8vh 142vh;
 	background-repeat: no-repeat;
+	padding: 0em 0.69em;
+	gap: 0.5em;
 	animation: 0.5s ease-out 0s 1 slideInFromLeft;
 }
 
@@ -125,10 +126,10 @@ section {
 
 #bug-report {
 	position: fixed;
-	bottom: 1vh;
-	padding: 0px 10px;
-	right: 4vh;
-	height: 5vh;
+	top: 3.5em;
+	padding: 0px 0.69em;
+	right: 0.5em;
+	height: 3em;
 	background-color: $highlight-color;
 	z-index: 100;
 	display: flex;

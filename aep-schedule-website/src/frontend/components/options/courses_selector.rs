@@ -63,7 +63,7 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
         >
             <SearchCourse courses=courses.clone() set_selections set_active_tab/>
         </Await>
-        <div class="row-container row-center tab-width">
+        <div class="row-container tab-width">
             <button class="tab-button chips" class=("tab-selected", move || active_tab.get() == "") id="personal" on:click={
                 move |_| set_active_tab.set("".to_string())
             }>

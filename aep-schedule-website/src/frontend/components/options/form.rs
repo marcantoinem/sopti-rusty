@@ -20,12 +20,10 @@ pub fn OptionsForms(
     };
 
     view! {
-        <h1>"Options de générations"</h1>
+        <h1 class="title">"Options de générations"</h1>
         <CoursesSelector state=state/>
-        <div class="bottom col-container">
-            <div class="row-container input-item"><p>"Nombre de conflits maximum"</p><NumberInput value=state.max_nb_conflicts max=127/></div>
-            <SelectOptimizations state=state/>
-            <button on:click=on_submit class="submit">"Générer les horaires"</button>
-        </div>
+        <div class="row-container input-item auto-bottom"><p>"Nombre de conflits maximum"</p><NumberInput value=state.max_nb_conflicts max=127/></div>
+        <SelectOptimizations state=state/>
+        <button on:click=on_submit class="submit">"Générer les horaires"</button>
     }
 }
