@@ -76,13 +76,16 @@ body {
 }
 
 .event {
-  border-radius: 5px;
+  border-radius: 0.5em;
   padding: 1px;
-  margin: 1px 3px;
+  margin: 0 0.3em;
   font-weight: bold;
   font-size: 70%;
   background-color: $highlight-color;
   text-align: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .event p {

@@ -1,1 +1,0 @@
-- Greatly performance by making schedule really cheap to clone and modify

@@ -35,13 +35,13 @@ pub fn Schedule(#[prop(optional)] last_day: Option<u8>, children: Children) -> i
 #[component]
 pub fn ScheduleEvent<'a>(period: &'a Period, children: Children) -> impl IntoView {
     let column = period.day as u8 + 3;
-    let hour = 2 * (period.hours.starting_hour() - 6);
+    let hour = period.hours.start() + 3;
     let len = period.hours.len_hour();
     let style = format!(
         "grid-column:{};grid-row:{} / span {};",
         column,
         hour,
-        len * 2
+        len * 4
     );
     view! {
         <div style={style} class="event">

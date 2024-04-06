@@ -1,10 +1,7 @@
 use crate::frontend::components::common::schedule::{Schedule, ScheduleEvent};
 use aep_schedule_generator::{
     algorithm::{schedule::Schedule, taken_course::TakenCourse},
-    data::{
-        group::Group,
-        time::{calendar::Calendar, period::Period, week_number::WeekNumber},
-    },
+    data::time::{calendar::Calendar, period::Period},
 };
 use leptos::{html::A, *};
 use phosphor_leptos::{Download, IconWeight};
@@ -30,30 +27,36 @@ pub fn Course<'a>(course: &'a TakenCourse) -> impl IntoView {
 }
 
 #[component]
-pub fn CoursePeriods(course: TakenCourse) -> impl IntoView {
-    let lab = course.lab_group.map(|c| {
+fn PeriodEvent<'a>(
+    period: &'a Period,
+    course: &'a TakenCourse,
+    period_type: &'static str,
+) -> impl IntoView {
+    let location = period.hours.to_string() + " - " + period.room.as_str();
+    let sigle = course.sigle.to_string() + " - " + period_type;
+    view! {
+        <ScheduleEvent period=&period>
+            <span>{location}</span>
+            <span>{sigle}</span>
+        </ScheduleEvent>
+    }
+}
+
+#[component]
+fn CoursePeriods<'a>(course: &'a TakenCourse) -> impl IntoView {
+    let lab = course.lab_group.as_ref().map(|c| {
         c.periods
-            .into_iter()
+            .iter()
             .map(|p| {
-                let room = p.room.to_string();
-                view! {
-                    <ScheduleEvent period=&p>
-                        {room}
-                    </ScheduleEvent>
-                }
+                view! {<PeriodEvent period=&p course=course period_type="Laboratoire"/>}
             })
             .collect_view()
     });
-    let theo = course.theo_group.map(|c| {
+    let theo = course.theo_group.as_ref().map(|c| {
         c.periods
-            .into_iter()
+            .iter()
             .map(|p| {
-                let room = p.room.to_string();
-                view! {
-                    <ScheduleEvent period=&p>
-                        {room}
-                    </ScheduleEvent>
-                }
+                view! {<PeriodEvent period=&p course=course period_type="Théorie"/>}
             })
             .collect_view()
     });
@@ -79,7 +82,7 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Calendar) -> impl IntoVie
         <a class="hidden" download="cours.ics" href=move || download.get() node_ref=link></a>
         {schedule.taken_courses.iter().map(|c| view!{<Course course={c} />}).collect_view()}
         <Schedule>
-            {schedule.taken_courses.iter().map(|c| view!{<CoursePeriods course={c.clone()} />}).collect_view()}
+            {schedule.taken_courses.iter().map(|c| view!{<CoursePeriods course=c />}).collect_view()}
         </Schedule>
         <button class="button-download" on:click=move |_| {
             let ics = schedule2.generate_ics(&calendar);

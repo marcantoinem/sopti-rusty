@@ -55,14 +55,14 @@ impl Hours {
 
     pub fn starting_text(self) -> String {
         let mut hour = self.starting_hour().to_string();
-        let minute = (self.start_minutes() & 0b11) * 15;
+        let minute = self.start_minutes();
         hour.push_str(&format!("h{:0>2}", minute));
         hour
     }
 
     pub fn end_text(self) -> String {
         let mut hour = self.last_hour().to_string();
-        let minute = (self.last_minutes() & 0b11) * 15;
+        let minute = self.last_minutes();
         hour.push_str(&format!("h{:0>2}", minute));
         hour
     }
