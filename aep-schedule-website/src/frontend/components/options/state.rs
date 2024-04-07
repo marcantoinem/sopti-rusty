@@ -11,6 +11,7 @@ pub struct OptionState {
         ReadSignal<Vec<ReactiveCourse>>,
         WriteSignal<Vec<ReactiveCourse>>,
     ),
+    pub week: [RwSignal<u64>; 5],
     pub max_nb_conflicts: RwSignal<u8>,
     pub day_off: RwSignal<u8>,
     pub morning: RwSignal<i8>,
@@ -33,6 +34,7 @@ impl Default for OptionState {
         Self {
             selections: create_signal(vec![]),
             max_nb_conflicts: create_rw_signal(0),
+            week: std::array::from_fn(|_i| create_rw_signal(0)),
             day_off: create_rw_signal(3),
             morning: create_rw_signal(0),
             finish_early: create_rw_signal(1),

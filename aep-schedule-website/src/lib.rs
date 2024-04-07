@@ -1,3 +1,4 @@
+#![feature(cmp_minmax)]
 pub mod backend;
 pub mod frontend;
 

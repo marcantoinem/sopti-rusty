@@ -190,3 +190,15 @@
 .title {
   line-height: 0.1;
 }
+
+.selected-hour {
+  background-color: black;
+}
+
+.unselected-hour {
+  background-color: white;
+}
+
+.selection {
+  pointer-events: none;
+}

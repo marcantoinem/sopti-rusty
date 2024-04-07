@@ -96,7 +96,7 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
             />
         </div>
         <Tab active_tab tab_id="".to_string()>
-            <PersonalTimeSelector></PersonalTimeSelector>
+            <PersonalTimeSelector week=state.week></PersonalTimeSelector>
         </Tab>
         <For
             each=selections

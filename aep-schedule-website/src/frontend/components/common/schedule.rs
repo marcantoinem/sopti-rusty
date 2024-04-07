@@ -29,7 +29,7 @@ pub fn Schedule(
             <div class="content" style={format!("grid-template-columns:2em 10px repeat({}, 1fr);grid-template-rows: repeat(56, {});", day_week.len(), col_height)}>
                 {hours.clone().into_iter().enumerate().map(|(i, h)| view!{<div class="time" style={format!("grid-row:{}", 4 * (i + 1))}>{h}</div>}).collect_view()}
                 <div class="filler-col"></div>
-                {(3..(day_week.len()+2)).map(|i| view!{<div class="col" style={format!("grid-column:{i}")}></div>}).collect_view()}
+                {(3..=(day_week.len()+2)).map(|i| view!{<div class="col" style={format!("grid-column:{i}")}></div>}).collect_view()}
                 {(1..=hours.len()).map(|i| view!{<div class="row" style={format!("grid-row:{}/ span 2", 4 * i - 1)}></div>}).collect_view()}
                 {children.map(|c| c())}
             </div>

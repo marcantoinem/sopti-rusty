@@ -44,6 +44,7 @@ body {
 
 .content {
   display: grid;
+  user-select: none;
 }
 
 .time {
@@ -58,7 +59,7 @@ body {
 }
 
 .col {
-  border-right: 1px solid black;
+  border-left: 1px solid black;
   grid-row: 1 / span 56;
   grid-column: span 1;
 }
@@ -66,7 +67,6 @@ body {
 .filler-col {
   grid-row: 1 / -1;
   grid-column: 2;
-  border-right: 1px solid black;
 }
 
 .row {
