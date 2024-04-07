@@ -1,5 +1,7 @@
 use crate::frontend::components::common::schedule::Schedule;
 use leptos::*;
+use web_sys::wasm_bindgen::JsCast;
+use web_sys::Element;
 
 #[component]
 pub fn PersonalTimeSelector(week: [RwSignal<u64>; 5]) -> impl IntoView {
@@ -24,7 +26,7 @@ pub fn PersonalTimeSelector(week: [RwSignal<u64>; 5]) -> impl IntoView {
         )
     };
 
-    let handle = window_event_listener(ev::mouseup, move |_| {
+    let handle = window_event_listener(ev::pointerup, move |_| {
         let Some((initial_x, initial_y)) = initial.get() else {
             return;
         };
@@ -73,13 +75,13 @@ pub fn PersonalTimeSelector(week: [RwSignal<u64>; 5]) -> impl IntoView {
                         }
                     };
                     view! {
-                        <div style=style class=class on:mousedown = move |_| {
+                        <div style=style class=class
+                        on:pointerdown=move |e| {
                             set_initial.set(Some((i, j)));
-                            let day = week[i].get();
-                            let hour = day & (1 << j);
-                            set_positive.set(hour == 0);
+                            set_positive.set((week[i].get() & (1 << j)) == 0);
+                            let _ = e.target().unwrap().dyn_ref::<Element>().unwrap().release_pointer_capture(e.pointer_id());
                         }
-                        on:mouseover = move |_| {
+                        on:pointerover=move |_| {
                             set_destination.set((i, j));
                         }
                         ></div>

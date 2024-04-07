@@ -25,6 +25,7 @@ body {
   display: grid;
   grid-template-rows: $days-height auto;
   margin-bottom: 0.4em;
+  touch-action: none;
 }
 
 .days {
