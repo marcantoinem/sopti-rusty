@@ -8,11 +8,10 @@ use crate::{
     algorithm::scores::{BEST_AFTERNOON, BEST_MORNING},
     data::time::week::Week,
 };
-use serde::{Deserialize, Serialize};
 use std::cmp;
 
-#[derive(Default, Deserialize, Serialize, PartialEq, Debug, Clone)]
-pub struct Weeks([Week; 2]);
+#[derive(Default, PartialEq, Debug, Clone)]
+pub struct Weeks([Week<7>; 2]);
 
 impl Weeks {
     pub fn add_period(&mut self, period: &Period) {

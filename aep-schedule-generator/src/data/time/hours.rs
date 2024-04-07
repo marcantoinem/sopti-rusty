@@ -89,6 +89,12 @@ impl From<&str> for Hours {
     }
 }
 
+impl From<u64> for Hours {
+    fn from(value: u64) -> Self {
+        Hours(value)
+    }
+}
+
 impl BitAnd for Hours {
     type Output = Hours;
     fn bitand(self, rhs: Self) -> Self::Output {

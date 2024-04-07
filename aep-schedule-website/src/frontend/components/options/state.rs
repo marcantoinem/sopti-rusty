@@ -1,6 +1,6 @@
 use aep_schedule_generator::{
     algorithm::{generation::SchedulesOptions, scores::EvaluationOption},
-    data::{course::Course, groups::Groups},
+    data::{course::Course, groups::Groups, time::week::Week},
 };
 use compact_str::CompactString;
 use leptos::*;
@@ -99,10 +99,12 @@ impl From<&OptionState> for SchedulesOptions {
             morning: state.morning.get(),
             finish_early: state.finish_early.get(),
         };
+        let user_conflicts = Week::new(state.week.map(|s| s.get()));
         Self {
             courses_to_take,
             max_nb_conflicts,
             evaluation,
+            user_conflicts,
             max_size: 50,
         }
     }

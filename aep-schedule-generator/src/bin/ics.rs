@@ -1,6 +1,6 @@
 use aep_schedule_generator::{
     algorithm::{generation::SchedulesOptions, scores::EvaluationOption},
-    data::{course::Course, courses::Courses},
+    data::{course::Course, courses::Courses, time::week::Week},
 };
 use std::{fs::File, io::BufReader};
 
@@ -31,6 +31,7 @@ fn main() {
         courses_to_take,
         max_nb_conflicts: 0,
         evaluation,
+        user_conflicts: Week::default(),
         max_size: 69,
     };
 

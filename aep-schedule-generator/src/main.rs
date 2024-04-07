@@ -1,6 +1,6 @@
 use aep_schedule_generator::{
     algorithm::{generation::SchedulesOptions, scores::EvaluationOption},
-    data::courses::Courses,
+    data::{courses::Courses, time::week::Week},
 };
 use std::{fs::File, io::BufReader, time::Instant};
 
@@ -43,6 +43,7 @@ fn main() {
         max_nb_conflicts: 3,
         evaluation,
         max_size: 100,
+        user_conflicts: Week::default(),
     };
     let instant = Instant::now();
     let schedules = options.get_schedules();

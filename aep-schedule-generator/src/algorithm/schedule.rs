@@ -10,6 +10,7 @@ use crate::data::{
         day::Day,
         hours::NO_HOUR,
         period::Period,
+        week::Week,
         weeks::Weeks,
     },
 };
@@ -78,12 +79,16 @@ impl<'a> ScheduleBuilder<'a> {
         &self,
         n: u8,
         min: f64,
+        user_conflicts: &Week<5>,
         options: EvaluationOption,
         mut new_course: TakenCourseBuilder,
     ) -> Option<Self> {
         let mut new_schedule = self.clone();
         if let Some(theo_group) = new_course.get_theo_group(self.courses) {
             for period in &theo_group.periods {
+                if user_conflicts.conflict_in_day(period) {
+                    return None;
+                }
                 if new_schedule.week.conflict_in_day(period) {
                     new_course.theo_group_conflict = true;
                     new_schedule.conflicts += 1;
@@ -96,6 +101,9 @@ impl<'a> ScheduleBuilder<'a> {
         }
         if let Some(lab_group) = new_course.get_lab_group(self.courses) {
             for period in &lab_group.periods {
+                if user_conflicts.conflict_in_day(period) {
+                    return None;
+                }
                 if new_schedule.week.conflict_in_day(period) {
                     new_course.lab_group_conflict = true;
                     new_schedule.conflicts += 1;

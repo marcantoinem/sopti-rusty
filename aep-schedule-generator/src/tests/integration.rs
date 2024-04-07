@@ -1,6 +1,6 @@
 use crate::{
     algorithm::{generation::SchedulesOptions, scores::EvaluationOption},
-    data::{course::Course, courses::Courses},
+    data::{course::Course, courses::Courses, time::week::Week},
 };
 use std::{fs::File, io::BufReader};
 
@@ -41,6 +41,7 @@ fn assert_no_combination_possible() {
         courses_to_take,
         max_nb_conflicts: 0,
         evaluation,
+        user_conflicts: Week::default(),
         max_size: 69,
     };
     let result = options.get_schedules().into_sorted_vec();
@@ -57,6 +58,7 @@ fn assert_possible() {
         courses_to_take,
         max_nb_conflicts: 1,
         evaluation,
+        user_conflicts: Week::default(),
         max_size: 69,
     };
     let result = options.get_schedules().into_sorted_vec();

@@ -4,6 +4,7 @@ use aep_schedule_generator::algorithm::scores::{EvaluationOption, Score};
 use aep_schedule_generator::algorithm::taken_courses::TakenCourses;
 use aep_schedule_generator::data::course::Course;
 use aep_schedule_generator::data::courses::Courses;
+use aep_schedule_generator::data::time::week::Week;
 use aep_schedule_generator::data::time::weeks::Weeks;
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use std::fs::File;
@@ -80,6 +81,7 @@ fn hellish_schedule(c: &mut Criterion) {
     let options = SchedulesOptions {
         courses_to_take,
         max_nb_conflicts: 4,
+        user_conflicts: Week::default(),
         evaluation,
         max_size: 69,
     };

@@ -1,13 +1,13 @@
 use super::{schedule::ScheduleBuilder, schedules::Schedules, scores::EvaluationOption};
-use crate::data::course::Course;
-use serde::{Deserialize, Serialize};
+use crate::data::{course::Course, time::week::Week};
 
-#[derive(Serialize, Deserialize, Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq)]
 pub struct SchedulesOptions {
     pub courses_to_take: Vec<Course>,
     pub max_nb_conflicts: u8,
     pub evaluation: EvaluationOption,
     pub max_size: usize,
+    pub user_conflicts: Week<5>,
 }
 
 impl SchedulesOptions {

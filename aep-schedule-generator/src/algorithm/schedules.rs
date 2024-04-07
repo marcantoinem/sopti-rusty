@@ -46,13 +46,15 @@ impl<'a> Schedules<'a> {
         };
         let min = self.get_min();
         let e = self.options.evaluation;
+        let c = self.options.user_conflicts;
         match (course.theo_groups.is_empty(), course.lab_groups.is_empty()) {
             (false, false) => {
                 for theo_group in course.theo_groups.iter().filter(|g| g.open) {
                     for lab_group in course.lab_groups.iter().filter(|g| g.open) {
                         let course =
                             TakenCourseBuilder::new(i, theo_group.into(), lab_group.into());
-                        if let Some(schedule) = schedule.add_check_conflicts(n, min, e, course) {
+                        if let Some(schedule) = schedule.add_check_conflicts(n, min, &c, e, course)
+                        {
                             self.get_schedules_rec(schedule, n, i + 1);
                         }
                     }
@@ -61,7 +63,7 @@ impl<'a> Schedules<'a> {
             (false, true) => {
                 for theo_group in course.theo_groups.iter().filter(|g| g.open) {
                     let course = TakenCourseBuilder::new(i, theo_group.into(), GroupIndex::none());
-                    if let Some(schedule) = schedule.add_check_conflicts(n, min, e, course) {
+                    if let Some(schedule) = schedule.add_check_conflicts(n, min, &c, e, course) {
                         self.get_schedules_rec(schedule, n, i + 1);
                     }
                 }
@@ -69,7 +71,7 @@ impl<'a> Schedules<'a> {
             (true, false) => {
                 for lab_group in course.lab_groups.iter().filter(|g| g.open) {
                     let course = TakenCourseBuilder::new(i, GroupIndex::none(), lab_group.into());
-                    if let Some(schedule) = schedule.add_check_conflicts(n, min, e, course) {
+                    if let Some(schedule) = schedule.add_check_conflicts(n, min, &c, e, course) {
                         self.get_schedules_rec(schedule, n, i + 1);
                     }
                 }
