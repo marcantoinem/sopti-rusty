@@ -65,6 +65,7 @@ inherits = "release"
 opt-level = 'z'
 lto = true
 panic = "abort"
+codegen-units = 4
 
 [package.metadata.leptos]
 # The name used by wasm-bindgen/cargo-leptos for the JS/WASM bundle. Defaults to the crate name
