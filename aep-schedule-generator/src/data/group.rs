@@ -1,38 +1,59 @@
-use super::time::period::Period;
+use super::{
+    group_index::GroupIndex,
+    time::{hours::Hours, period::Period},
+};
 use serde::{Deserialize, Serialize};
-use smallvec::{smallvec, SmallVec};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
 pub struct Group {
-    pub number: u8,
+    pub number: GroupIndex,
     pub open: bool,
     pub conflict: bool,
-    pub periods: SmallVec<[Period; 2]>,
+    pub periods: Vec<Period>,
 }
 
 impl Group {
     pub fn new(number: &str, period: Period) -> Self {
-        let number = number.parse().unwrap_or(0);
+        let number = number.parse::<u8>().unwrap_or(1) - 1;
+        let number = number.into();
         Self {
             number,
             open: true,
             conflict: false,
-            periods: smallvec![period],
+            periods: vec![period],
         }
     }
 
     pub fn add_period(&mut self, new_group: Group) {
         for new_period in new_group.periods {
-            if let Some(period) = self.periods.iter_mut().find(|p| {
+            let mut new_hours = Hours::default();
+            self.periods.retain(|p| {
                 let new_hour = new_period.hours | p.hours;
-                p.day == new_period.day
+                let is_mergeable = p.day == new_period.day
                     && p.room == new_period.room
-                    && (p.hours.start_minutes() + 4 == new_hour.start_minutes()
-                        || p.hours.last_minutes() + 4 == new_hour.last_minutes())
-            }) {
-                period.hours |= new_period.hours;
-            } else {
+                    && (p.hours.start() == new_hour.start() + 4
+                        || p.hours.end() + 4 == new_hour.end());
+                let keep = !is_mergeable || new_hours == Hours::default();
+                if is_mergeable {
+                    new_hours |= new_hour;
+                }
+                keep
+            });
+            if new_hours == Hours::default() {
                 self.periods.push(new_period);
+            } else {
+                let first_period = self
+                    .periods
+                    .iter_mut()
+                    .find(|p| {
+                        let new_hour = new_period.hours | p.hours;
+                        p.day == new_period.day
+                            && p.room == new_period.room
+                            && (p.hours.start() == new_hour.start() + 4
+                                || p.hours.end() + 4 == new_hour.end())
+                    })
+                    .unwrap();
+                first_period.hours |= new_hours;
             }
         }
     }

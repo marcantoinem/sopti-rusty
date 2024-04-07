@@ -4,13 +4,13 @@
   background-color: $highlight-color;
   border: none;
   color: white;
-  padding: 8px 16px;
+  padding: 0.2em 0.5em;
   text-decoration: none;
-  margin: 4px 2px;
-  border-radius: 50px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 20pt;
-  font-weight: 500;
+  width: 12em;
+  align-self: center;
 }
 
 .relative {
@@ -24,7 +24,6 @@
   text-align: center;
   border-radius: 5px;
   width: 80%;
-  margin: 5px;
   padding: 0px;
   font-weight: bold;
 }
@@ -59,6 +58,7 @@
 .three-col {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
+  width: 98%;
 }
 
 .bottom {
@@ -76,6 +76,10 @@
 
 .opti-slider {
   width: 70%;
+}
+
+.auto-bottom {
+  margin-top: auto;
 }
 
 .group-chip {
@@ -126,7 +130,7 @@
 }
 
 .input-item {
-  width: 60%;
+  width: 95%;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -162,7 +166,8 @@
 }
 
 .tab-width {
-  width: 80%;
+  flex-wrap: wrap;
+  width: 95%;
 }
 
 .tab-selected {
@@ -180,4 +185,20 @@
 .number-input {
   height: 22pt;
   margin-left: auto;
+}
+
+.title {
+  line-height: 0.1;
+}
+
+.selected-hour {
+  background-color: black;
+}
+
+.unselected-hour {
+  background-color: white;
+}
+
+.selection {
+  pointer-events: none;
 }

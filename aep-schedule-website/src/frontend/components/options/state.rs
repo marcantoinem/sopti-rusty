@@ -1,6 +1,6 @@
 use aep_schedule_generator::{
     algorithm::{generation::SchedulesOptions, scores::EvaluationOption},
-    data::{course::Course, groups::Groups},
+    data::{course::Course, groups::Groups, time::week::Week},
 };
 use compact_str::CompactString;
 use leptos::*;
@@ -11,6 +11,7 @@ pub struct OptionState {
         ReadSignal<Vec<ReactiveCourse>>,
         WriteSignal<Vec<ReactiveCourse>>,
     ),
+    pub week: [RwSignal<u64>; 5],
     pub max_nb_conflicts: RwSignal<u8>,
     pub day_off: RwSignal<u8>,
     pub morning: RwSignal<i8>,
@@ -33,6 +34,7 @@ impl Default for OptionState {
         Self {
             selections: create_signal(vec![]),
             max_nb_conflicts: create_rw_signal(0),
+            week: std::array::from_fn(|_i| create_rw_signal(0)),
             day_off: create_rw_signal(3),
             morning: create_rw_signal(0),
             finish_early: create_rw_signal(1),
@@ -43,10 +45,10 @@ impl Default for OptionState {
 impl From<ReactiveCourse> for Course {
     fn from(mut value: ReactiveCourse) -> Self {
         for (i, open) in value.theo_open.iter().enumerate() {
-            value.theo_groups[i].open = open.get();
+            value.theo_groups.get_mut(i.into()).unwrap().open = open.get();
         }
         for (i, open) in value.lab_open.iter().enumerate() {
-            value.lab_groups[i].open = open.get();
+            value.lab_groups.get_mut(i.into()).unwrap().open = open.get();
         }
         Self {
             sigle: value.sigle,
@@ -97,10 +99,13 @@ impl From<&OptionState> for SchedulesOptions {
             morning: state.morning.get(),
             finish_early: state.finish_early.get(),
         };
+        let user_conflicts = Week::new(state.week.map(|s| s.get()));
         Self {
             courses_to_take,
             max_nb_conflicts,
             evaluation,
+            user_conflicts,
+            max_size: 50,
         }
     }
 }

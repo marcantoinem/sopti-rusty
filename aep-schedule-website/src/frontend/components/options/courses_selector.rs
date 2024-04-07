@@ -3,9 +3,11 @@ use super::state::ReactiveCourse;
 use crate::backend::routes::get_courses;
 use crate::frontend::components::common::checkbox::CheckboxChip;
 use crate::frontend::components::common::tab::Tab;
+use crate::frontend::components::options::personal::PersonalTimeSelector;
 use crate::frontend::components::options::search::SearchCourse;
 use aep_schedule_generator::data::groups::Groups;
 use leptos::*;
+use phosphor_leptos::CalendarX;
 use phosphor_leptos::IconWeight;
 use phosphor_leptos::X;
 
@@ -17,7 +19,7 @@ fn GroupsSettings(groups: Groups, open: Vec<RwSignal<bool>>) -> impl IntoView {
                 let open_style = if g.open {"group-chip"} else {"group-chip closed-group"};
                 view!{
                     <CheckboxChip value=open class=open_style>
-                        <span>{g.number}</span> <div class="col-container group-text-col">{g.periods.iter().map(|p| {
+                        <span>{g.number.to_string()}</span> <div class="col-container group-text-col">{g.periods.iter().map(|p| {
                             view!{<div class="row-container group-text">
                                 <span>{p.day.to_string()}</span>
                                 <span class="period-group">{p.hours.to_string()}</span>
@@ -57,12 +59,18 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
     let (active_tab, set_active_tab) = create_signal("".to_string());
     view! {
         <Await
-            future=|| get_courses()
+            future=get_courses
             let:courses
         >
             <SearchCourse courses=courses.clone() set_selections set_active_tab/>
         </Await>
-        <div class="row-container row-center tab-width">
+        <div class="row-container tab-width">
+            <button class="tab-button chips" class=("tab-selected", move || active_tab.get() == "") id="personal" on:click={
+                move |_| set_active_tab.set("".to_string())
+            }>
+                <CalendarX weight=IconWeight::Regular size="16px"/>
+                {"Horaire personnel"}
+            </button>
             <For
                 each=selections
                 key=|c| c.sigle.clone()
@@ -87,14 +95,15 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
                 }
             />
         </div>
+        <Tab active_tab tab_id="".to_string()>
+            <PersonalTimeSelector week=state.week></PersonalTimeSelector>
+        </Tab>
         <For
             each=selections
             key=|c| c.sigle.clone()
-            children=move |course| {
-                view!{
-                    <CourseTab course active_tab/>
-                }
-            }
-        />
+            let:course
+        >
+            <CourseTab course active_tab/>
+        </For>
     }
 }

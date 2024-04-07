@@ -1,7 +1,7 @@
 use crate::frontend::components::{options::form::OptionsForms, schedules::SchedulesComponent};
 use aep_schedule_generator::algorithm::generation::SchedulesOptions;
 use leptos::*;
-use phosphor_leptos::{CaretDoubleRight, IconWeight, Bug};
+use phosphor_leptos::{CaretDoubleRight, IconWeight};
 
 #[component]
 pub fn GeneratorPage() -> impl IntoView {
@@ -19,6 +19,5 @@ pub fn GeneratorPage() -> impl IntoView {
             <SchedulesComponent read_signal=action.value()/>
         </section>
         <button on:click=move |_| {set_hide(false)} id="go-back"><CaretDoubleRight weight=IconWeight::Regular size="3vh"/></button>
-        <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty/-/issues/new" target="_blank" id="bug-report"><Bug weight=IconWeight::Regular size="3vh"/><span>"Reporter un bug"</span></a>
     }
 }

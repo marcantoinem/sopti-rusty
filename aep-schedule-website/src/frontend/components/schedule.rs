@@ -1,87 +1,93 @@
+use crate::frontend::components::common::schedule::{Schedule, ScheduleEvent};
 use aep_schedule_generator::{
     algorithm::{schedule::Schedule, taken_course::TakenCourse},
-    data::{
-        group::Group,
-        time::{period::Period, week_number::WeekNumber},
-    },
+    data::time::{calendar::Calendar, period::Period},
 };
-use leptos::*;
+use leptos::{html::A, *};
+use phosphor_leptos::{Download, IconWeight};
 
 #[component]
 pub fn Course<'a>(course: &'a TakenCourse) -> impl IntoView {
-    let lab_group = course
-        .lab_group
-        .as_ref()
-        .and_then(|g| Some(format!("L: {}", g.number)));
     let theo_group = course
         .theo_group
         .as_ref()
-        .and_then(|g| Some(format!("C: {}", g.number)));
+        .map(|g| format!("T: {}", g.number));
+    let lab_group = course
+        .lab_group
+        .as_ref()
+        .map(|g| format!("L: {}", g.number));
     view! {
         <tr>
             <td>{course.sigle.to_string()}</td>
             <td>{course.name.to_string()}</td>
-            <td>{lab_group}</td>
             <td>{theo_group}</td>
+            <td>{lab_group}</td>
         </tr>
     }
 }
 
-fn style_p(period: &Period) -> String {
-    let column = period.day as u8 + 3;
-    let hour = period.hours.starting_hour() - 7;
-    let len = period.hours.len_hour();
-    format!("grid-column:{};grid-row:{} / span {};", column, hour, len)
-}
-
-fn group_style(group: &Group, period: &Period) -> String {
-    let mut class = "event".to_string();
-    if group.conflict {
-        class.push_str(" conflict");
+#[component]
+fn PeriodEvent<'a>(
+    period: &'a Period,
+    course: &'a TakenCourse,
+    period_type: &'static str,
+) -> impl IntoView {
+    let location = period.hours.to_string() + " - " + period.room.as_str();
+    let sigle = course.sigle.to_string() + " - " + period_type;
+    view! {
+        <ScheduleEvent period=&period>
+            <span>{location}</span>
+            <span>{sigle}</span>
+        </ScheduleEvent>
     }
-    match period.week_nb {
-        WeekNumber::B1 => class.push_str(" b1"),
-        WeekNumber::B2 => class.push_str(" b2"),
-        _ => (),
-    }
-    class
 }
 
 #[component]
-pub fn ScheduleComponent(schedule: Schedule) -> impl IntoView {
-    const HOURS: [&str; 14] = [
-        "8:30", "9:30", "10:30", "11:30", "12:45", "13:45", "14:45", "15:45", "16:45", "17:45",
-        "18:30", "19:30", "20:30", "21:30",
-    ];
-    const DAY_WEEK: [&str; 5] = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
+fn CoursePeriods<'a>(course: &'a TakenCourse) -> impl IntoView {
+    let lab = course.lab_group.as_ref().map(|c| {
+        c.periods
+            .iter()
+            .map(|p| {
+                view! {<PeriodEvent period=&p course=course period_type="L"/>}
+            })
+            .collect_view()
+    });
+    let theo = course.theo_group.as_ref().map(|c| {
+        c.periods
+            .iter()
+            .map(|p| {
+                view! {<PeriodEvent period=&p course=course period_type="T"/>}
+            })
+            .collect_view()
+    });
     view! {
-        <div class="schedule-container">
-            <table class="cours">
-                {schedule.courses.iter().map(|c| view!{<Course course=c/>}).collect_view()}
-            </table>
-            <div class="schedule">
-                <div class="days">
-                    <div></div>
-                    <div></div>
-                    {DAY_WEEK.map(|d| view!{<div class="day">{d}</div>})}
-                </div>
-                <div class="content">
-                    {HOURS.map(|h| view!{<div class="time">{h}</div>})}
-                    <div class="filler-col"></div>
-                    {(3..(DAY_WEEK.len()+2)).map(|i| view!{<div class="col" style={format!("grid-column:{i}")}></div>}).collect_view()}
-                    {(1..=HOURS.len()).map(|i| view!{<div class="row" style={format!("grid-row:{i}")}></div>}).collect_view()}
-                    {schedule.courses.iter().map(|c| {
-                        view!{
-                            {c.lab_group.as_ref().map(|g| Some(g.periods.iter().map(|p| {
-                                view!{<div class={group_style(g, p)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Lab. Gr: " {g.number} " " {p.week_nb.to_string()}</p></div>}
-                            }).collect_view()))}
-                            {c.theo_group.as_ref().map(|g| Some(g.periods.iter().map(|p| {
-                                view!{<div class={group_style(g, p)} style=style_p(p)><p>{c.sigle.to_string()}</p><p>"Theo. Gr: " {g.number} " " {p.week_nb.to_string()}</p></div>}
-                            }).collect_view()))}
-                        }
-                    }).collect_view()}
-                </div>
-            </div>
-        </div>
+        {lab}
+        {theo}
+    }
+}
+
+#[component]
+pub fn ScheduleComponent(schedule: Schedule, calendar: Calendar) -> impl IntoView {
+    let schedule2 = schedule.clone();
+    let (download, set_download) = create_signal("".to_string());
+    let link: NodeRef<A> = create_node_ref();
+
+    view! {
+        <a class="hidden" download="cours.ics" href=move || download.get() node_ref=link></a>
+        <table class="cours">
+            {schedule.taken_courses.iter().map(|c| view!{<Course course={c} />}).collect_view()}
+        </table>
+        <Schedule last_day=schedule.last_day>
+            {schedule.taken_courses.iter().map(|c| view!{<CoursePeriods course=c />}).collect_view()}
+        </Schedule>
+        <button class="button-download" on:click=move |_| {
+            let ics = schedule2.generate_ics(&calendar);
+            let url = url_escape::encode_fragment(&ics);
+            set_download("data:text/plain;charset=utf-8,".to_string() + &url);
+            link().unwrap().click();
+        }>
+            <Download weight=IconWeight::Regular size="3vh"/>
+            <span>"Télécharger le calendrier de cet horaire"</span>
+        </button>
     }
 }

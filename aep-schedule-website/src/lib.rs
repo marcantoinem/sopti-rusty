@@ -1,5 +1,5 @@
+#![feature(cmp_minmax)]
 pub mod backend;
-pub mod fileserv;
 pub mod frontend;
 
 cfg_if::cfg_if! { if #[cfg(feature = "hydrate")] {

@@ -1,5 +1,6 @@
 use super::course::{Course, CourseName};
 use super::group::Group;
+use super::group_index::GroupIndex;
 use super::time::period::Period;
 use compact_str::CompactString;
 use std::{array, collections::HashMap, io::BufRead};
@@ -72,7 +73,10 @@ impl Courses {
             let Some(course) = self.courses.get_mut(sigle) else {
                 continue;
             };
-            let Ok(number) = number.parse() else { continue };
+            let Ok(number) = number.parse::<u8>() else {
+                continue;
+            };
+            let number = GroupIndex::from(number - 1);
             let groups = match course_type {
                 "L" => &mut course.lab_groups,
                 "C" => &mut course.theo_groups,
@@ -90,5 +94,12 @@ impl Courses {
 
     pub fn get_course(&self, sigle: &str) -> Option<Course> {
         self.courses.get(sigle).cloned()
+    }
+
+    pub fn get_courses(&self, sigles: &[&str]) -> Vec<Course> {
+        sigles
+            .into_iter()
+            .filter_map(|sigle| self.get_course(*sigle))
+            .collect()
     }
 }

@@ -1,10 +1,10 @@
 @import 'constant.scss';
 
 .schedule-container {
-width: 83%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+  width: 83%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 10pt;
   border-collapse: collapse;
   animation: 0.1s ease-out 1 fadeIn;
@@ -13,8 +13,7 @@ width: 83%;
 // Calendar inspired by https://codepen.io/kjellmf/pen/qgxyVJ
 
 $days-height: 2em;
-$time-width: 2em;
-$hours: repeat(14, 2em);
+$time-width: 1em;
 $days: $time-width 10px repeat(5, 1fr);
 
 body {
@@ -25,15 +24,16 @@ body {
   width: 100%;
   display: grid;
   grid-template-rows: $days-height auto;
+  margin-bottom: 0.4em;
+  touch-action: none;
 }
 
 .days {
   background: $background-color;
-  color:white;
+  color: white;
   display: grid;
   place-content: center;
   text-align: center;
-  grid-template-columns: $days;
   top: 0;
   z-index: 10;
   border-bottom: 2px solid $highlight-color;
@@ -43,14 +43,9 @@ body {
   width: 100%;
 }
 
-.day {
-  border-left: 1px solid $highlight-color;
-}
-
 .content {
   display: grid;
-  grid-template-columns: $days;
-  grid-template-rows: $hours;
+  user-select: none;
 }
 
 .time {
@@ -65,15 +60,14 @@ body {
 }
 
 .col {
-  border-right: 1px solid black;
-  grid-row: 1 / span 24;
+  border-left: 1px solid black;
+  grid-row: 1 / span 56;
   grid-column: span 1;
 }
 
 .filler-col {
   grid-row: 1 / -1;
   grid-column: 2;
-  border-right: 1px solid black;
 }
 
 .row {
@@ -82,13 +76,16 @@ body {
 }
 
 .event {
-  border-radius: 5px;
+  border-radius: 0.5em;
   padding: 1px;
-  margin: 1px 3px;
+  margin: 0 2px;
   font-weight: bold;
   font-size: 70%;
   background-color: $highlight-color;
   text-align: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .event p {
@@ -108,4 +105,19 @@ body {
 .b2 {
   width: 45%;
   margin-left: 55%;
+}
+
+.button-download {
+  padding: 0px 10px;
+  gap: 10px;
+  height: 4vh;
+  background-color: $highlight-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  color: white;
+  font-weight: bolder;
+  border-radius: 10px;
+  cursor: pointer;
 }

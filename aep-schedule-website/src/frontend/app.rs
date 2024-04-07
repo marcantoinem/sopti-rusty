@@ -3,12 +3,14 @@ use crate::frontend::pages::home::HomePage;
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
-use phosphor_leptos::{GitlabLogo, IconWeight};
+use phosphor_leptos::{Bug, GitlabLogo, IconWeight};
 
 #[component]
 pub fn App() -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context();
+
+    let (is_active, set_active) = create_signal(String::new());
 
     view! {
 
@@ -21,15 +23,34 @@ pub fn App() -> impl IntoView {
 
         // content for this welcome page
         <Router>
-            <nav>
-                <a href="/">"Accueil"</a>
-                <a href="/generateur">"Générateur d'horaire"</a>
-                <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty" class="sources"><span>"Sources "</span><GitlabLogo weight=IconWeight::Regular size="3vh"/></a>
-            </nav>
+            <header>
+                <nav class=is_active>
+                    <A href="/">"Générateur d'horaire"</A>
+                    <A href="/apropos">"À propos"</A>
+                    <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty/-/issues/new" class="sources pad-left"  target="_blank">
+                        <span>"Reporter un bug"</span>
+                        <Bug weight=IconWeight::Regular size="3vh"/>
+                    </a>
+                    <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty" class="sources"  target="_blank" ><span>"Sources "</span><GitlabLogo weight=IconWeight::Regular size="3vh"/></a>
+                </nav>
+                <div class=move || is_active.get() + " hamburger" on:click=move |_| {
+                    set_active.update(|text| {
+                        if text == "active" {
+                            text.clear();
+                        } else {
+                            text.push_str("active");
+                        }
+                    });
+                }>
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                </div>
+            </header>
             <main>
                 <Routes>
-                    <Route path="/" view=HomePage/>
-                    <Route path="/generateur" view=GeneratorPage/>
+                    <Route path="/" view=GeneratorPage/>
+                    <Route path="/apropos" view=HomePage/>
                 </Routes>
             </main>
         </Router>

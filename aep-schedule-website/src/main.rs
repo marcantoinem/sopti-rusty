@@ -3,9 +3,11 @@ cfg_if::cfg_if!(if #[cfg(feature = "ssr")] {
         routing::get,
         Router,
     };
+    use std::future::IntoFuture;
     use leptos_axum::{generate_route_list, LeptosRoutes};
-    use leptos::{get_configuration};
-    use aep_schedule_website::fileserv::file_and_error_handler;
+    use leptos::*;
+    use tower_http::compression::CompressionLayer;
+    use aep_schedule_website::backend::fileserv::file_and_error_handler;
     use aep_schedule_website::frontend::app::App;
     use aep_schedule_website::backend::state::{AppState, server_fn_handler, leptos_routes_handler};
 
@@ -20,7 +22,7 @@ cfg_if::cfg_if!(if #[cfg(feature = "ssr")] {
         let conf = get_configuration(None).await.unwrap();
         let leptos_options = conf.leptos_options;
         let routes = generate_route_list(App);
-        let state = AppState::new(leptos_options.clone(), routes.clone());
+        let state = AppState::new(leptos_options.clone(), routes.clone()).await;
         let addr = leptos_options.site_addr;
         // build our application with a route
         let app = Router::new()
@@ -30,12 +32,14 @@ cfg_if::cfg_if!(if #[cfg(feature = "ssr")] {
             )
             .leptos_routes_with_handler(routes, get(leptos_routes_handler))
             .fallback(file_and_error_handler)
+            .layer(CompressionLayer::new())
             .with_state(state.clone());
         // run our app with hyper
         // `axum::Server` is a re-export of `hyper::Server`
         log::info!("listening on http://{}", &addr);
+        let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
         let _ = tokio::join!(
-            axum::Server::bind(&addr).serve(app.into_make_service()),
+            axum::serve(listener, app.into_make_service()).into_future(),
             state.update_courses()
         );
     }

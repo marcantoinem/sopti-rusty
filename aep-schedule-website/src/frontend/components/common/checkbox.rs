@@ -1,6 +1,5 @@
 use leptos::*;
 
-/// This checkbox is only visual, it display a signal.
 #[component]
 pub fn CheckboxChip(
     #[prop(optional, into)] value: RwSignal<bool>,
