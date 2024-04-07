@@ -25,8 +25,8 @@ pub fn App() -> impl IntoView {
         <Router>
             <header>
                 <nav class=is_active>
-                    <A href="/">"Accueil"</A>
-                    <A href="/generateur">"Générateur d'horaire"</A>
+                    <A href="/">"Générateur d'horaire"</A>
+                    <A href="/apropos">"À propos"</A>
                     <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty/-/issues/new" class="sources pad-left"  target="_blank">
                         <span>"Reporter un bug"</span>
                         <Bug weight=IconWeight::Regular size="3vh"/>
@@ -49,8 +49,8 @@ pub fn App() -> impl IntoView {
             </header>
             <main>
                 <Routes>
-                    <Route path="/" view=HomePage/>
-                    <Route path="/generateur" view=GeneratorPage/>
+                    <Route path="/" view=GeneratorPage/>
+                    <Route path="/apropos" view=HomePage/>
                 </Routes>
             </main>
         </Router>

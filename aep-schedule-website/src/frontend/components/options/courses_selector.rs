@@ -3,6 +3,7 @@ use super::state::ReactiveCourse;
 use crate::backend::routes::get_courses;
 use crate::frontend::components::common::checkbox::CheckboxChip;
 use crate::frontend::components::common::tab::Tab;
+use crate::frontend::components::options::personal::PersonalTimeSelector;
 use crate::frontend::components::options::search::SearchCourse;
 use aep_schedule_generator::data::groups::Groups;
 use leptos::*;
@@ -95,7 +96,7 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
             />
         </div>
         <Tab active_tab tab_id="".to_string()>
-            <p>"Schedule will be put there."</p>
+            <PersonalTimeSelector></PersonalTimeSelector>
         </Tab>
         <For
             each=selections

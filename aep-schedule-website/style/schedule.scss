@@ -13,8 +13,7 @@
 // Calendar inspired by https://codepen.io/kjellmf/pen/qgxyVJ
 
 $days-height: 2em;
-$time-width: 2em;
-$hours: repeat(56, 0.5em);
+$time-width: 1em;
 $days: $time-width 10px repeat(5, 1fr);
 
 body {
@@ -25,6 +24,7 @@ body {
   width: 100%;
   display: grid;
   grid-template-rows: $days-height auto;
+  margin-bottom: 0.4em;
 }
 
 .days {
@@ -44,7 +44,6 @@ body {
 
 .content {
   display: grid;
-  grid-template-rows: $hours;
 }
 
 .time {
