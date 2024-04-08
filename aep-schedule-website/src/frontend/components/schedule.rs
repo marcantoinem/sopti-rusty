@@ -1,7 +1,7 @@
 use crate::frontend::components::common::schedule::{Schedule, ScheduleEvent};
 use aep_schedule_generator::{
     algorithm::{schedule::Schedule, taken_course::TakenCourse},
-    data::time::{calendar::Calendar, period::Period},
+    data::time::{calendar::Calendar, period::Period, week_number::WeekNumber},
 };
 use leptos::{html::A, *};
 use phosphor_leptos::{Download, IconWeight};
@@ -35,12 +35,17 @@ fn PeriodEvent<'a>(
 ) -> impl IntoView {
     let location = period.hours.to_string() + " - " + period.room.as_str();
     let sigle = course.sigle.to_string() + " - " + period_type;
-    let class = match i % 4 {
-        0 => " color1",
-        1 => " color2",
-        2 => " color3",
-        _ => " color4",
+    let mut class = match i % 4 {
+        0 => " color1".to_string(),
+        1 => " color2".to_string(),
+        2 => " color3".to_string(),
+        _ => " color4".to_string(),
     };
+    match period.week_nb {
+        WeekNumber::B1 => class.push_str(" b1"),
+        WeekNumber::B2 => class.push_str(" b2"),
+        _ => (),
+    }
 
     view! {
         <ScheduleEvent period=&period class=class>

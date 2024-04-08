@@ -203,3 +203,15 @@
 .selection {
   pointer-events: none;
 }
+
+.add-button {
+  position: absolute;
+  right: 0;
+  height: 3em;
+  width: 3em;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none !important;
+}
