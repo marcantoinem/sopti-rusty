@@ -169,7 +169,7 @@ a:hover {
 	padding: 0em 1em;
 }
 
-a {
+nav > a {
 	color: black;
 }
 
@@ -226,7 +226,7 @@ nav.active {
 	}
 }
 
-.dossier-etudiant-frame {
-	width: 100%;
-	height: 100vh;
+.classroom-page {
+	justify-content: space-between;
+	padding: 1em;
 }
