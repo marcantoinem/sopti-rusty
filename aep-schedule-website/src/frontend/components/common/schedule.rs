@@ -38,7 +38,11 @@ pub fn Schedule(
 }
 
 #[component]
-pub fn ScheduleEvent<'a>(period: &'a Period, children: Children) -> impl IntoView {
+pub fn ScheduleEvent<'a>(
+    period: &'a Period,
+    children: Children,
+    #[prop(optional)] class: &'static str,
+) -> impl IntoView {
     let column = period.day as u8 + 3;
     let hour = period.hours.start() + 3;
     let len = period.hours.len_hour();
@@ -49,7 +53,7 @@ pub fn ScheduleEvent<'a>(period: &'a Period, children: Children) -> impl IntoVie
         len * 4
     );
     view! {
-        <div style={style} class="event">
+        <div style={style} class="event".to_owned() + class>
             {children()}
         </div>
     }

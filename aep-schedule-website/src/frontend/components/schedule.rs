@@ -28,14 +28,22 @@ pub fn Course<'a>(course: &'a TakenCourse) -> impl IntoView {
 
 #[component]
 fn PeriodEvent<'a>(
+    i: usize,
     period: &'a Period,
     course: &'a TakenCourse,
     period_type: &'static str,
 ) -> impl IntoView {
     let location = period.hours.to_string() + " - " + period.room.as_str();
     let sigle = course.sigle.to_string() + " - " + period_type;
+    let class = match i % 4 {
+        0 => " color1",
+        1 => " color2",
+        2 => " color3",
+        _ => " color4",
+    };
+
     view! {
-        <ScheduleEvent period=&period>
+        <ScheduleEvent period=&period class=class>
             <span>{location}</span>
             <span>{sigle}</span>
         </ScheduleEvent>
@@ -43,12 +51,12 @@ fn PeriodEvent<'a>(
 }
 
 #[component]
-fn CoursePeriods<'a>(course: &'a TakenCourse) -> impl IntoView {
+fn CoursePeriods<'a>(i: usize, course: &'a TakenCourse) -> impl IntoView {
     let lab = course.lab_group.as_ref().map(|c| {
         c.periods
             .iter()
             .map(|p| {
-                view! {<PeriodEvent period=&p course=course period_type="L"/>}
+                view! {<PeriodEvent i period=&p course=course period_type="L"/>}
             })
             .collect_view()
     });
@@ -56,7 +64,7 @@ fn CoursePeriods<'a>(course: &'a TakenCourse) -> impl IntoView {
         c.periods
             .iter()
             .map(|p| {
-                view! {<PeriodEvent period=&p course=course period_type="T"/>}
+                view! {<PeriodEvent i period=&p course=course period_type="T"/>}
             })
             .collect_view()
     });
@@ -78,7 +86,7 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Calendar) -> impl IntoVie
             {schedule.taken_courses.iter().map(|c| view!{<Course course={c} />}).collect_view()}
         </table>
         <Schedule last_day=schedule.last_day>
-            {schedule.taken_courses.iter().map(|c| view!{<CoursePeriods course=c />}).collect_view()}
+            {schedule.taken_courses.iter().enumerate().map(|(i, c)| view!{<CoursePeriods i course=c />}).collect_view()}
         </Schedule>
         <button class="button-download" on:click=move |_| {
             let ics = schedule2.generate_ics(&calendar);

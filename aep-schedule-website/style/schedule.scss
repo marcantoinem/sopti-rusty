@@ -77,7 +77,6 @@ $days: $time-width 10px repeat(5, 1fr);
   margin: 0 2px;
   font-weight: bold;
   font-size: 70%;
-  background-color: $highlight-color;
   text-align: center;
   justify-content: center;
   display: flex;
@@ -116,4 +115,20 @@ $days: $time-width 10px repeat(5, 1fr);
   font-weight: bolder;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.color1 {
+  background-color: #41AAE6;
+}
+
+.color2 {
+  background-color: #8CC83C;
+}
+
+.color3 {
+  background-color: #FA961E;
+}
+
+.color4 {
+  background-color: #B91E32;
 }

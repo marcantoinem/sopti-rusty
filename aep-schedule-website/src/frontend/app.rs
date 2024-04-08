@@ -28,7 +28,7 @@ pub fn App() -> impl IntoView {
                     <A href="/">"Générateur d'horaire"</A>
                     <A href="/apropos">"À propos"</A>
                     <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty/-/issues/new" class="sources pad-left"  target="_blank">
-                        <span>"Reporter un bug"</span>
+                        <span>"Signaler un bug"</span>
                         <Bug weight=IconWeight::Regular size="3vh"/>
                     </a>
                     <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty" class="sources"  target="_blank" ><span>"Sources "</span><GitlabLogo weight=IconWeight::Regular size="3vh"/></a>
