@@ -50,3 +50,14 @@ input:focus ~ .result-box {
 .spacer {
     flex-grow: 1;
 }
+
+.warning-box {
+    padding: 1em;
+    gap: 1em;
+    max-width: 42em;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: $error-color;
+    color: white;
+}
