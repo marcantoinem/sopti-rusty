@@ -8,12 +8,14 @@ use std::{array, collections::HashMap, io::BufRead};
 #[derive(Debug, Clone)]
 pub struct Courses {
     courses: HashMap<CompactString, Course>,
+    rooms: HashMap<CompactString, Vec<Period>>,
 }
 
 impl Courses {
     pub fn from_csv(csv_horsages: impl BufRead, csv_fermes: impl BufRead) -> Courses {
         let courses = HashMap::new();
-        let mut courses = Courses { courses };
+        let rooms = HashMap::new();
+        let mut courses = Courses { courses, rooms };
         courses.update_all_courses(csv_horsages);
         courses.update_closed(csv_fermes);
         courses
@@ -46,6 +48,25 @@ impl Courses {
                 let period = Period::new(week_day, room.into(), hour, week_nb);
                 course.insert_or_push(period_type, Group::new(number, period));
                 self.courses.insert(sigle.into(), course);
+            }
+        }
+
+        for course in self.courses.values() {
+            for group in course.lab_groups.iter() {
+                for period in group.periods.iter() {
+                    self.rooms
+                        .entry(period.room.clone())
+                        .and_modify(|periods| periods.push(period.clone()))
+                        .or_default();
+                }
+            }
+            for group in course.theo_groups.iter() {
+                for period in group.periods.iter() {
+                    self.rooms
+                        .entry(period.room.clone())
+                        .and_modify(|periods| periods.push(period.clone()))
+                        .or_default();
+                }
             }
         }
     }
@@ -88,5 +109,15 @@ impl Courses {
             .into_iter()
             .filter_map(|sigle| self.get_course(*sigle))
             .collect()
+    }
+
+    pub fn get_classroom(&self, local: &CompactString) -> Vec<Period> {
+        self.rooms.get(local).cloned().unwrap_or_default()
+    }
+
+    pub fn get_all_classroom(&self) -> Vec<CompactString> {
+        let mut rooms: Vec<_> = self.rooms.keys().cloned().collect();
+        rooms.sort_unstable();
+        rooms
     }
 }
