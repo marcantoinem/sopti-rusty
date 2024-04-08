@@ -1,5 +1,6 @@
+use crate::frontend::pages::apropos::HomePage;
+use crate::frontend::pages::classroom::ClassRoomComponent;
 use crate::frontend::pages::generator::GeneratorPage;
-use crate::frontend::pages::home::HomePage;
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
@@ -26,6 +27,7 @@ pub fn App() -> impl IntoView {
             <header>
                 <nav class=is_active>
                     <A href="/">"Générateur d'horaire"</A>
+                    <A href="/local">"Horaire d'un local"</A>
                     <A href="/apropos">"À propos"</A>
                     <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty/-/issues/new" class="sources pad-left"  target="_blank">
                         <span>"Signaler un bug"</span>
@@ -51,6 +53,7 @@ pub fn App() -> impl IntoView {
                 <Routes>
                     <Route path="/" view=GeneratorPage/>
                     <Route path="/apropos" view=HomePage/>
+                    <Route path="/local" view=ClassRoomComponent/>
                 </Routes>
             </main>
         </Router>
