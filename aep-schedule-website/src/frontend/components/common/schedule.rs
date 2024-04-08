@@ -26,7 +26,7 @@ pub fn Schedule(
                 <div></div>
                 {day_week.iter().map(|d| view!{<div class="day">{*d}</div>}).collect_view()}
             </div>
-            <div class="content" style={format!("grid-template-columns:2em 10px repeat({}, 1fr);grid-template-rows: repeat(56, {});", day_week.len(), col_height)}>
+            <div class="content" style={format!("grid-template-columns:2em 10px repeat({}, 1fr);grid-template-rows: repeat(58, {});", day_week.len(), col_height)}>
                 {hours.clone().into_iter().enumerate().map(|(i, h)| view!{<div class="time" style={format!("grid-row:{}", 4 * (i + 1))}>{h}</div>}).collect_view()}
                 <div class="filler-col"></div>
                 {(3..=(day_week.len()+2)).map(|i| view!{<div class="col" style={format!("grid-column:{i}")}></div>}).collect_view()}
