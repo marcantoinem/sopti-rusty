@@ -56,7 +56,7 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
     };
 
     view! {
-        <div class="search-container" class=class>
+        <div class="search-container ".to_owned() + &class>
             <input type="text" class="search-bar" on:input=on_input placeholder=placeholder prop:value=input id=id/>
             <div class="result-box">
                 {suggestions.into_iter().enumerate().map(|(i, autocomplete)| view!{
