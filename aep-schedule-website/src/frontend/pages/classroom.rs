@@ -5,20 +5,26 @@ use crate::{
         schedule::{Schedule, ScheduleEvent},
     },
 };
-use aep_schedule_generator::data::time::period::PeriodCourse;
+use aep_schedule_generator::data::time::{period::PeriodCourse, week_number::WeekNumber};
 use leptos::*;
 use phosphor_leptos::WarningCircle;
 
 #[component]
 fn PeriodEvent<'a>(i: usize, period_course: &'a PeriodCourse) -> impl IntoView {
     let time = period_course.period.hours.to_string();
-    let class = match i % 4 {
-        0 => " color1",
-        1 => " color2",
-        2 => " color3",
-        _ => " color4",
-    };
     let sigle = period_course.sigle.to_string();
+
+    let mut class = match i % 4 {
+        0 => " color1".to_string(),
+        1 => " color2".to_string(),
+        2 => " color3".to_string(),
+        _ => " color4".to_string(),
+    };
+    match period_course.period.week_nb {
+        WeekNumber::B1 => class.push_str(" b1"),
+        WeekNumber::B2 => class.push_str(" b2"),
+        _ => (),
+    }
 
     view! {
         <ScheduleEvent period=&period_course.period class=class>
@@ -54,9 +60,7 @@ pub fn ClassRoomComponent() -> impl IntoView {
                 </span>
             </div>
             <Await
-                // `future` provides the `Future` to be resolved
                 future=|| get_classrooms()
-                // the data is bound to whatever variable name you provide
                 let:classrooms
             >
                 {classrooms.as_ref().map(|classrooms| {

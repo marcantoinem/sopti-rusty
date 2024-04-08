@@ -1,4 +1,5 @@
 use leptos::*;
+use phosphor_leptos::PlusCircle;
 use std::{cmp, ops::Range};
 
 #[derive(Clone, PartialEq)]
@@ -13,11 +14,10 @@ impl AutoCompleteOption {
     }
 }
 
-fn get_suggestions<F: FnMut(String) + 'static>(
+fn get_suggestions(
     sorted_possibilities: Vec<AutoCompleteOption>,
-    input: RwSignal<String>,
+    is_ok: RwSignal<String>,
     input_value: String,
-    mut submit: F,
     suggestion_range: WriteSignal<Range<usize>>,
 ) {
     let input_value = input_value.trim();
@@ -28,11 +28,12 @@ fn get_suggestions<F: FnMut(String) + 'static>(
     let top = sorted_possibilities
         .partition_point(|c| c.value[0..cmp::min(i, c.value.len())] <= input_value[0..i]);
     if bottom < sorted_possibilities.len() && sorted_possibilities[bottom].value == input_value {
-        submit(input_value);
-        input.set("".to_string());
-        suggestion_range.set(0..0);
+        is_ok.set(String::from("add-button"));
         return;
     }
+
+    is_ok.set(String::from("hidden add-button"));
+
     suggestion_range.set(bottom..top);
 }
 
@@ -47,17 +48,30 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
     let input = create_rw_signal(String::new());
     let (suggestion_range, set_suggestion_range) = create_signal(0..0);
     let suggestions = suggestion_list.clone();
+    let is_ok = create_rw_signal(String::from("hidden add-button"));
 
     let on_input = move |ev| {
         let value = event_target_value(&ev);
         input.set(value.clone());
         let suggestion_list = suggestion_list.clone();
-        get_suggestions(suggestion_list, input, value, submit, set_suggestion_range);
+        get_suggestions(suggestion_list, is_ok, value, set_suggestion_range);
     };
 
     view! {
         <div class="search-container ".to_owned() + &class>
-            <input type="text" class="search-bar" on:input=on_input placeholder=placeholder prop:value=input id=id/>
+            <input type="text" class="search-bar" on:input=on_input placeholder=placeholder prop:value=input id=id on:keyup=move |ev| {
+                if ev.key() == "Enter" && is_ok.get() == "add-button" {
+                    let input = input.get().trim().to_uppercase();
+                    submit(input);
+                }
+            }
+            />
+            <button class=is_ok on:click=move |_| {
+                let input = input.get().trim().to_uppercase();
+                submit(input);
+            }>
+                <PlusCircle size="2.5em"/>
+            </button>
             <div class="result-box">
                 {suggestions.into_iter().enumerate().map(|(i, autocomplete)| view!{
                     <div
