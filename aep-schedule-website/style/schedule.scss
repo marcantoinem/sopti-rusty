@@ -16,10 +16,6 @@ $days-height: 2em;
 $time-width: 1em;
 $days: $time-width 10px repeat(5, 1fr);
 
-body {
-  background: #fff;
-}
-
 .schedule {
   width: 100%;
   display: grid;
@@ -116,7 +112,7 @@ body {
   align-items: center;
   justify-content: center;
   border: none;
-  color: white;
+  color: $highlight-text;
   font-weight: bolder;
   border-radius: 10px;
   cursor: pointer;

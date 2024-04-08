@@ -86,7 +86,7 @@ impl<'a> ScheduleBuilder<'a> {
         let mut new_schedule = self.clone();
         if let Some(theo_group) = new_course.get_theo_group(self.courses) {
             for period in &theo_group.periods {
-                if user_conflicts.conflict_in_day(period) {
+                if user_conflicts.user_conflict_in_day(period) {
                     return None;
                 }
                 if new_schedule.week.conflict_in_day(period) {
@@ -101,7 +101,7 @@ impl<'a> ScheduleBuilder<'a> {
         }
         if let Some(lab_group) = new_course.get_lab_group(self.courses) {
             for period in &lab_group.periods {
-                if user_conflicts.conflict_in_day(period) {
+                if user_conflicts.user_conflict_in_day(period) {
                     return None;
                 }
                 if new_schedule.week.conflict_in_day(period) {

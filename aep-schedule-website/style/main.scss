@@ -6,6 +6,8 @@
 body {
 	font-family: sans-serif;
 	margin: 0;
+	min-height: calc(100vh - 3em);
+	$background-color: $light-background;
 }
 
 nav {
@@ -23,7 +25,7 @@ nav {
 	display: flex;
 	box-sizing: border-box;
 	position: fixed;
-	background-color: $white;
+	background-color: $highlight-background;
 	top: 0;
 	justify-content: flex-start;
 	align-items: center;
@@ -59,6 +61,15 @@ nav > a {
 main {
 	display: flex;
 	justify-content: flex-end;
+	margin-top: 3em;
+	min-height: calc(100vh - 3em);
+	background-color: $light-background;
+	@media screen and (max-width: 1000px) {
+		top: 0;
+	}
+	@media screen and (min-width: 1000px) {
+		top: 3em;
+	}
 }
 
 section {
@@ -78,27 +89,22 @@ section {
 		top: 0;
 		width: 100%;
 		height: 100%;
-		background-position: top -10vh right -2.69vh;
 	}
 	@media screen and (min-width: 1000px) {
 		top: 3em;
-		height: calc(100% - 3em);
+		height: calc(100vh - 3em);
 		width: 42%;
-		padding-right: 4vh;
-		background-position: top -10vh right 0vh;
 	}
+	box-sizing: border-box;
 	z-index: 20;
 	position: fixed;
 	left: 0;
-	color: white;
+	color: $light-background;
 	display: flex;
 	flex-direction: column;
 	justify-items: center;
 	background-color: $background-color;
-	background-image: url('../haikei.svg');
-	background-size: 10% 142%;
-	background-repeat: no-repeat;
-	padding: 0em 0.69em;
+	padding: 0.2em 0.69em;
 	gap: 0.5em;
 	animation: 0.5s ease-out 0s 1 slideInFromLeft;
 }
@@ -108,15 +114,16 @@ section {
 		width: 100%;
 	}
 	@media screen and (min-width: 1000px) {
-		padding-top: 3em;
-		width: 52%;
+		width: 58%;
 	}
+
+	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 10px;
 	padding: 0.42em;
-	background-color: $white;
+	background-color: $light-background;
 }
 
 #go-back {
@@ -137,7 +144,7 @@ section {
 	align-items: center;
 	justify-content: center;
 	border: none;
-	color: white;
+	color: $highlight-text;
 	border-radius: 100%;
 	cursor: pointer;
 }
