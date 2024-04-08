@@ -21,7 +21,6 @@ $days: $time-width 10px repeat(5, 1fr);
   display: grid;
   grid-template-rows: $days-height auto;
   margin-bottom: 0.4em;
-  touch-action: none;
 }
 
 .days {
