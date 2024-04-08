@@ -1,7 +1,8 @@
 use aep_schedule_generator::data::{
     course::{Course, CourseName},
-    time::calendar::Calendar,
+    time::{calendar::Calendar, period::PeriodCourse},
 };
+use compact_str::CompactString;
 use leptos::*;
 
 #[server(GetCoursesName, "/api", "GetJson")]
@@ -29,4 +30,20 @@ pub async fn get_calendar() -> Result<Calendar, ServerFnError> {
     let calendar = AppState::calendar().await?;
     let calendar = calendar.read().await;
     Ok((*calendar).clone())
+}
+
+#[server(GetClassroom, "/api", "GetJson")]
+pub async fn get_classroom(room: CompactString) -> Result<Vec<PeriodCourse>, ServerFnError> {
+    use crate::backend::state::AppState;
+    let courses = AppState::courses().await?;
+    let courses = courses.read().await;
+    Ok(courses.get_classroom(&room))
+}
+
+#[server(GetClassrooms, "/api", "GetJson")]
+pub async fn get_classrooms() -> Result<Vec<CompactString>, ServerFnError> {
+    use crate::backend::state::AppState;
+    let courses = AppState::courses().await?;
+    let courses = courses.read().await;
+    Ok(courses.get_all_classroom())
 }

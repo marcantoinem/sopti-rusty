@@ -1,19 +1,21 @@
 use super::course::{Course, CourseName};
 use super::group::Group;
 use super::group_index::GroupIndex;
-use super::time::period::Period;
+use super::time::period::{Period, PeriodCourse};
 use compact_str::CompactString;
 use std::{array, collections::HashMap, io::BufRead};
 
 #[derive(Debug, Clone)]
 pub struct Courses {
     courses: HashMap<CompactString, Course>,
+    rooms: HashMap<CompactString, Vec<PeriodCourse>>,
 }
 
 impl Courses {
     pub fn from_csv(csv_horsages: impl BufRead, csv_fermes: impl BufRead) -> Courses {
         let courses = HashMap::new();
-        let mut courses = Courses { courses };
+        let rooms = HashMap::new();
+        let mut courses = Courses { courses, rooms };
         courses.update_all_courses(csv_horsages);
         courses.update_closed(csv_fermes);
         courses
@@ -56,6 +58,29 @@ impl Courses {
                 };
                 groups.insert_or_push(Group::new(number, period));
                 self.courses.insert(sigle.into(), course);
+            }
+        }
+
+        for course in self.courses.values() {
+            for group in course.lab_groups.iter() {
+                for period in group.periods.iter() {
+                    self.rooms
+                        .entry(period.room.clone())
+                        .and_modify(|periods| {
+                            periods.push(PeriodCourse::from(period, course.sigle.clone()))
+                        })
+                        .or_default();
+                }
+            }
+            for group in course.theo_groups.iter() {
+                for period in group.periods.iter() {
+                    self.rooms
+                        .entry(period.room.clone())
+                        .and_modify(|periods| {
+                            periods.push(PeriodCourse::from(period, course.sigle.clone()))
+                        })
+                        .or_default();
+                }
             }
         }
     }
@@ -101,5 +126,15 @@ impl Courses {
             .into_iter()
             .filter_map(|sigle| self.get_course(*sigle))
             .collect()
+    }
+
+    pub fn get_classroom(&self, local: &CompactString) -> Vec<PeriodCourse> {
+        self.rooms.get(local).cloned().unwrap_or_default()
+    }
+
+    pub fn get_all_classroom(&self) -> Vec<CompactString> {
+        let mut rooms: Vec<_> = self.rooms.keys().cloned().collect();
+        rooms.sort_unstable();
+        rooms
     }
 }

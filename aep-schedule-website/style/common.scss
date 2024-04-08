@@ -1,5 +1,6 @@
 .search-container {
     position: relative;
+    height: max-content;
 }
 
 .hidden {
@@ -48,4 +49,16 @@ input:focus ~ .result-box {
 
 .spacer {
     flex-grow: 1;
+}
+
+.warning-box {
+    padding: 1em;
+    gap: 1em;
+    max-width: 42em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-justify: auto;
+    background-color: $error-color;
+    color: white;
 }
