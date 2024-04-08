@@ -20,3 +20,18 @@ impl Period {
         }
     }
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct PeriodCourse {
+    pub period: Period,
+    pub sigle: CompactString,
+}
+
+impl PeriodCourse {
+    pub fn from(period: &Period, sigle: CompactString) -> Self {
+        Self {
+            period: period.clone(),
+            sigle: sigle.clone(),
+        }
+    }
+}

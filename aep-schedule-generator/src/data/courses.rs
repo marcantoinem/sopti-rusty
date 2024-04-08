@@ -1,14 +1,14 @@
 use super::course::{Course, CourseName};
 use super::group::Group;
 use super::group_index::GroupIndex;
-use super::time::period::Period;
+use super::time::period::{Period, PeriodCourse};
 use compact_str::CompactString;
 use std::{array, collections::HashMap, io::BufRead};
 
 #[derive(Debug, Clone)]
 pub struct Courses {
     courses: HashMap<CompactString, Course>,
-    rooms: HashMap<CompactString, Vec<Period>>,
+    rooms: HashMap<CompactString, Vec<PeriodCourse>>,
 }
 
 impl Courses {
@@ -66,7 +66,9 @@ impl Courses {
                 for period in group.periods.iter() {
                     self.rooms
                         .entry(period.room.clone())
-                        .and_modify(|periods| periods.push(period.clone()))
+                        .and_modify(|periods| {
+                            periods.push(PeriodCourse::from(period, course.sigle.clone()))
+                        })
                         .or_default();
                 }
             }
@@ -74,7 +76,9 @@ impl Courses {
                 for period in group.periods.iter() {
                     self.rooms
                         .entry(period.room.clone())
-                        .and_modify(|periods| periods.push(period.clone()))
+                        .and_modify(|periods| {
+                            periods.push(PeriodCourse::from(period, course.sigle.clone()))
+                        })
                         .or_default();
                 }
             }
@@ -124,7 +128,7 @@ impl Courses {
             .collect()
     }
 
-    pub fn get_classroom(&self, local: &CompactString) -> Vec<Period> {
+    pub fn get_classroom(&self, local: &CompactString) -> Vec<PeriodCourse> {
         self.rooms.get(local).cloned().unwrap_or_default()
     }
 
