@@ -25,19 +25,14 @@ impl Courses {
         for line in lines {
             let Ok(line) = line else { continue };
             let mut columns = line.split(';');
-            let [_, Some(sigle), Some(number), Some(nb_credit), _, _, Some(room), Some(course_type), _, Some(week_nb), _, Some(name), _, Some(week_day), Some(hour)] =
+            let [_, Some(sigle), Some(number), Some(nb_credit), _, _, Some(room), Some(period_type), _, Some(week_nb), Some(course_type), Some(name), _, Some(week_day), Some(hour)] =
                 array::from_fn(|_| columns.next())
             else {
                 continue;
             };
             if let Some(course) = self.courses.get_mut(sigle) {
                 let period = Period::new(week_day, room.into(), hour, week_nb);
-                let groups = match course_type {
-                    "L" => &mut course.lab_groups,
-                    "C" => &mut course.theo_groups,
-                    _ => continue,
-                };
-                groups.insert_or_push(Group::new(number, period));
+                course.insert_or_push(period_type, Group::new(number, period));
             } else {
                 let Ok(nb_credit) = nb_credit
                     .chars()
@@ -47,14 +42,9 @@ impl Courses {
                 else {
                     continue;
                 };
-                let mut course = Course::new(sigle.into(), name.into(), nb_credit);
+                let mut course = Course::new(sigle.into(), name.into(), nb_credit, course_type);
                 let period = Period::new(week_day, room.into(), hour, week_nb);
-                let groups = match course_type {
-                    "L" => &mut course.lab_groups,
-                    "C" => &mut course.theo_groups,
-                    _ => continue,
-                };
-                groups.insert_or_push(Group::new(number, period));
+                course.insert_or_push(period_type, Group::new(number, period));
                 self.courses.insert(sigle.into(), course);
             }
         }
@@ -65,7 +55,7 @@ impl Courses {
         for line in lines {
             let Ok(line) = line else { continue };
             let mut columns = line.split(';');
-            let [_, Some(sigle), Some(number), Some(course_type)] =
+            let [_, Some(sigle), Some(number), Some(period_type)] =
                 array::from_fn(|_| columns.next())
             else {
                 continue;
@@ -77,12 +67,9 @@ impl Courses {
                 continue;
             };
             let number = GroupIndex::from(number - 1);
-            let groups = match course_type {
-                "L" => &mut course.lab_groups,
-                "C" => &mut course.theo_groups,
-                _ => continue,
-            };
-            groups.get_mut(number).and_then(|g| Some(g.open = false));
+            course
+                .get_mut(period_type, number)
+                .and_then(|g| Some(g.open = false));
         }
     }
 

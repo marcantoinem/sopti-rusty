@@ -12,27 +12,10 @@ fn main() {
         "INF1900", "LOG1810", "INF1015", "INF1600", "PHS1101", "MTH1007", "MTH1101", "SSH3201",
         "SSH3501",
     ];
-    let mut courses_to_take: Vec<_> = courses_to_take
+    let courses_to_take: Vec<_> = courses_to_take
         .into_iter()
         .map(|sigle| courses.get_course(sigle).unwrap())
         .collect();
-    let mut n_combination = 1;
-    for course in courses_to_take.iter_mut() {
-        for g in course.lab_groups.iter_mut() {
-            g.open = true;
-        }
-        for g in course.theo_groups.iter_mut() {
-            g.open = true;
-        }
-        let n_lab_group = course.lab_groups.iter().count();
-        let n_theo_group = course.theo_groups.iter().count();
-        if n_lab_group > 1 {
-            n_combination *= n_lab_group;
-        }
-        if n_theo_group > 1 {
-            n_combination *= n_theo_group;
-        }
-    }
     let evaluation = EvaluationOption {
         day_off: 2,
         morning: 2,
@@ -51,10 +34,9 @@ fn main() {
     let result = schedules.into_sorted_vec();
 
     println!(
-        "{:?} computed in {:?} {} combinations evaluated over {} total combination",
+        "{:?} computed in {:?} {} combinations evaluated",
         result.len(),
         instant.elapsed().as_secs_f64(),
         number,
-        n_combination
     );
 }

@@ -1,4 +1,4 @@
-use super::groups::Groups;
+use super::{course_type::CourseType, group::Group, group_index::GroupIndex};
 use compact_str::CompactString;
 use serde::{Deserialize, Serialize};
 
@@ -6,8 +6,7 @@ use serde::{Deserialize, Serialize};
 pub struct Course {
     pub sigle: CompactString,
     pub name: String,
-    pub theo_groups: Groups,
-    pub lab_groups: Groups,
+    pub course_type: CourseType,
     pub nb_credit: usize,
 }
 
@@ -29,13 +28,69 @@ impl From<&Course> for CourseName {
 }
 
 impl Course {
-    pub fn new(sigle: &str, name: &str, nb_credit: usize) -> Self {
+    pub fn new(sigle: &str, name: &str, nb_credit: usize, course_type: &str) -> Self {
         Course {
             sigle: sigle.into(),
             name: name.to_string(),
-            theo_groups: Groups::default(),
-            lab_groups: Groups::default(),
+            course_type: course_type.into(),
             nb_credit,
+        }
+    }
+    pub fn insert_or_push(&mut self, period_type: &str, new_group: Group) {
+        match (period_type, &mut self.course_type) {
+            ("T", CourseType::TheoOnly { theo_groups }) => theo_groups.insert_or_push(new_group),
+            ("L", CourseType::LabOnly { lab_groups }) => lab_groups.insert_or_push(new_group),
+            ("T", CourseType::Both { theo_groups, .. }) => theo_groups.insert_or_push(new_group),
+            ("L", CourseType::Both { lab_groups, .. }) => lab_groups.insert_or_push(new_group),
+            ("T", CourseType::Linked { theo_groups, .. }) => theo_groups.insert_or_push(new_group),
+            ("L", CourseType::Linked { lab_groups, .. }) => lab_groups.insert_or_push(new_group),
+            _ => (),
+        }
+    }
+    pub fn get_mut(&mut self, period_type: &str, number: GroupIndex) -> Option<&mut Group> {
+        match (period_type, &mut self.course_type) {
+            ("T", CourseType::TheoOnly { theo_groups }) => theo_groups.get_mut(number),
+            ("L", CourseType::LabOnly { lab_groups }) => lab_groups.get_mut(number),
+            ("T", CourseType::Both { theo_groups, .. }) => theo_groups.get_mut(number),
+            ("L", CourseType::Both { lab_groups, .. }) => lab_groups.get_mut(number),
+            ("T", CourseType::Linked { theo_groups, .. }) => theo_groups.get_mut(number),
+            ("L", CourseType::Linked { lab_groups, .. }) => lab_groups.get_mut(number),
+            _ => None,
+        }
+    }
+    pub fn for_each_groups(&self, function: impl FnMut(&Group)) {
+        match &self.course_type {
+            CourseType::LabOnly { lab_groups } => lab_groups.iter().for_each(function),
+            CourseType::TheoOnly { theo_groups } => theo_groups.iter().for_each(function),
+            CourseType::Linked {
+                theo_groups,
+                lab_groups,
+            }
+            | CourseType::Both {
+                theo_groups,
+                lab_groups,
+            } => theo_groups
+                .iter()
+                .chain(lab_groups.iter())
+                .for_each(function),
+        }
+    }
+
+    pub fn for_each_groups_mut(&mut self, function: impl FnMut(&mut Group)) {
+        match &mut self.course_type {
+            CourseType::LabOnly { lab_groups } => lab_groups.iter_mut().for_each(function),
+            CourseType::TheoOnly { theo_groups } => theo_groups.iter_mut().for_each(function),
+            CourseType::Linked {
+                theo_groups,
+                lab_groups,
+            }
+            | CourseType::Both {
+                theo_groups,
+                lab_groups,
+            } => theo_groups
+                .iter_mut()
+                .chain(lab_groups.iter_mut())
+                .for_each(function),
         }
     }
 }
