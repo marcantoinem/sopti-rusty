@@ -1,9 +1,9 @@
-use serde::{Deserialize, Serialize};
-
 use crate::data::course::Course;
 use crate::data::course_type::CourseType;
 use crate::data::group::Group;
 use crate::data::group_index::GroupIndex;
+use crate::data::period_type::PeriodType;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct TakenCourseBuilder {
@@ -29,8 +29,12 @@ impl TakenCourseBuilder {
     pub fn for_each_group<'a>(&self, courses: &'a [Course], function: impl FnMut(&Group)) {
         let course = self.get_course(courses);
         match &course.course_type {
-            CourseType::LabOnly { lab_groups } => lab_groups.iter().for_each(function),
-            CourseType::TheoOnly { theo_groups } => theo_groups.iter().for_each(function),
+            CourseType::LabOnly { lab_groups } => {
+                lab_groups[self.lab_group].iter().for_each(function)
+            }
+            CourseType::TheoOnly { theo_groups } => {
+                theo_groups[self.theo_group].iter().for_each(function)
+            }
             CourseType::Linked {
                 theo_groups,
                 lab_groups,
@@ -38,9 +42,9 @@ impl TakenCourseBuilder {
             | CourseType::Both {
                 theo_groups,
                 lab_groups,
-            } => theo_groups
+            } => theo_groups[self.theo_group]
                 .iter()
-                .chain(lab_groups.iter())
+                .chain(lab_groups[self.lab_group].iter())
                 .for_each(function),
         }
     }
@@ -92,4 +96,41 @@ pub struct TakenCourse {
     pub name: String,
     pub taken_course_type: TakenCourseType,
     pub nb_credit: usize,
+}
+
+impl TakenCourse {
+    pub fn for_each_group(&self, mut function: impl FnMut(&Group)) {
+        match &self.taken_course_type {
+            TakenCourseType::LabOnly { lab_group } => function(lab_group),
+            TakenCourseType::TheoOnly { theo_group } => function(theo_group),
+            TakenCourseType::Linked {
+                theo_group,
+                lab_group,
+            }
+            | TakenCourseType::Both {
+                theo_group,
+                lab_group,
+            } => {
+                function(theo_group);
+                function(lab_group)
+            }
+        }
+    }
+    pub fn map_collect<T>(&self, mut function: impl FnMut(&Group, PeriodType) -> T) -> T {
+        match &self.taken_course_type {
+            TakenCourseType::LabOnly { lab_group } => function(lab_group, PeriodType::Lab),
+            TakenCourseType::TheoOnly { theo_group } => function(theo_group, PeriodType::Theo),
+            TakenCourseType::Linked {
+                theo_group,
+                lab_group,
+            }
+            | TakenCourseType::Both {
+                theo_group,
+                lab_group,
+            } => {
+                function(theo_group, PeriodType::Theo);
+                function(lab_group, PeriodType::Lab)
+            }
+        }
+    }
 }

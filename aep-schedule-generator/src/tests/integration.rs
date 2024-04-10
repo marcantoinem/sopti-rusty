@@ -46,7 +46,8 @@ fn assert_no_combination_possible() {
 #[test]
 fn assert_possible() {
     let hellish_session = ["INF1900", "INF1015", "INF1600", "LOG1810"];
-    let mut courses_to_take = get_h24_courses().get_courses(&hellish_session);
+    let courses_to_take = get_h24_courses();
+    let mut courses_to_take = courses_to_take.get_courses(&hellish_session);
     let evaluation = default_evaluation();
     open_all_courses(&mut courses_to_take);
     let options = SchedulesOptions {

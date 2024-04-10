@@ -38,22 +38,22 @@ impl Course {
     }
     pub fn insert_or_push(&mut self, period_type: &str, new_group: Group) {
         match (period_type, &mut self.course_type) {
-            ("T", CourseType::TheoOnly { theo_groups }) => theo_groups.insert_or_push(new_group),
+            ("C", CourseType::TheoOnly { theo_groups }) => theo_groups.insert_or_push(new_group),
             ("L", CourseType::LabOnly { lab_groups }) => lab_groups.insert_or_push(new_group),
-            ("T", CourseType::Both { theo_groups, .. }) => theo_groups.insert_or_push(new_group),
+            ("C", CourseType::Both { theo_groups, .. }) => theo_groups.insert_or_push(new_group),
             ("L", CourseType::Both { lab_groups, .. }) => lab_groups.insert_or_push(new_group),
-            ("T", CourseType::Linked { theo_groups, .. }) => theo_groups.insert_or_push(new_group),
+            ("C", CourseType::Linked { theo_groups, .. }) => theo_groups.insert_or_push(new_group),
             ("L", CourseType::Linked { lab_groups, .. }) => lab_groups.insert_or_push(new_group),
             _ => (),
         }
     }
     pub fn get_mut(&mut self, period_type: &str, number: GroupIndex) -> Option<&mut Group> {
         match (period_type, &mut self.course_type) {
-            ("T", CourseType::TheoOnly { theo_groups }) => theo_groups.get_mut(number),
+            ("C", CourseType::TheoOnly { theo_groups }) => theo_groups.get_mut(number),
             ("L", CourseType::LabOnly { lab_groups }) => lab_groups.get_mut(number),
-            ("T", CourseType::Both { theo_groups, .. }) => theo_groups.get_mut(number),
+            ("C", CourseType::Both { theo_groups, .. }) => theo_groups.get_mut(number),
             ("L", CourseType::Both { lab_groups, .. }) => lab_groups.get_mut(number),
-            ("T", CourseType::Linked { theo_groups, .. }) => theo_groups.get_mut(number),
+            ("C", CourseType::Linked { theo_groups, .. }) => theo_groups.get_mut(number),
             ("L", CourseType::Linked { lab_groups, .. }) => lab_groups.get_mut(number),
             _ => None,
         }

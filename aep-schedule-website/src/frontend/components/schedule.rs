@@ -1,7 +1,10 @@
 use crate::frontend::components::common::schedule::{Schedule, ScheduleEvent};
 use aep_schedule_generator::{
     algorithm::{schedule::Schedule, taken_course::TakenCourse},
-    data::time::{calendar::Calendar, period::Period},
+    data::{
+        period_type::PeriodType,
+        time::{calendar::Calendar, period::Period},
+    },
 };
 use leptos::{html::A, *};
 use phosphor_leptos::{Download, IconWeight};
@@ -52,25 +55,21 @@ fn PeriodEvent<'a>(
 
 #[component]
 fn CoursePeriods<'a>(i: usize, course: &'a TakenCourse) -> impl IntoView {
-    let lab = course.lab_group.as_ref().map(|c| {
-        c.periods
-            .iter()
-            .map(|p| {
-                view! {<PeriodEvent i period=&p course=course period_type="L"/>}
-            })
-            .collect_view()
-    });
-    let theo = course.theo_group.as_ref().map(|c| {
-        c.periods
-            .iter()
-            .map(|p| {
-                view! {<PeriodEvent i period=&p course=course period_type="T"/>}
-            })
-            .collect_view()
-    });
     view! {
-        {lab}
-        {theo}
+        {
+            course.map_collect(|c, period_type| {
+            let period_type = match period_type {
+                PeriodType::Lab => "L",
+                PeriodType::Theo => "T",
+            };
+            c.periods
+                .iter()
+                .map(|p| {
+                    view! {<PeriodEvent i period=&p course=course period_type/>}
+                })
+                .collect_view()
+            });
+        }
     }
 }
 

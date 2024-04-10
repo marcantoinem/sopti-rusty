@@ -146,58 +146,36 @@ pub struct Schedule {
 }
 
 impl Schedule {
-    // pub fn generate_ics(&self, calendar: &Calendar) -> String {
-    //     let mut cal = IcalCalendarBuilder::version("2.0")
-    //         .gregorian()
-    //         .prodid("-//ical-rs//github.com//")
-    //         .build();
+    pub fn generate_ics(&self, calendar: &Calendar) -> String {
+        let mut cal = IcalCalendarBuilder::version("2.0")
+            .gregorian()
+            .prodid("-//ical-rs//github.com//")
+            .build();
 
-    //     for course in self.taken_courses.iter() {
-    //         if let Some(lab) = &course.lab_group {
-    //             for p in lab.periods.iter() {
-    //                 calendar.iter_apply(p.week_nb, p.day, |d| {
-    //                     let start =
-    //                         date_to_timestamp(&d, p.hours.starting_hour(), p.hours.start_minutes());
-    //                     let end =
-    //                         date_to_timestamp(&d, p.hours.last_hour(), p.hours.last_minutes());
-    //                     let event = IcalEventBuilder::tzid("America/New_York")
-    //                         .uid(Uuid::new_v4())
-    //                         .changed(chrono::Local::now().format("%Y%m%dT%H%M%S").to_string())
-    //                         .start(start)
-    //                         .end(end)
-    //                         .set(ical_property!(
-    //                             "SUMMARY",
-    //                             format!("Laboratoire {}", course.sigle)
-    //                         ))
-    //                         .set(ical_property!("DESCRIPTION", p.room.to_string()))
-    //                         .build();
-    //                     cal.events.push(event);
-    //                 });
-    //             }
-    //         }
-    //         if let Some(theo) = &course.theo_group {
-    //             for p in theo.periods.iter() {
-    //                 calendar.iter_apply(p.week_nb, p.day, |d| {
-    //                     let start =
-    //                         date_to_timestamp(&d, p.hours.starting_hour(), p.hours.start_minutes());
-    //                     let end =
-    //                         date_to_timestamp(&d, p.hours.last_hour(), p.hours.last_minutes());
-    //                     let event = IcalEventBuilder::tzid("America/New_York")
-    //                         .uid(Uuid::new_v4())
-    //                         .changed(chrono::Local::now().format("%Y%m%dT%H%M%S").to_string())
-    //                         .start(start)
-    //                         .end(end)
-    //                         .set(ical_property!(
-    //                             "SUMMARY",
-    //                             format!("Théorie {}", course.sigle)
-    //                         ))
-    //                         .set(ical_property!("DESCRIPTION", p.room.to_string()))
-    //                         .build();
-    //                     cal.events.push(event);
-    //                 });
-    //             }
-    //         }
-    //     }
-    //     cal.generate()
-    // }
+        for course in self.taken_courses.iter() {
+            course.for_each_group(|g| {
+                for p in g.periods.iter() {
+                    calendar.iter_apply(p.week_nb, p.day, |d| {
+                        let start =
+                            date_to_timestamp(&d, p.hours.starting_hour(), p.hours.start_minutes());
+                        let end =
+                            date_to_timestamp(&d, p.hours.last_hour(), p.hours.last_minutes());
+                        let event = IcalEventBuilder::tzid("America/New_York")
+                            .uid(Uuid::new_v4())
+                            .changed(chrono::Local::now().format("%Y%m%dT%H%M%S").to_string())
+                            .start(start)
+                            .end(end)
+                            .set(ical_property!(
+                                "SUMMARY",
+                                format!("Laboratoire {}", course.sigle)
+                            ))
+                            .set(ical_property!("DESCRIPTION", p.room.to_string()))
+                            .build();
+                        cal.events.push(event);
+                    });
+                }
+            });
+        }
+        cal.generate()
+    }
 }

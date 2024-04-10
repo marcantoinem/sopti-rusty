@@ -15,8 +15,6 @@ impl TakenCourses {
 
     #[inline(always)]
     pub fn iter(&self) -> impl Iterator<Item = TakenCourseBuilder> + '_ {
-        self.taken_courses[0..self.len as usize]
-            .into_iter()
-            .copied()
+        self.taken_courses[0..self.len as usize].iter().copied()
     }
 }
