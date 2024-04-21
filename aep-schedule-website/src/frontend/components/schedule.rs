@@ -1,7 +1,6 @@
 use crate::frontend::components::common::schedule::{Schedule, ScheduleEvent};
 use aep_schedule_generator::{
-    algorithm::{schedule::Schedule, taken_course::TakenCourse},
-    data::period_type::PeriodType,
+    algorithm::{schedule::Schedule, taken_course::{TakenCourse, TakenCourseType}},
     data::time::{calendar::Calendar, period::Period, week_number::WeekNumber},
 };
 use leptos::{html::A, *};
@@ -52,21 +51,31 @@ fn PeriodEvent<'a>(
 
 #[component]
 fn CoursePeriods<'a>(i: usize, course: &'a TakenCourse) -> impl IntoView {
-    view! {
-        {
-            course.map_collect(|c, period_type| {
-            let period_type = match period_type {
-                PeriodType::Lab => "L",
-                PeriodType::Theo => "T",
-            };
-            c.periods
-                .iter()
-                .map(|p| {
-                    view! {<PeriodEvent i period=&p course=course period_type/>}
-                })
-                .collect_view()
-            });
-        }
+    match &course.taken_course_type {
+        TakenCourseType::TheoOnly { theo_group } => {
+            theo_group.periods.iter().map(|p| {
+                view! {<PeriodEvent i period=&p course=course period_type="T"/>}
+            }).collect_view()
+        },
+        TakenCourseType::LabOnly { lab_group } => {
+            lab_group.periods.iter().map(|p| {
+                view! {<PeriodEvent i period=&p course=course period_type="L"/>}
+            }).collect_view()
+        },
+        TakenCourseType::Both { theo_group, lab_group } | TakenCourseType::Linked { theo_group, lab_group } => {
+            view!{
+                {
+                    theo_group.periods.iter().map(|p| {
+                        view! {<PeriodEvent i period=&p course=course period_type="T"/>}
+                    }).collect_view()
+                }
+                {
+                    lab_group.periods.iter().map(|p| {
+                        view! {<PeriodEvent i period=&p course=course period_type="L"/>}
+                    }).collect_view()
+                }
+            }.into_view()
+        },
     }
 }
 

@@ -2,7 +2,6 @@ use crate::data::course::Course;
 use crate::data::course_type::CourseType;
 use crate::data::group::Group;
 use crate::data::group_index::GroupIndex;
-use crate::data::period_type::PeriodType;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -129,27 +128,6 @@ impl TakenCourse {
             } => {
                 function(theo_group);
                 function(lab_group)
-            }
-        }
-    }
-    pub fn map_collect<T>(&self, mut function: impl FnMut(&Group, PeriodType) -> T) -> Vec<T> {
-        match &self.taken_course_type {
-            TakenCourseType::LabOnly { lab_group } => vec![function(lab_group, PeriodType::Lab)],
-            TakenCourseType::TheoOnly { theo_group } => {
-                vec![function(theo_group, PeriodType::Theo)]
-            }
-            TakenCourseType::Linked {
-                theo_group,
-                lab_group,
-            }
-            | TakenCourseType::Both {
-                theo_group,
-                lab_group,
-            } => {
-                vec![
-                    function(theo_group, PeriodType::Theo),
-                    function(lab_group, PeriodType::Lab),
-                ]
             }
         }
     }
