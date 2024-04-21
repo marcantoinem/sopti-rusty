@@ -1,6 +1,6 @@
 use crate::frontend::components::common::schedule::{Schedule, ScheduleEvent};
 use aep_schedule_generator::{
-    algorithm::{schedule::Schedule, taken_course::TakenCourse},
+    algorithm::{schedule::Schedule, taken_course::{TakenCourse, TakenCourseType}},
     data::time::{calendar::Calendar, period::Period, week_number::WeekNumber},
 };
 use leptos::{html::A, *};
@@ -8,14 +8,8 @@ use phosphor_leptos::{Download, IconWeight};
 
 #[component]
 pub fn Course<'a>(course: &'a TakenCourse) -> impl IntoView {
-    let theo_group = course
-        .theo_group
-        .as_ref()
-        .map(|g| format!("T: {}", g.number));
-    let lab_group = course
-        .lab_group
-        .as_ref()
-        .map(|g| format!("L: {}", g.number));
+    let theo_group = course.theo_group().map(|g| format!("T: {}", g.number));
+    let lab_group = course.lab_group().map(|g| format!("L: {}", g.number));
     view! {
         <tr>
             <td>{course.sigle.to_string()}</td>
@@ -57,25 +51,31 @@ fn PeriodEvent<'a>(
 
 #[component]
 fn CoursePeriods<'a>(i: usize, course: &'a TakenCourse) -> impl IntoView {
-    let lab = course.lab_group.as_ref().map(|c| {
-        c.periods
-            .iter()
-            .map(|p| {
-                view! {<PeriodEvent i period=&p course=course period_type="L"/>}
-            })
-            .collect_view()
-    });
-    let theo = course.theo_group.as_ref().map(|c| {
-        c.periods
-            .iter()
-            .map(|p| {
+    match &course.taken_course_type {
+        TakenCourseType::TheoOnly { theo_group } => {
+            theo_group.periods.iter().map(|p| {
                 view! {<PeriodEvent i period=&p course=course period_type="T"/>}
-            })
-            .collect_view()
-    });
-    view! {
-        {lab}
-        {theo}
+            }).collect_view()
+        },
+        TakenCourseType::LabOnly { lab_group } => {
+            lab_group.periods.iter().map(|p| {
+                view! {<PeriodEvent i period=&p course=course period_type="L"/>}
+            }).collect_view()
+        },
+        TakenCourseType::Both { theo_group, lab_group } | TakenCourseType::Linked { theo_group, lab_group } => {
+            view!{
+                {
+                    theo_group.periods.iter().map(|p| {
+                        view! {<PeriodEvent i period=&p course=course period_type="T"/>}
+                    }).collect_view()
+                }
+                {
+                    lab_group.periods.iter().map(|p| {
+                        view! {<PeriodEvent i period=&p course=course period_type="L"/>}
+                    }).collect_view()
+                }
+            }.into_view()
+        },
     }
 }
 

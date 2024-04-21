@@ -3,7 +3,7 @@ use super::{
     schedule::{Schedule, ScheduleBuilder},
     taken_course::TakenCourseBuilder,
 };
-use crate::data::group_index::GroupIndex;
+use crate::data::{course_type::CourseType, group_index::GroupIndex};
 use std::{cmp::Reverse, collections::BinaryHeap};
 
 #[derive(Debug)]
@@ -47,10 +47,29 @@ impl<'a> Schedules<'a> {
         let min = self.get_min();
         let e = self.options.evaluation;
         let c = self.options.user_conflicts;
-        match (course.theo_groups.is_empty(), course.lab_groups.is_empty()) {
-            (false, false) => {
-                for theo_group in course.theo_groups.iter().filter(|g| g.open) {
-                    for lab_group in course.lab_groups.iter().filter(|g| g.open) {
+        match &course.course_type {
+            CourseType::LabOnly { lab_groups } => {
+                for lab_group in lab_groups.iter().filter(|g| g.open) {
+                    let course = TakenCourseBuilder::new(i, GroupIndex::none(), lab_group.into());
+                    if let Some(schedule) = schedule.add_check_conflicts(n, min, &c, e, course) {
+                        self.get_schedules_rec(schedule, n, i + 1);
+                    }
+                }
+            }
+            CourseType::TheoOnly { theo_groups } => {
+                for theo_group in theo_groups.iter().filter(|g| g.open) {
+                    let course = TakenCourseBuilder::new(i, theo_group.into(), GroupIndex::none());
+                    if let Some(schedule) = schedule.add_check_conflicts(n, min, &c, e, course) {
+                        self.get_schedules_rec(schedule, n, i + 1);
+                    }
+                }
+            }
+            CourseType::Both {
+                theo_groups,
+                lab_groups,
+            } => {
+                for theo_group in theo_groups.iter().filter(|g| g.open) {
+                    for lab_group in lab_groups.iter().filter(|g| g.open) {
                         let course =
                             TakenCourseBuilder::new(i, theo_group.into(), lab_group.into());
                         if let Some(schedule) = schedule.add_check_conflicts(n, min, &c, e, course)
@@ -60,23 +79,21 @@ impl<'a> Schedules<'a> {
                     }
                 }
             }
-            (false, true) => {
-                for theo_group in course.theo_groups.iter().filter(|g| g.open) {
-                    let course = TakenCourseBuilder::new(i, theo_group.into(), GroupIndex::none());
+            CourseType::Linked {
+                theo_groups,
+                lab_groups,
+            } => {
+                for (theo_group, lab_group) in theo_groups
+                    .iter()
+                    .filter(|g| g.open)
+                    .zip(lab_groups.iter().filter(|g| g.open))
+                {
+                    let course = TakenCourseBuilder::new(i, theo_group.into(), lab_group.into());
                     if let Some(schedule) = schedule.add_check_conflicts(n, min, &c, e, course) {
                         self.get_schedules_rec(schedule, n, i + 1);
                     }
                 }
             }
-            (true, false) => {
-                for lab_group in course.lab_groups.iter().filter(|g| g.open) {
-                    let course = TakenCourseBuilder::new(i, GroupIndex::none(), lab_group.into());
-                    if let Some(schedule) = schedule.add_check_conflicts(n, min, &c, e, course) {
-                        self.get_schedules_rec(schedule, n, i + 1);
-                    }
-                }
-            }
-            _ => (),
         }
     }
 

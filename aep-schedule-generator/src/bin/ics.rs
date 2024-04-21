@@ -1,6 +1,10 @@
 use aep_schedule_generator::{
     algorithm::{generation::SchedulesOptions, scores::EvaluationOption},
-    data::{course::Course, courses::Courses, time::week::Week},
+    data::{
+        course::Course,
+        courses::Courses,
+        time::{calendar::Calendar, week::Week},
+    },
 };
 use std::{fs::File, io::BufReader};
 
@@ -14,12 +18,7 @@ fn main() {
         .map(|sigle| courses.get_course(sigle).unwrap())
         .collect();
     for course in courses_to_take.iter_mut() {
-        for g in course.lab_groups.iter_mut() {
-            g.open = true;
-        }
-        for g in course.theo_groups.iter_mut() {
-            g.open = true;
-        }
+        course.for_each_groups_mut(|g| g.open = true);
     }
 
     let evaluation = EvaluationOption {
@@ -39,8 +38,8 @@ fn main() {
     let result = result.first().unwrap();
     println!("{:?}", result);
 
-    // let days = BufReader::new(File::open("alternance.csv").unwrap());
-    // let calendar = Calendar::from_csv(days);
+    let days = BufReader::new(File::open("alternance.csv").unwrap());
+    let calendar = Calendar::from_csv(days);
 
-    // let _ = std::fs::write("test.ics", result.generate_ics(&calendar));
+    let _ = std::fs::write("test.ics", result.generate_ics(&calendar));
 }

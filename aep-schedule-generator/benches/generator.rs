@@ -26,12 +26,7 @@ fn default_evaluation() -> EvaluationOption {
 
 fn open_all_courses(courses_to_take: &mut [Course]) {
     for course in courses_to_take.iter_mut() {
-        for g in course.lab_groups.iter_mut() {
-            g.open = true;
-        }
-        for g in course.theo_groups.iter_mut() {
-            g.open = true;
-        }
+        course.for_each_groups_mut(|g| g.open = true);
     }
 }
 

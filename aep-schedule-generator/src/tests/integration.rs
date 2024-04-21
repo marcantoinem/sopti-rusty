@@ -12,12 +12,7 @@ fn get_h24_courses() -> Courses {
 
 fn open_all_courses(courses_to_take: &mut [Course]) {
     for course in courses_to_take.iter_mut() {
-        for g in course.lab_groups.iter_mut() {
-            g.open = true;
-        }
-        for g in course.theo_groups.iter_mut() {
-            g.open = true;
-        }
+        course.for_each_groups_mut(|g| g.open = true);
     }
 }
 
@@ -51,7 +46,8 @@ fn assert_no_combination_possible() {
 #[test]
 fn assert_possible() {
     let hellish_session = ["INF1900", "INF1015", "INF1600", "LOG1810"];
-    let mut courses_to_take = get_h24_courses().get_courses(&hellish_session);
+    let courses_to_take = get_h24_courses();
+    let mut courses_to_take = courses_to_take.get_courses(&hellish_session);
     let evaluation = default_evaluation();
     open_all_courses(&mut courses_to_take);
     let options = SchedulesOptions {
