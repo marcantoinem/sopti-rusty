@@ -99,6 +99,22 @@ pub struct TakenCourse {
 }
 
 impl TakenCourse {
+    pub fn theo_group(&self) -> Option<&Group> {
+        match &self.taken_course_type {
+            TakenCourseType::TheoOnly { theo_group }
+            | TakenCourseType::Linked { theo_group, .. }
+            | TakenCourseType::Both { theo_group, .. } => Some(theo_group),
+            _ => None,
+        }
+    }
+    pub fn lab_group(&self) -> Option<&Group> {
+        match &self.taken_course_type {
+            TakenCourseType::LabOnly { lab_group }
+            | TakenCourseType::Linked { lab_group, .. }
+            | TakenCourseType::Both { lab_group, .. } => Some(lab_group),
+            _ => None,
+        }
+    }
     pub fn for_each_group(&self, mut function: impl FnMut(&Group)) {
         match &self.taken_course_type {
             TakenCourseType::LabOnly { lab_group } => function(lab_group),
@@ -116,10 +132,12 @@ impl TakenCourse {
             }
         }
     }
-    pub fn map_collect<T>(&self, mut function: impl FnMut(&Group, PeriodType) -> T) -> T {
+    pub fn map_collect<T>(&self, mut function: impl FnMut(&Group, PeriodType) -> T) -> Vec<T> {
         match &self.taken_course_type {
-            TakenCourseType::LabOnly { lab_group } => function(lab_group, PeriodType::Lab),
-            TakenCourseType::TheoOnly { theo_group } => function(theo_group, PeriodType::Theo),
+            TakenCourseType::LabOnly { lab_group } => vec![function(lab_group, PeriodType::Lab)],
+            TakenCourseType::TheoOnly { theo_group } => {
+                vec![function(theo_group, PeriodType::Theo)]
+            }
             TakenCourseType::Linked {
                 theo_group,
                 lab_group,
@@ -128,8 +146,10 @@ impl TakenCourse {
                 theo_group,
                 lab_group,
             } => {
-                function(theo_group, PeriodType::Theo);
-                function(lab_group, PeriodType::Lab)
+                vec![
+                    function(theo_group, PeriodType::Theo),
+                    function(lab_group, PeriodType::Lab),
+                ]
             }
         }
     }
