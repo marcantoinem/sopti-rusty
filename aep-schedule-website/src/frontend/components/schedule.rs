@@ -1,12 +1,8 @@
 use crate::frontend::components::common::schedule::{Schedule, ScheduleEvent};
 use aep_schedule_generator::{
     algorithm::{schedule::Schedule, taken_course::TakenCourse},
-    data::{
-        period_type::PeriodType,
-        time::{calendar::Calendar, period::Period},
-    },
+    data::period_type::PeriodType,
     data::time::{calendar::Calendar, period::Period, week_number::WeekNumber},
-        time::{calendar::Calendar, period::Period, week_number::WeekNumber},
 };
 use leptos::{html::A, *};
 use phosphor_leptos::{Download, IconWeight};

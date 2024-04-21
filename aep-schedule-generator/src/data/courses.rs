@@ -52,7 +52,7 @@ impl Courses {
         }
 
         for course in self.courses.values() {
-            for group in course.lab_groups.iter() {
+            course.for_each_groups(|group| {
                 for period in group.periods.iter() {
                     self.rooms
                         .entry(period.room.clone())
@@ -61,17 +61,7 @@ impl Courses {
                         })
                         .or_default();
                 }
-            }
-            for group in course.theo_groups.iter() {
-                for period in group.periods.iter() {
-                    self.rooms
-                        .entry(period.room.clone())
-                        .and_modify(|periods| {
-                            periods.push(PeriodCourse::from(period, course.sigle.clone()))
-                        })
-                        .or_default();
-                }
-            }
+            });
         }
     }
     pub fn update_closed(&mut self, csv_fermes: impl BufRead) {
