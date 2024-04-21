@@ -18,6 +18,9 @@ use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::RwLock;
 
+const HORSAGE_URL: &str = "https://cours.polymtl.ca/Horaire/public/horsage.csv";
+const FERME_URL: &str = "https://cours.polymtl.ca/Horaire/public/fermes.csv";
+
 /// This takes advantage of Axum's SubStates feature by deriving FromRef. This is the only way to have more than one
 /// item in Axum's State. Leptos requires you to have leptosOptions in your State struct for the leptos route handlers
 #[derive(FromRef, Debug, Clone)]
@@ -35,13 +38,13 @@ impl AppState {
             .build()
             .unwrap();
         let horsage = client
-            .get("https://cours.polymtl.ca/Horaire/public/horsage.csv")
+            .get(HORSAGE_URL)
             .send()
             .await
             .unwrap();
         let horsage = horsage.text().await.unwrap();
         let fermes = client
-            .get("https://cours.polymtl.ca/Horaire/public/fermes.csv")
+            .get(FERME_URL)
             .send()
             .await
             .unwrap();
@@ -69,7 +72,7 @@ impl AppState {
         loop {
             tokio::time::sleep(Duration::from_secs(5 * 60)).await;
             let Ok(horsage) = client
-                .get("https://cours.polymtl.ca/Horaire/public/horsage.csv")
+                .get(HORSAGE_URL)
                 .send()
                 .await
             else {
@@ -79,7 +82,7 @@ impl AppState {
                 continue;
             };
             let Ok(fermes) = client
-                .get("https://cours.polymtl.ca/Horaire/public/fermes.csv")
+                .get(FERME_URL)
                 .send()
                 .await
             else {
@@ -97,16 +100,12 @@ impl AppState {
         }
     }
 
-    pub async fn courses() -> Result<Arc<RwLock<Courses>>, ServerFnError> {
-        use_context::<Arc<RwLock<Courses>>>().ok_or(ServerFnError::ServerError(
-            "Courses not available".to_string(),
-        ))
+    pub async fn courses() -> Arc<RwLock<Courses>> {
+        use_context::<Arc<RwLock<Courses>>>().unwrap()
     }
 
-    pub async fn calendar() -> Result<Arc<RwLock<Calendar>>, ServerFnError> {
-        use_context::<Arc<RwLock<Calendar>>>().ok_or(ServerFnError::ServerError(
-            "Calendar not available".to_string(),
-        ))
+    pub async fn calendar() -> Arc<RwLock<Calendar>> {
+        use_context::<Arc<RwLock<Calendar>>>().unwrap()
     }
 }
 

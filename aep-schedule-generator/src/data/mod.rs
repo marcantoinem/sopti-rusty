@@ -5,3 +5,4 @@ pub mod group;
 pub mod group_index;
 pub mod groups;
 pub mod time;
+pub mod notification;
