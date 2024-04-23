@@ -116,6 +116,10 @@ $days: $time-width 10px repeat(5, 1fr);
   cursor: pointer;
 }
 
+.remove-touch {
+  touch-action: none;
+}
+
 .color1 {
   background-color: #41AAE6;
 }

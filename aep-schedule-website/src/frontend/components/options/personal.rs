@@ -75,7 +75,7 @@ pub fn PersonalTimeSelector(week: [RwSignal<u64>; 5]) -> impl IntoView {
                         }
                     };
                     view! {
-                        <div style=style class=class
+                        <div class="remove-touch" style=style class=class
                         on:pointerdown=move |e| {
                             set_initial.set(Some((i, j)));
                             set_positive.set((week[i].get() & (1 << j)) == 0);
