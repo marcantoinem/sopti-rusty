@@ -17,7 +17,14 @@ pub struct SigleGroup {
     group_index: GroupIndex,
 }
 
-struct UsersNotify {
+struct UsersToNotify {
     courses: HashMap<SigleGroup, Vec<Arc<NotificationMethod>>>,
-    push_notification_users: HashMap<AuthToken, Arc<NotificationMethod>>,
+    users: HashMap<AuthToken, (Arc<NotificationMethod>, Vec<SigleGroup>)>,
+    to_notify: Vec<NotificationMethod>
+}
+
+impl UsersToNotify {
+    async fn send_all_emails() {
+        
+    }
 }
