@@ -35,3 +35,4 @@ http = "1.1.0"
 p256 = { version = "0.13.2", features = ["arithmetic"] }
 web-push-native = "0.4.0"
 lettre = { version = "0.11.7", features = ["tokio1"] }
+log = "0.4.21"

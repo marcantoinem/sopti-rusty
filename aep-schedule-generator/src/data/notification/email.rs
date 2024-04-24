@@ -26,20 +26,6 @@ impl Email {
         )
     }
 
-    pub fn authentify_smtp() -> SmtpTransport {
-        let username = env::var("SMTP_USERNAME").expect("SMTP_USERNAME env variable not defined");
-        let password = env::var("SMTP_PASSWORD").expect("SMTP_PASSWORD env variable not defined");
-        let creds = Credentials::new(username, password);
-        
-        let relay = env::var("SMTP_RELAY").expect("SMTP_RELAY_URL env variable not defined");
-
-        SmtpTransport::starttls_relay(&relay)
-            .unwrap()
-            .credentials(creds)
-            .port(587)
-            .build()
-    }
-
     pub async fn send_message(&self, sigle_group: SigleGroup, mailer: &SmtpTransport) {
         let email = Message::builder()
             .from("Marc-Antoine Manningham <marc-antoine.manningham@polymtl.ca>".parse().unwrap())
@@ -50,8 +36,8 @@ impl Email {
             .unwrap();
         
         match mailer.send(&email).await {
-            Ok(_) => println!("Email sent successfully!"),
-            Err(e) => panic!("Could not send email: {e:?}"),
-        }
+            Err(e) => log::error!("Sending mail failed with error: {}", e),
+            _ => (),
+        };
     }
 }

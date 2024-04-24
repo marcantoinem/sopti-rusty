@@ -65,6 +65,7 @@ dependencies = [
  "http 1.1.0",
  "ical",
  "lettre",
+ "log",
  "p256",
  "rand",
  "serde",
