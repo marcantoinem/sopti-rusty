@@ -1,20 +1,29 @@
-use std::{collections::HashMap, sync::Arc};
+use std::{collections::HashMap, fmt::Display, sync::Arc};
 use compact_str::CompactString;
 use crate::data::group_index::GroupIndex;
 use super::{auth_token::AuthToken, NotificationMethod};
 
 #[derive(Debug, Clone, Copy, Hash)]
 #[repr(u8)]
-enum GroupType {
+pub enum GroupType {
     LabGroup,
     TheoGroup,
 }
 
+impl Display for GroupType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::LabGroup => f.write_str("laboratoire"),
+            Self::TheoGroup => f.write_str("théorie"),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Hash)]
 pub struct SigleGroup {
-    sigle: CompactString,
-    group_type: GroupType,
-    group_index: GroupIndex,
+    pub sigle: CompactString,
+    pub group_type: GroupType,
+    pub group_index: GroupIndex,
 }
 
 struct UsersToNotify {
