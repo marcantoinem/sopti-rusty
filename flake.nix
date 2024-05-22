@@ -21,11 +21,12 @@
           name = "ssl-project";
 
           packages = with pkgs; [
+            pkg-config
             openssl.dev
             openssl
           ];
 
-          PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
+          PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig"; 
         };
       });
 }

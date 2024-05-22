@@ -10,7 +10,6 @@ use leptos::*;
 #[component]
 pub fn OptionsForms(
     action: Action<SchedulesOptions, Vec<Schedule>>,
-    set_hide: WriteSignal<bool>,
 ) -> impl IntoView {
     let state = OptionState::default();
 

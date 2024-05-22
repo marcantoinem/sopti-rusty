@@ -5,15 +5,16 @@ use phosphor_leptos::{CaretDoubleRight, IconWeight};
 
 #[component]
 pub fn GeneratorPage() -> impl IntoView {
+    let (hide, set_hide) = create_signal(false);
     // Creates a reactive value to update the button
     let action = create_action(|s: &SchedulesOptions| {
         let s = s.clone();
+        set_hide(true);
         async move { s.get_schedules().into_sorted_vec() }
     });
-    let (hide, set_hide) = create_signal(false);
     view! {
         <aside class="left-panel" class=("hide-left-panel", hide)>
-            <OptionsForms action=action set_hide/>
+            <OptionsForms action=action/>
         </aside>
         <section class="right-panel">
             <SchedulesComponent read_signal=action.value()/>

@@ -31,8 +31,4 @@ ical = { version = "0.11.0", features = ["ical", "vcard", "generator"] }
 chrono = "0.4.31"
 uuid = { version = "1.6.1", features = ["v4"] }
 rand = { version = "0.8.5", features = ["std_rng"] }
-http = "1.1.0"
-p256 = { version = "0.13.2", features = ["arithmetic"] }
-web-push-native = "0.4.0"
-lettre = { version = "0.11.7", features = ["tokio1"] }
 log = "0.4.21"
