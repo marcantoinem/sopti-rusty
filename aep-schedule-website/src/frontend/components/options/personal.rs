@@ -4,7 +4,10 @@ use web_sys::wasm_bindgen::JsCast;
 use web_sys::Element;
 
 #[component]
-pub fn PersonalTimeSelector(week: [RwSignal<u64>; 5]) -> impl IntoView {
+pub fn PersonalTimeSelector<F>(week: [RwSignal<u64>; 5], submit: F) -> impl IntoView
+where
+    F: Fn() + Copy + 'static,
+{
     let (initial, set_initial) = create_signal(None);
     let (destination, set_destination) = create_signal((0, 0));
     let (is_positive, set_positive) = create_signal(true);
@@ -43,6 +46,7 @@ pub fn PersonalTimeSelector(week: [RwSignal<u64>; 5]) -> impl IntoView {
                 }
             });
         }
+        submit();
         set_initial.set(None);
     });
     on_cleanup(move || handle.remove());

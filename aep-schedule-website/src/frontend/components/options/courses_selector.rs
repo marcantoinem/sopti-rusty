@@ -98,7 +98,9 @@ fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl Int
 }
 
 #[component]
-pub fn CoursesSelector(state: OptionState) -> impl IntoView {
+pub fn CoursesSelector<F>(state: OptionState, submit: F) -> impl IntoView
+where
+    F: Fn() + Copy + 'static {
     let (selections, set_selections) = state.selections;
     let (active_tab, set_active_tab) = create_signal("".to_string());
     view! {
@@ -140,7 +142,7 @@ pub fn CoursesSelector(state: OptionState) -> impl IntoView {
             />
         </div>
         <Tab active_tab tab_id="".to_string()>
-            <PersonalTimeSelector week=state.week></PersonalTimeSelector>
+            <PersonalTimeSelector week=state.week submit></PersonalTimeSelector>
         </Tab>
         <For
             each=selections

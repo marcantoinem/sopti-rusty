@@ -25,7 +25,7 @@
             openssl.dev
             openssl
           ];
-
+          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ pkgs.openssl ];
           PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig"; 
         };
       });

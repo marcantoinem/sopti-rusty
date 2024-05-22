@@ -7,7 +7,7 @@ use phosphor_leptos::{CaretDoubleRight, IconWeight};
 pub fn GeneratorPage() -> impl IntoView {
     let (hide, set_hide) = create_signal(false);
     // Creates a reactive value to update the button
-    let action = create_action(|s: &SchedulesOptions| {
+    let action = create_action( move|s: &SchedulesOptions| {
         let s = s.clone();
         set_hide(true);
         async move { s.get_schedules().into_sorted_vec() }
