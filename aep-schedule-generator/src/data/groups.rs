@@ -1,4 +1,9 @@
-use super::{group::Group, group_index::GroupIndex};
+use super::{
+    group::Group,
+    group_index::GroupIndex,
+    group_sigle::{GroupType, SigleGroup},
+};
+use compact_str::CompactString;
 use serde::{Deserialize, Serialize};
 use std::ops::{Index, IndexMut};
 
@@ -43,6 +48,13 @@ impl Groups {
 
     pub fn get_mut(&mut self, index: GroupIndex) -> Option<&mut Group> {
         self[index].as_mut()
+    }
+
+    pub fn get_closed(&self, group_type: GroupType, sigle: &CompactString) -> Vec<SigleGroup> {
+        self.iter()
+            .filter(|g| !g.open)
+            .map(|g| SigleGroup::new(sigle.clone(), group_type, g.number))
+            .collect()
     }
 }
 

@@ -1,6 +1,7 @@
 use super::course::{Course, CourseName};
 use super::group::Group;
 use super::group_index::GroupIndex;
+use super::group_sigle::SigleGroup;
 use super::time::period::{Period, PeriodCourse};
 use compact_str::CompactString;
 use std::{array, collections::HashMap, io::BufRead};
@@ -21,7 +22,7 @@ impl Courses {
         courses
     }
 
-    pub fn update_all_courses(&mut self, csv_horsages: impl BufRead) {
+    fn update_all_courses(&mut self, csv_horsages: impl BufRead) {
         let mut lines = csv_horsages.lines();
         lines.next();
         for line in lines {
@@ -64,7 +65,8 @@ impl Courses {
             });
         }
     }
-    pub fn update_closed(&mut self, csv_fermes: impl BufRead) {
+
+    fn update_closed(&mut self, csv_fermes: impl BufRead) {
         let mut lines = csv_fermes.lines();
         lines.next();
         for line in lines {
@@ -86,6 +88,17 @@ impl Courses {
                 .get_mut(period_type, number)
                 .and_then(|g| Some(g.open = false));
         }
+    }
+
+    pub fn update(&mut self, csv_horsages: impl BufRead, csv_fermes: impl BufRead) {
+        let closed: Vec<SigleGroup> = self
+            .courses
+            .iter()
+            .map(|c| c.1.get_all_closed_groups())
+            .flatten()
+            .collect();
+        self.update_all_courses(csv_horsages);
+        self.update_closed(csv_fermes);
     }
 
     pub fn get_courses_name(&self) -> Vec<CourseName> {

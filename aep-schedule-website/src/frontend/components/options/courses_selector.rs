@@ -23,10 +23,12 @@ fn GroupsSettings(groups: Vec<(bool, Vec<Period>)>, open: Vec<RwSignal<bool>>) -
                         <span>{i + 1}</span>
                         <div class="col-container group-text-col">
                             {periods.iter().map(|p| {
-                                view!{<div class="row-container group-text">
-                                    <span>{p.day.to_string()}</span>
-                                    <span class="period-group">{p.hours.to_string()}</span>
-                                </div>}
+                                view!{
+                                    <div class="row-container group-text">
+                                        <span>{p.day.to_string()}</span>
+                                        <span class="period-group">{p.hours.to_string()}</span>
+                                    </div>
+                                }
                             }).collect_view()}
                         </div>
                     </CheckboxChip>
@@ -45,7 +47,7 @@ fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl Int
                 {
                     match course.course_type {
                         ReactiveCourseType::TheoOnly { theo_open, theo_groups } => {
-                            let groups = theo_groups.into_iter().map(|g| (g.open, g.periods)).collect(); 
+                            let groups = theo_groups.into_iter().map(|g| (g.open, g.periods)).collect();
                             view!{
                                 <div>
                                     <h3>"Théorie"</h3>
@@ -54,7 +56,7 @@ fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl Int
                             }.into_view()
                         },
                         ReactiveCourseType::LabOnly { lab_open, lab_groups } => {
-                            let groups = lab_groups.into_iter().map(|g| (g.open, g.periods)).collect(); 
+                            let groups = lab_groups.into_iter().map(|g| (g.open, g.periods)).collect();
                             view!{
                                 <div>
                                     <h3>"Laboratoire"</h3>
@@ -82,7 +84,7 @@ fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl Int
                                 let mut periods = g1.periods;
                                 periods.append(&mut g2.periods);
                                 (g1.open, periods)
-                            }).collect(); 
+                            }).collect();
                             view!{
                                 <div>
                                     <h3>"Théorie et laboratoire lié"</h3>
@@ -100,7 +102,8 @@ fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl Int
 #[component]
 pub fn CoursesSelector<F>(state: OptionState, submit: F) -> impl IntoView
 where
-    F: Fn() + Copy + 'static {
+    F: Fn() + Copy + 'static,
+{
     let (selections, set_selections) = state.selections;
     let (active_tab, set_active_tab) = create_signal("".to_string());
     view! {
