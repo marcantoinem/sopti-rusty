@@ -90,7 +90,11 @@ impl Courses {
         }
     }
 
-    pub fn update(&mut self, csv_horsages: impl BufRead, csv_fermes: impl BufRead) {
+    pub fn update(
+        &mut self,
+        csv_horsages: impl BufRead,
+        csv_fermes: impl BufRead,
+    ) -> Vec<SigleGroup> {
         let closed: Vec<SigleGroup> = self
             .courses
             .iter()
@@ -99,6 +103,14 @@ impl Courses {
             .collect();
         self.update_all_courses(csv_horsages);
         self.update_closed(csv_fermes);
+        closed
+            .into_iter()
+            .filter(|sigle_group| {
+                self.courses
+                    .get(&sigle_group.sigle)
+                    .is_some_and(|course| course.is_open(sigle_group))
+            })
+            .collect()
     }
 
     pub fn get_courses_name(&self) -> Vec<CourseName> {
