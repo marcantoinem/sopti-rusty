@@ -1797,6 +1797,7 @@ dependencies = [
  "quoted_printable",
  "socket2",
  "tokio",
+ "tokio-native-tls",
  "url",
 ]
 

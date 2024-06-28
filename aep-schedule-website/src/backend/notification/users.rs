@@ -1,12 +1,10 @@
-use super::{
-    auth_token::AuthToken,
-    user::{SharedUser, User},
-    NotificationMethod,
-};
-use crate::data::group_index::GroupIndex;
+use super::{auth_token::AuthToken, user::SharedUser, NotificationMethod};
+use crate::{backend::user_builder::UserBuilder, data::group_index::GroupIndex};
+use aep_schedule_generator::data::group_sigle::SigleGroup;
 use compact_str::CompactString;
+use lettre::Credentials;
 use lettre::SmtpTransport;
-use std::{collections::HashMap, fmt::Display, sync::Arc};
+use std::{collections::HashMap, env, fmt::Display, sync::Arc};
 use tower::make::Shared;
 
 struct UsersToNotify {
@@ -34,7 +32,7 @@ impl UsersToNotify {
             .build()
     }
 
-    pub fn new(courses: impl Iterator<&CompactString>) -> Self {
+    pub fn new<'a>(courses: impl Iterator<Item = &'a CompactString>) -> Self {
         let create_mailer = Self::create_mailer();
         let courses = courses.map(|c| (c, vec![])).collect();
         let users = HashMap::new();
@@ -44,5 +42,10 @@ impl UsersToNotify {
             users,
             create_mailer,
         }
+    }
+
+    pub fn register_user(&mut self, user: UserBuilder) -> Self {
+        let user: SharedUser = user.into();
+        self.courses.groups()
     }
 }

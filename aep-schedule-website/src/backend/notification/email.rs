@@ -1,14 +1,11 @@
-use super::{auth_token::AuthToken, users::SigleGroup};
+use super::auth_token::AuthToken;
+use aep_schedule_generator::data::group_sigle::SigleGroup;
 use lettre::{
     message::{header::ContentType, Mailbox},
     transport::smtp::authentication::Credentials,
     AsyncTransport, Message, SmtpTransport,
 };
 use std::env;
-
-pub struct Email {
-    email: String,
-}
 
 impl Email {
     fn template_header(&self, sigle_group: SigleGroup) -> String {
