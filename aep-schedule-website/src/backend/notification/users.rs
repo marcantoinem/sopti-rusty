@@ -1,12 +1,17 @@
-use super::{auth_token::AuthToken, NotificationMethod};
+use super::{
+    auth_token::AuthToken,
+    user::{SharedUser, User},
+    NotificationMethod,
+};
 use crate::data::group_index::GroupIndex;
 use compact_str::CompactString;
 use lettre::SmtpTransport;
 use std::{collections::HashMap, fmt::Display, sync::Arc};
+use tower::make::Shared;
 
 struct UsersToNotify {
-    courses: HashMap<SigleGroup, Vec<Arc<NotificationMethod>>>,
-    users: HashMap<AuthToken, (Arc<NotificationMethod>, Vec<SigleGroup>)>,
+    courses: HashMap<SigleGroup, Vec<SharedUser>>,
+    users: HashMap<AuthToken, SharedUser>,
     create_mailer: SmtpTransport,
 }
 
@@ -17,11 +22,15 @@ impl UsersToNotify {
         let creds = Credentials::new(username, password);
 
         let relay = env::var("SMTP_RELAY").expect("SMTP_RELAY_URL env variable not defined");
+        let port: u32 = env::var("SMTP_PORT")
+            .expect("SMTP_PORT env variable not defined")
+            .parse()
+            .expect("SMTP_PORT env variable should be a number");
 
         SmtpTransport::starttls_relay(&relay)
             .unwrap()
             .credentials(creds)
-            .port(587)
+            .port(port)
             .build()
     }
 

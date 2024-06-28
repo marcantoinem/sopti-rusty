@@ -1,9 +1,10 @@
 use self::{email::Email, push_notification::PushNotification, users::SigleGroup};
 
-pub mod users;
 pub mod auth_token;
-pub mod push_notification;
 pub mod email;
+pub mod push_notification;
+pub mod user;
+pub mod users;
 
 pub enum NotificationMethod {
     Email(Email),
@@ -11,7 +12,5 @@ pub enum NotificationMethod {
 }
 
 impl NotificationMethod {
-    pub fn send_notification(&self, ) {
-
-    }
+    pub fn send_notification(&self) {}
 }
