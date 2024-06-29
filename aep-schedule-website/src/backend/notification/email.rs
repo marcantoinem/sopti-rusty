@@ -1,15 +1,14 @@
-use super::auth_token::AuthToken;
 use crate::backend::shared::email::Email;
 use aep_schedule_generator::data::group_sigle::SigleGroup;
 use lettre::{
     message::{header::ContentType, Mailbox},
-    transport::smtp::authentication::Credentials,
-    AsyncTransport, Message, SmtpTransport, Transport,
+    Message, SmtpTransport, Transport,
 };
-use std::env;
+use std::collections::HashSet;
 
 impl Email {
-    fn template_header(&self, sigle_group: &SigleGroup) -> String {
+    fn template_header(&self, sigle_group: &HashSet<SigleGroup>) -> String {
+        let sigle_group = sigle_group.iter().next().unwrap();
         format!(
             "La section de {} {} du cours {} s'est ouverte.",
             sigle_group.sigle,
@@ -18,7 +17,8 @@ impl Email {
         )
     }
 
-    fn template_body(&self, sigle_group: &SigleGroup) -> String {
+    fn template_body(&self, sigle_group: &HashSet<SigleGroup>) -> String {
+        let sigle_group = sigle_group.iter().next().unwrap();
         format!(
             "La section de {} {} du cours {} s'est ouverte.",
             sigle_group.sigle,
@@ -27,14 +27,17 @@ impl Email {
         )
     }
 
-    pub async fn send_message(&self, sigle_group: SigleGroup, mailer: &SmtpTransport) {
+    pub async fn send_message(&self, sigle_group: &HashSet<SigleGroup>, mailer: &SmtpTransport) {
         let email = Message::builder()
             .from(
                 "Marc-Antoine Manningham <marc-antoine.manningham@polymtl.ca>"
                     .parse()
                     .unwrap(),
             )
-            .to(Mailbox::new(None, self.email.parse().unwrap()))
+            .to(Mailbox::new(
+                Some("Horaires AEP".into()),
+                self.email.parse().unwrap(),
+            ))
             .subject(self.template_header(&sigle_group))
             .header(ContentType::TEXT_PLAIN)
             .body(self.template_body(&sigle_group))

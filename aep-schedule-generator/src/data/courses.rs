@@ -4,6 +4,7 @@ use super::group_index::GroupIndex;
 use super::group_sigle::SigleGroup;
 use super::time::period::{Period, PeriodCourse};
 use compact_str::CompactString;
+use std::collections::HashSet;
 use std::{array, collections::HashMap, io::BufRead};
 
 #[derive(Debug, Clone)]
@@ -94,7 +95,7 @@ impl Courses {
         &mut self,
         csv_horsages: impl BufRead,
         csv_fermes: impl BufRead,
-    ) -> Vec<SigleGroup> {
+    ) -> HashSet<SigleGroup> {
         let closed: Vec<SigleGroup> = self
             .courses
             .iter()

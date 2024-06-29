@@ -2,15 +2,16 @@ use crate::backend::shared::user_builder::UserBuilder;
 
 use super::{auth_token::AuthToken, user::SharedUser};
 use aep_schedule_generator::data::group_sigle::SigleGroup;
-use compact_str::CompactString;
 use lettre::{transport::smtp::authentication::Credentials, SmtpTransport};
-use std::{collections::HashMap, env, fmt::Display, sync::Arc};
-use tower::make::Shared;
+use std::{
+    collections::{HashMap, HashSet},
+    env,
+};
 
-struct UsersToNotify {
+pub struct UsersToNotify {
     courses: HashMap<SigleGroup, Vec<SharedUser>>,
-    users: HashMap<AuthToken, SharedUser>,
-    create_mailer: SmtpTransport,
+    _users: HashMap<AuthToken, SharedUser>,
+    mailer: SmtpTransport,
 }
 
 impl UsersToNotify {
@@ -32,15 +33,15 @@ impl UsersToNotify {
             .build()
     }
 
-    pub fn new<'a>(courses: impl Iterator<Item = &'a SigleGroup>) -> Self {
-        let create_mailer = Self::create_mailer();
-        let courses = courses.map(|c| (c.clone(), vec![])).collect();
-        let users = HashMap::new();
+    pub fn new() -> Self {
+        let mailer = Self::create_mailer();
+        let courses = HashMap::new();
+        let _users = HashMap::new();
 
         Self {
             courses,
-            users,
-            create_mailer,
+            _users,
+            mailer,
         }
     }
 
@@ -52,5 +53,20 @@ impl UsersToNotify {
                 .and_modify(|v| v.push(user.clone()))
                 .or_insert(vec![user.clone()]);
         });
+    }
+
+    pub async fn send_opened(&self, opened: HashSet<SigleGroup>) {
+        let mut notified_users = HashSet::new();
+        for sigle_group in &opened {
+            if let Some(users) = self.courses.get(sigle_group) {
+                for user in users
+                    .iter()
+                    .filter(|u| !notified_users.contains(&u.get_auth_token()))
+                {
+                    user.send_message(&opened, &self.mailer).await;
+                }
+                notified_users.extend(users.iter().map(|u| u.get_auth_token()));
+            }
+        }
     }
 }

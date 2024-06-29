@@ -1,13 +1,15 @@
 use super::auth_token::AuthToken;
-use crate::backend::shared::notification_method::NotificationMethod;
+use crate::backend::shared::email::Email;
 use crate::backend::shared::user_builder::UserBuilder;
 use aep_schedule_generator::data::group_sigle::SigleGroup;
+use lettre::SmtpTransport;
 use std::collections::HashSet;
 use std::sync::Arc;
 use std::sync::Mutex;
 
 struct User {
-    notifications_method: Vec<NotificationMethod>,
+    email: Option<Email>,
+    //notification: Option<Notification>,
     auth_token: AuthToken,
     sigles_group: HashSet<SigleGroup>,
 }
@@ -21,16 +23,24 @@ impl SharedUser {
             to_apply(g);
         }
     }
+    pub fn get_auth_token(&self) -> AuthToken {
+        self.0.lock().unwrap().auth_token.clone()
+    }
+    pub async fn send_message(&self, sigle_group: &HashSet<SigleGroup>, mailer: &SmtpTransport) {
+        if let Some(email) = &self.0.lock().unwrap().email {
+            email.send_message(sigle_group, mailer).await;
+        }
+    }
 }
 
 impl From<UserBuilder> for SharedUser {
     fn from(value: UserBuilder) -> Self {
         let UserBuilder {
-            notifications_method,
+            email,
             sigles_group,
         } = value;
         let user = User {
-            notifications_method,
+            email,
             auth_token: AuthToken::new(),
             sigles_group,
         };

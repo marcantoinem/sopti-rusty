@@ -5,6 +5,12 @@ pub struct AuthToken(String);
 
 impl AuthToken {
     pub fn new() -> Self {
-        Self(StdRng::from_entropy().sample_iter(&Alphanumeric).take(32).map(char::from).collect())
+        Self(
+            StdRng::from_entropy()
+                .sample_iter(&Alphanumeric)
+                .take(32)
+                .map(char::from)
+                .collect(),
+        )
     }
 }
