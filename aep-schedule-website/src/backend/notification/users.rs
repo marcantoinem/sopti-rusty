@@ -1,9 +1,9 @@
-use super::{auth_token::AuthToken, user::SharedUser, NotificationMethod};
-use crate::{backend::user_builder::UserBuilder, data::group_index::GroupIndex};
+use crate::backend::shared::user_builder::UserBuilder;
+
+use super::{auth_token::AuthToken, user::SharedUser};
 use aep_schedule_generator::data::group_sigle::SigleGroup;
 use compact_str::CompactString;
-use lettre::Credentials;
-use lettre::SmtpTransport;
+use lettre::{transport::smtp::authentication::Credentials, SmtpTransport};
 use std::{collections::HashMap, env, fmt::Display, sync::Arc};
 use tower::make::Shared;
 
@@ -20,7 +20,7 @@ impl UsersToNotify {
         let creds = Credentials::new(username, password);
 
         let relay = env::var("SMTP_RELAY").expect("SMTP_RELAY_URL env variable not defined");
-        let port: u32 = env::var("SMTP_PORT")
+        let port: u16 = env::var("SMTP_PORT")
             .expect("SMTP_PORT env variable not defined")
             .parse()
             .expect("SMTP_PORT env variable should be a number");
@@ -32,9 +32,9 @@ impl UsersToNotify {
             .build()
     }
 
-    pub fn new<'a>(courses: impl Iterator<Item = &'a CompactString>) -> Self {
+    pub fn new<'a>(courses: impl Iterator<Item = &'a SigleGroup>) -> Self {
         let create_mailer = Self::create_mailer();
-        let courses = courses.map(|c| (c, vec![])).collect();
+        let courses = courses.map(|c| (c.clone(), vec![])).collect();
         let users = HashMap::new();
 
         Self {
@@ -44,8 +44,13 @@ impl UsersToNotify {
         }
     }
 
-    pub fn register_user(&mut self, user: UserBuilder) -> Self {
+    pub fn register_user(&mut self, user: UserBuilder) {
         let user: SharedUser = user.into();
-        self.courses.groups()
+        user.for_each_groups(|g| {
+            self.courses
+                .entry(g.clone())
+                .and_modify(|v| v.push(user.clone()))
+                .or_insert(vec![user.clone()]);
+        });
     }
 }

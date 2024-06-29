@@ -1,14 +1,15 @@
 use super::auth_token::AuthToken;
+use crate::backend::shared::email::Email;
 use aep_schedule_generator::data::group_sigle::SigleGroup;
 use lettre::{
     message::{header::ContentType, Mailbox},
     transport::smtp::authentication::Credentials,
-    AsyncTransport, Message, SmtpTransport,
+    AsyncTransport, Message, SmtpTransport, Transport,
 };
 use std::env;
 
 impl Email {
-    fn template_header(&self, sigle_group: SigleGroup) -> String {
+    fn template_header(&self, sigle_group: &SigleGroup) -> String {
         format!(
             "La section de {} {} du cours {} s'est ouverte.",
             sigle_group.sigle,
@@ -17,7 +18,7 @@ impl Email {
         )
     }
 
-    fn template_body(&self, sigle_group: SigleGroup) -> String {
+    fn template_body(&self, sigle_group: &SigleGroup) -> String {
         format!(
             "La section de {} {} du cours {} s'est ouverte.",
             sigle_group.sigle,
@@ -34,12 +35,12 @@ impl Email {
                     .unwrap(),
             )
             .to(Mailbox::new(None, self.email.parse().unwrap()))
-            .subject(self.template_header(sigle_group))
+            .subject(self.template_header(&sigle_group))
             .header(ContentType::TEXT_PLAIN)
-            .body(self.template_body(sigle_group))
+            .body(self.template_body(&sigle_group))
             .unwrap();
 
-        match mailer.send(&email).await {
+        match mailer.send(&email) {
             Err(e) => log::error!("Sending mail failed with error: {}", e),
             _ => (),
         };

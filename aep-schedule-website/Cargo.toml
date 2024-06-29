@@ -16,8 +16,9 @@ leptos_axum = { version = "0.6", optional = true }
 leptos_meta = { version = "0.6", features = ["nightly"] }
 leptos_router = { version = "0.6", features = ["nightly"] }
 log = "0.4"
+rand = { version = "0.8", optional = true }
 simple_logger = "5"
-tokio = { version = "1.37", optional = true, features = ["full"] }
+tokio = { version = "1.38", optional = true, features = ["full"] }
 tower = { version = "0.4.13", optional = true }
 compact_str = { version = "0.7.1" }
 tower-http = { version = "0.5", features = [
@@ -30,7 +31,7 @@ thiserror = "1.0.38"
 tracing = { version = "0.1.40", optional = true }
 serde = { version = "1.0", features = ["derive"] }
 reqwest = { version = "0.12", optional = true }
-phosphor-leptos = "0.5.0"
+phosphor-leptos = "0.5"
 web-sys = { version = "0.3.69", features = [
     "console",
     "Document",
@@ -59,6 +60,7 @@ ssr = [
     "dep:leptos_axum",
     "dep:reqwest",
     "dep:lettre",
+    "dep:rand",
     "leptos/ssr",
     "leptos_meta/ssr",
     "leptos_router/ssr",

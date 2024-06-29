@@ -1,3 +1,3 @@
 pub struct Email {
-    email: String,
+    pub email: String,
 }

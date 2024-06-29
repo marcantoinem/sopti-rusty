@@ -4,7 +4,7 @@ use compact_str::CompactString;
 
 use super::group_index::GroupIndex;
 
-#[derive(Debug, Clone, Copy, Hash)]
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[repr(u8)]
 pub enum GroupType {
     LabGroup,
@@ -20,7 +20,7 @@ impl Display for GroupType {
     }
 }
 
-#[derive(Debug, Clone, Hash)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct SigleGroup {
     pub sigle: CompactString,
     pub group_type: GroupType,
