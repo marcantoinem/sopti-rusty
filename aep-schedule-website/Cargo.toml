@@ -31,7 +31,6 @@ thiserror = "1.0.38"
 tracing = { version = "0.1.40", optional = true }
 serde = { version = "1.0", features = ["derive"] }
 reqwest = { version = "0.12", optional = true }
-phosphor-leptos = "0.5"
 web-sys = { version = "0.3.69", features = [
     "console",
     "Document",

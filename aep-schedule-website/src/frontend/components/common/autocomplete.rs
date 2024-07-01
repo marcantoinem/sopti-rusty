@@ -1,5 +1,5 @@
+use crate::frontend::components::icons::plus_circle::PlusCircle;
 use leptos::*;
-use phosphor_leptos::PlusCircle;
 use std::{cmp, ops::Range};
 
 #[derive(Clone, PartialEq)]

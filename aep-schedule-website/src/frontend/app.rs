@@ -1,10 +1,12 @@
+use crate::frontend::components::icons::bug::Bug;
+use crate::frontend::components::icons::gitlab_logo::GitlabLogo;
+use crate::frontend::components::icons::IconWeight;
 use crate::frontend::pages::apropos::HomePage;
 use crate::frontend::pages::classroom::ClassRoomComponent;
 use crate::frontend::pages::generator::GeneratorPage;
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
-use phosphor_leptos::{Bug, GitlabLogo, IconWeight};
 
 #[component]
 pub fn App() -> impl IntoView {

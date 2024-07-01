@@ -1,13 +1,13 @@
+use crate::frontend::components::icons::{caret_double_right::CaretDoubleRight, IconWeight};
 use crate::frontend::components::{options::form::OptionsForms, schedules::SchedulesComponent};
 use aep_schedule_generator::algorithm::generation::SchedulesOptions;
 use leptos::*;
-use phosphor_leptos::{CaretDoubleRight, IconWeight};
 
 #[component]
 pub fn GeneratorPage() -> impl IntoView {
     let (hide, set_hide) = create_signal(false);
     // Creates a reactive value to update the button
-    let action = create_action( move|s: &SchedulesOptions| {
+    let action = create_action(move |s: &SchedulesOptions| {
         let s = s.clone();
         set_hide(true);
         async move { s.get_schedules().into_sorted_vec() }

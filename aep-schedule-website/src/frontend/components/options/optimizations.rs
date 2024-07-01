@@ -1,6 +1,8 @@
 use super::state::OptionState;
+use crate::frontend::components::icons::{
+    calendar_check::CalendarCheck, house::House, sun::Sun, sun_horizon::SunHorizon, IconWeight,
+};
 use leptos::*;
-use phosphor_leptos::{CalendarCheck, House, IconWeight, Sun, SunHorizon};
 use std::cmp;
 
 fn weight(input: u8) -> IconWeight {
@@ -16,13 +18,13 @@ fn weight(input: u8) -> IconWeight {
 #[component]
 pub fn SelectOptimizations<F>(state: OptionState, submit: F) -> impl IntoView
 where
-    F: Fn() + Copy + 'static
+    F: Fn() + Copy + 'static,
 {
     let weight_house = create_memo(move |_| weight(state.day_off.get()));
     let weight_early = create_memo(move |_| weight((-cmp::min(0, state.morning.get())) as u8));
     let weight_morning = create_memo(move |_| weight(cmp::max(0, state.morning.get()) as u8));
     let weight_finish = create_memo(move |_| weight(state.finish_early.get()));
-    
+
     view! {
         <div class="three-col">
             <div class="col-container">

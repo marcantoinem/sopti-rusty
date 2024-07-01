@@ -1,3 +1,4 @@
+use crate::frontend::components::icons::warning_circle::WarningCircle;
 use crate::{
     backend::routes::{get_classroom, get_classrooms},
     frontend::components::common::{
@@ -7,7 +8,6 @@ use crate::{
 };
 use aep_schedule_generator::data::time::{period::PeriodCourse, week_number::WeekNumber};
 use leptos::*;
-use phosphor_leptos::WarningCircle;
 
 #[component]
 fn PeriodEvent<'a>(i: usize, period_course: &'a PeriodCourse) -> impl IntoView {

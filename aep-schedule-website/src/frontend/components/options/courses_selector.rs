@@ -3,14 +3,14 @@ use super::state::ReactiveCourse;
 use crate::backend::routes::get_courses;
 use crate::frontend::components::common::checkbox::CheckboxChip;
 use crate::frontend::components::common::tab::Tab;
+use crate::frontend::components::icons::calendar_x::CalendarX;
+use crate::frontend::components::icons::x::X;
+use crate::frontend::components::icons::IconWeight;
 use crate::frontend::components::options::personal::PersonalTimeSelector;
 use crate::frontend::components::options::search::SearchCourse;
 use crate::frontend::components::options::state::ReactiveCourseType;
 use aep_schedule_generator::data::time::period::Period;
 use leptos::*;
-use phosphor_leptos::CalendarX;
-use phosphor_leptos::IconWeight;
-use phosphor_leptos::X;
 
 #[component]
 fn GroupsSettings(groups: Vec<(bool, Vec<Period>)>, open: Vec<RwSignal<bool>>) -> impl IntoView {

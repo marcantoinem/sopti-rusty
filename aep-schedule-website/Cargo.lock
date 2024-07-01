@@ -44,7 +44,6 @@ dependencies = [
  "lettre",
  "log",
  "p256",
- "phosphor-leptos",
  "rand",
  "reqwest",
  "serde",
@@ -2220,15 +2219,6 @@ name = "percent-encoding"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e3148f5046208a5d56bcfc03053e3ca6334e51da8dfb19b6cdc8b306fae3283e"
-
-[[package]]
-name = "phosphor-leptos"
-version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f1cee48c2f347ac9c8e41414ada7e3b979542ce71357c70e14287413760fabe9"
-dependencies = [
- "leptos",
-]
 
 [[package]]
 name = "pin-project"

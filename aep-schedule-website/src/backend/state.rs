@@ -69,20 +69,20 @@ impl AppState {
             .unwrap();
         loop {
             tokio::time::sleep(Duration::from_secs(5 * 60)).await;
-            let Ok(horsage) = client.get(HORSAGE_URL).send().await else {
-                continue;
-            };
-            let Ok(horsage) = horsage.text().await else {
-                continue;
-            };
-            let Ok(fermes) = client.get(FERME_URL).send().await else {
-                continue;
-            };
-            let Ok(fermes) = fermes.text().await else {
-                continue;
-            };
-            fs::write("horsage.csv", horsage).expect("Unable to write file");
-            fs::write("fermes.csv", fermes).expect("Unable to write file");
+            //let Ok(horsage) = client.get(HORSAGE_URL).send().await else {
+            //    continue;
+            //};
+            //let Ok(horsage) = horsage.text().await else {
+            //    continue;
+            //};
+            //let Ok(fermes) = client.get(FERME_URL).send().await else {
+            //    continue;
+            //};
+            //let Ok(fermes) = fermes.text().await else {
+            //    continue;
+            //};
+            //fs::write("horsage.csv", horsage).expect("Unable to write file");
+            //fs::write("fermes.csv", fermes).expect("Unable to write file");
             let horsage = BufReader::new(File::open("horsage.csv").unwrap());
             let fermes = BufReader::new(File::open("fermes.csv").unwrap());
             let opened_course = self.courses.write().await.update(horsage, fermes);
