@@ -26,6 +26,7 @@ impl Courses {
     fn update_all_courses(&mut self, csv_horsages: impl BufRead) {
         let mut lines = csv_horsages.lines();
         lines.next();
+        self.courses.clear();
         for line in lines {
             let Ok(line) = line else { continue };
             let mut columns = line.split(';');

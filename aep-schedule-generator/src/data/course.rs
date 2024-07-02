@@ -133,10 +133,10 @@ impl Course {
                 theo_groups,
                 lab_groups,
             } => match sigle_group.group_type {
-                GroupType::LabGroup => theo_groups[sigle_group.group_index]
+                GroupType::LabGroup => lab_groups[sigle_group.group_index]
                     .as_ref()
                     .is_some_and(|g| g.open),
-                GroupType::TheoGroup => lab_groups[sigle_group.group_index]
+                GroupType::TheoGroup => theo_groups[sigle_group.group_index]
                     .as_ref()
                     .is_some_and(|g| g.open),
             },

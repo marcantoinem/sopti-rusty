@@ -20,7 +20,7 @@ impl UsersToNotify {
         let password = env::var("SMTP_PASSWORD").expect("SMTP_PASSWORD env variable not defined");
         let creds = Credentials::new(username, password);
 
-        let relay = env::var("SMTP_RELAY").expect("SMTP_RELAY_URL env variable not defined");
+        let relay = env::var("SMTP_RELAY").expect("SMTP_RELAY env variable not defined");
         let port: u16 = env::var("SMTP_PORT")
             .expect("SMTP_PORT env variable not defined")
             .parse()
@@ -57,7 +57,12 @@ impl UsersToNotify {
 
     pub async fn send_opened(&self, opened: HashSet<SigleGroup>) {
         let mut notified_users = HashSet::new();
+        println!("Notifying the student");
         for sigle_group in &opened {
+            println!(
+                "Group {} of course {} is opened",
+                sigle_group.group_index, sigle_group.sigle
+            );
             if let Some(users) = self.courses.get(sigle_group) {
                 for user in users
                     .iter()

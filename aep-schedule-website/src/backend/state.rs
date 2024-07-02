@@ -1,6 +1,8 @@
 use crate::frontend::app::App;
-use aep_schedule_generator::data::courses::Courses;
+use aep_schedule_generator::data::group_index::GroupIndex;
+use aep_schedule_generator::data::group_sigle::GroupType;
 use aep_schedule_generator::data::time::calendar::Calendar;
+use aep_schedule_generator::data::{courses::Courses, group_sigle::SigleGroup};
 use axum::{
     body::Body as AxumBody,
     extract::FromRef,
@@ -11,14 +13,14 @@ use axum::{
 use leptos::*;
 use leptos_axum::handle_server_fns_with_context;
 use leptos_router::RouteListing;
-use std::fs::File;
 use std::io::BufReader;
 use std::sync::Arc;
 use std::time::Duration;
+use std::{collections::HashSet, fs::File};
 use std::{fs, sync::Mutex};
 use tokio::sync::RwLock;
 
-use super::notification::users::UsersToNotify;
+use super::{notification::users::UsersToNotify, shared::user_builder::UserBuilder};
 
 const HORSAGE_URL: &str = "https://cours.polymtl.ca/Horaire/public/horsage.csv";
 const FERME_URL: &str = "https://cours.polymtl.ca/Horaire/public/fermes.csv";
@@ -67,22 +69,31 @@ impl AppState {
             .user_agent("NCSA Mosaic/1.0 (X11;SunOS 4.1.4 sun4m)")
             .build()
             .unwrap();
+        let mut courses = HashSet::new();
+        courses.insert(SigleGroup::new(
+            "INF1900".into(),
+            GroupType::LabGroup,
+            GroupIndex::from(3u8),
+        ));
+        self.users_to_notify.lock().unwrap().register_user(
+            UserBuilder::new(courses).add_email("marc-antoine.manningham@polymtl.ca"),
+        );
         loop {
-            tokio::time::sleep(Duration::from_secs(5 * 60)).await;
-            //let Ok(horsage) = client.get(HORSAGE_URL).send().await else {
-            //    continue;
-            //};
-            //let Ok(horsage) = horsage.text().await else {
-            //    continue;
-            //};
-            //let Ok(fermes) = client.get(FERME_URL).send().await else {
-            //    continue;
-            //};
-            //let Ok(fermes) = fermes.text().await else {
-            //    continue;
-            //};
-            //fs::write("horsage.csv", horsage).expect("Unable to write file");
-            //fs::write("fermes.csv", fermes).expect("Unable to write file");
+            tokio::time::sleep(Duration::from_secs(5)).await;
+            let Ok(horsage) = client.get(HORSAGE_URL).send().await else {
+                continue;
+            };
+            let Ok(horsage) = horsage.text().await else {
+                continue;
+            };
+            let Ok(fermes) = client.get(FERME_URL).send().await else {
+                continue;
+            };
+            let Ok(fermes) = fermes.text().await else {
+                continue;
+            };
+            fs::write("horsage.csv", horsage).expect("Unable to write file");
+            fs::write("fermes.csv", fermes).expect("Unable to write file");
             let horsage = BufReader::new(File::open("horsage.csv").unwrap());
             let fermes = BufReader::new(File::open("fermes.csv").unwrap());
             let opened_course = self.courses.write().await.update(horsage, fermes);
