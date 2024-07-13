@@ -20,7 +20,7 @@ use std::{collections::HashSet, fs::File};
 use std::{fs, sync::Mutex};
 use tokio::sync::RwLock;
 
-use super::{notification::users::UsersToNotify, shared::user_builder::UserBuilder};
+use super::notification::users::UsersToNotify;
 
 const HORSAGE_URL: &str = "https://cours.polymtl.ca/Horaire/public/horsage.csv";
 const FERME_URL: &str = "https://cours.polymtl.ca/Horaire/public/fermes.csv";
@@ -75,11 +75,8 @@ impl AppState {
             GroupType::LabGroup,
             GroupIndex::from(3u8),
         ));
-        self.users_to_notify.lock().unwrap().register_user(
-            UserBuilder::new(courses).add_email("marc-antoine.manningham@polymtl.ca"),
-        );
         loop {
-            tokio::time::sleep(Duration::from_secs(5)).await;
+            tokio::time::sleep(Duration::from_secs(15 * 60)).await;
             let Ok(horsage) = client.get(HORSAGE_URL).send().await else {
                 continue;
             };
@@ -112,6 +109,10 @@ impl AppState {
     pub async fn calendar() -> Arc<RwLock<Calendar>> {
         use_context::<Arc<RwLock<Calendar>>>().unwrap()
     }
+
+    pub async fn users_to_notify() -> Arc<Mutex<UsersToNotify>> {
+        use_context::<Arc<Mutex<UsersToNotify>>>().unwrap()
+    }
 }
 
 pub async fn server_fn_handler(
@@ -122,6 +123,7 @@ pub async fn server_fn_handler(
         move || {
             provide_context(app_state.calendar.clone());
             provide_context(app_state.courses.clone());
+            provide_context(app_state.users_to_notify.clone());
         },
         request,
     )
@@ -138,6 +140,7 @@ pub async fn leptos_routes_handler(
         move || {
             provide_context(app_state.calendar.clone());
             provide_context(app_state.courses.clone());
+            provide_context(app_state.users_to_notify.clone());
         },
         App,
     );

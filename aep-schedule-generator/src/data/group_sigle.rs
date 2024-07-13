@@ -1,10 +1,11 @@
 use std::fmt::Display;
 
 use compact_str::CompactString;
+use serde::{Deserialize, Serialize};
 
 use super::group_index::GroupIndex;
 
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[repr(u8)]
 pub enum GroupType {
     LabGroup,
@@ -20,7 +21,7 @@ impl Display for GroupType {
     }
 }
 
-#[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct SigleGroup {
     pub sigle: CompactString,
     pub group_type: GroupType,

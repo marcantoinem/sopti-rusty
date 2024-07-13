@@ -57,7 +57,6 @@ impl UsersToNotify {
 
     pub async fn send_opened(&self, opened: HashSet<SigleGroup>) {
         let mut notified_users = HashSet::new();
-        println!("Notifying the student");
         for sigle_group in &opened {
             println!(
                 "Group {} of course {} is opened",
