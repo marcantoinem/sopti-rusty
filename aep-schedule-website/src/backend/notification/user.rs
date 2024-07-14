@@ -8,16 +8,19 @@ use std::sync::Arc;
 use std::sync::Mutex;
 
 struct User {
-    email: Option<Email>,
+    pub email: Email,
     //notification: Option<Notification>,
-    auth_token: AuthToken,
-    sigles_group: HashSet<SigleGroup>,
+    pub auth_token: AuthToken,
+    pub sigles_group: HashSet<SigleGroup>,
 }
 
 #[derive(Clone)]
 pub struct SharedUser(Arc<Mutex<User>>);
 
 impl SharedUser {
+    pub fn add_group(&mut self, sigle_group: SigleGroup) {
+        self.0.lock().unwrap().sigles_group.insert(sigle_group);
+    }
     pub fn for_each_groups(&self, mut to_apply: impl FnMut(&SigleGroup) -> ()) {
         for g in &self.0.lock().unwrap().sigles_group {
             to_apply(g);
@@ -27,18 +30,20 @@ impl SharedUser {
         self.0.lock().unwrap().auth_token.clone()
     }
     pub async fn send_message(&self, sigle_group: &HashSet<SigleGroup>, mailer: &SmtpTransport) {
-        if let Some(email) = &self.0.lock().unwrap().email {
-            email.send_message(sigle_group, mailer).await;
-        }
+        self.0
+            .lock()
+            .unwrap()
+            .email
+            .send_message(sigle_group, mailer)
+            .await;
     }
 }
 
 impl From<UserBuilder> for SharedUser {
     fn from(value: UserBuilder) -> Self {
-        let UserBuilder {
-            email,
-            sigles_group,
-        } = value;
+        let UserBuilder { email, sigle_group } = value;
+        let mut sigles_group = HashSet::new();
+        sigles_group.insert(sigle_group);
         let user = User {
             email,
             auth_token: AuthToken::new(),

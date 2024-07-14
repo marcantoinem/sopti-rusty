@@ -1,6 +1,6 @@
-use crate::backend::shared::user_builder::UserBuilder;
+use crate::backend::shared::{email::Email, user_builder::UserBuilder};
 
-use super::{auth_token::AuthToken, user::SharedUser};
+use super::user::SharedUser;
 use aep_schedule_generator::data::group_sigle::SigleGroup;
 use lettre::{transport::smtp::authentication::Credentials, SmtpTransport};
 use std::{
@@ -10,7 +10,7 @@ use std::{
 
 pub struct UsersToNotify {
     courses: HashMap<SigleGroup, Vec<SharedUser>>,
-    _users: HashMap<AuthToken, SharedUser>,
+    users: HashMap<Email, SharedUser>,
     mailer: SmtpTransport,
 }
 
@@ -36,23 +36,29 @@ impl UsersToNotify {
     pub fn new() -> Self {
         let mailer = Self::create_mailer();
         let courses = HashMap::new();
-        let _users = HashMap::new();
+        let users = HashMap::new();
 
         Self {
             courses,
-            _users,
+            users,
             mailer,
         }
     }
 
     pub fn register_user(&mut self, user: UserBuilder) {
-        let user: SharedUser = user.into();
-        user.for_each_groups(|g| {
-            self.courses
-                .entry(g.clone())
-                .and_modify(|v| v.push(user.clone()))
-                .or_insert(vec![user.clone()]);
-        });
+        let sigle_group = user.sigle_group.clone();
+        let shared_user = match self.users.get(&user.email) {
+            Some(shared_user) => {
+                let mut shared_user = shared_user.clone();
+                shared_user.add_group(sigle_group.clone());
+                shared_user
+            }
+            None => user.into(),
+        };
+        self.courses
+            .entry(sigle_group)
+            .and_modify(|v| v.push(shared_user.clone()))
+            .or_insert(vec![shared_user]);
     }
 
     pub async fn send_opened(&self, opened: HashSet<SigleGroup>) {

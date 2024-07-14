@@ -1,4 +1,5 @@
 use crate::frontend::components::icons::{caret_double_right::CaretDoubleRight, IconWeight};
+use crate::frontend::components::notifications::Notifications;
 use crate::frontend::components::{options::form::OptionsForms, schedules::SchedulesComponent};
 use aep_schedule_generator::algorithm::generation::SchedulesOptions;
 use leptos::*;
@@ -12,6 +13,9 @@ pub fn GeneratorPage() -> impl IntoView {
         set_hide(true);
         async move { s.get_schedules().into_sorted_vec() }
     });
+
+    let (modal, set_modal) = create_signal(None);
+
     view! {
         <aside class="left-panel" class=("hide-left-panel", hide)>
             <OptionsForms action=action/>
@@ -19,6 +23,7 @@ pub fn GeneratorPage() -> impl IntoView {
         <section class="right-panel">
             <SchedulesComponent read_signal=action.value()/>
         </section>
+        <Notifications modal set_modal/>
         <button on:click=move |_| {set_hide(false)} id="go-back"><CaretDoubleRight weight=IconWeight::Regular size="3vh"/></button>
     }
 }
