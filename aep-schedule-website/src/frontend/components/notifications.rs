@@ -58,6 +58,6 @@ pub fn Notifications(
                     <input type="submit" value="Envoyer"/>
                 </form>
             </div>
-        </div>true
+        </div>
     }
 }

@@ -10,3 +10,4 @@ pkg
 **/horsage.csv
 **/flamegraph.svg
 **/perf.data*
+**/env.nu
