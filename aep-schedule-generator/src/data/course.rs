@@ -1,4 +1,9 @@
-use super::{course_type::CourseType, group::Group, group_index::GroupIndex};
+use super::{
+    course_type::CourseType,
+    group::Group,
+    group_index::GroupIndex,
+    group_sigle::{GroupType, SigleGroup},
+};
 use compact_str::CompactString;
 use serde::{Deserialize, Serialize};
 
@@ -91,6 +96,53 @@ impl Course {
                 .iter_mut()
                 .chain(lab_groups.iter_mut())
                 .for_each(function),
+        }
+    }
+
+    pub fn get_all_closed_groups(&self) -> Vec<SigleGroup> {
+        match &self.course_type {
+            CourseType::TheoOnly { theo_groups } => {
+                theo_groups.get_closed(GroupType::TheoGroup, &self.sigle)
+            }
+            CourseType::LabOnly { lab_groups } => {
+                lab_groups.get_closed(GroupType::LabGroup, &self.sigle)
+            }
+            CourseType::Both {
+                theo_groups,
+                lab_groups,
+            } => {
+                let mut closed = theo_groups.get_closed(GroupType::TheoGroup, &self.sigle);
+                closed.extend_from_slice(&lab_groups.get_closed(GroupType::LabGroup, &self.sigle));
+                closed
+            }
+            CourseType::Linked { theo_groups, .. } => {
+                theo_groups.get_closed(GroupType::TheoGroup, &self.sigle)
+            }
+        }
+    }
+
+    pub fn is_open(&self, sigle_group: &SigleGroup) -> bool {
+        match &self.course_type {
+            CourseType::TheoOnly { theo_groups } => theo_groups[sigle_group.group_index]
+                .as_ref()
+                .is_some_and(|g| g.open),
+            CourseType::LabOnly { lab_groups } => lab_groups[sigle_group.group_index]
+                .as_ref()
+                .is_some_and(|g| g.open),
+            CourseType::Both {
+                theo_groups,
+                lab_groups,
+            } => match sigle_group.group_type {
+                GroupType::LabGroup => lab_groups[sigle_group.group_index]
+                    .as_ref()
+                    .is_some_and(|g| g.open),
+                GroupType::TheoGroup => theo_groups[sigle_group.group_index]
+                    .as_ref()
+                    .is_some_and(|g| g.open),
+            },
+            CourseType::Linked { theo_groups, .. } => theo_groups[sigle_group.group_index]
+                .as_ref()
+                .is_some_and(|g| g.open),
         }
     }
 }

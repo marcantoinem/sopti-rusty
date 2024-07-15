@@ -25,8 +25,10 @@ name = "generator"
 harness = false
 
 [dependencies]
-compact_str = { version = "0.7.1", features = ["serde"] }
+compact_str = { version = "0.8", features = ["serde"] }
 serde = { version = "1.0.187", features = ["derive", "rc"] }
-ical = { version = "0.10.0", features = ["ical", "vcard", "generator"] }
+ical = { version = "0.11.0", features = ["ical", "vcard", "generator"] }
 chrono = "0.4.31"
 uuid = { version = "1.6.1", features = ["v4"] }
+rand = { version = "0.8.5", features = ["std_rng"] }
+log = "0.4.21"

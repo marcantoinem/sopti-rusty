@@ -1,4 +1,9 @@
-use super::{group::Group, group_index::GroupIndex};
+use super::{
+    group::Group,
+    group_index::GroupIndex,
+    group_sigle::{GroupType, SigleGroup},
+};
+use compact_str::CompactString;
 use serde::{Deserialize, Serialize};
 use std::ops::{Index, IndexMut};
 
@@ -25,6 +30,13 @@ impl Groups {
         }
     }
 
+    pub fn merge(mut self, other: Groups) -> Self {
+        for group in other.into_iter() {
+            self.insert_or_push(group);
+        }
+        self
+    }
+
     pub fn into_iter(self) -> impl Iterator<Item = Group> {
         self.0.into_iter().filter_map(|g| g)
     }
@@ -43,6 +55,13 @@ impl Groups {
 
     pub fn get_mut(&mut self, index: GroupIndex) -> Option<&mut Group> {
         self[index].as_mut()
+    }
+
+    pub fn get_closed(&self, group_type: GroupType, sigle: &CompactString) -> Vec<SigleGroup> {
+        self.iter()
+            .filter(|g| !g.open)
+            .map(|g| SigleGroup::new(sigle.clone(), group_type, g.number))
+            .collect()
     }
 }
 

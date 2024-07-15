@@ -3,7 +3,7 @@ use std::fmt::Display;
 use crate::data::group::Group;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(Hash, Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct GroupIndex(u8);
 
 impl Display for GroupIndex {

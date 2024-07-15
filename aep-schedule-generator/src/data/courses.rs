@@ -1,8 +1,10 @@
 use super::course::{Course, CourseName};
 use super::group::Group;
 use super::group_index::GroupIndex;
+use super::group_sigle::SigleGroup;
 use super::time::period::{Period, PeriodCourse};
 use compact_str::CompactString;
+use std::collections::HashSet;
 use std::{array, collections::HashMap, io::BufRead};
 
 #[derive(Debug, Clone)]
@@ -21,9 +23,10 @@ impl Courses {
         courses
     }
 
-    pub fn update_all_courses(&mut self, csv_horsages: impl BufRead) {
+    fn update_all_courses(&mut self, csv_horsages: impl BufRead) {
         let mut lines = csv_horsages.lines();
         lines.next();
+        self.courses.clear();
         for line in lines {
             let Ok(line) = line else { continue };
             let mut columns = line.split(';');
@@ -64,7 +67,8 @@ impl Courses {
             });
         }
     }
-    pub fn update_closed(&mut self, csv_fermes: impl BufRead) {
+
+    fn update_closed(&mut self, csv_fermes: impl BufRead) {
         let mut lines = csv_fermes.lines();
         lines.next();
         for line in lines {
@@ -86,6 +90,29 @@ impl Courses {
                 .get_mut(period_type, number)
                 .and_then(|g| Some(g.open = false));
         }
+    }
+
+    pub fn update(
+        &mut self,
+        csv_horsages: impl BufRead,
+        csv_fermes: impl BufRead,
+    ) -> HashSet<SigleGroup> {
+        let closed: Vec<SigleGroup> = self
+            .courses
+            .iter()
+            .map(|c| c.1.get_all_closed_groups())
+            .flatten()
+            .collect();
+        self.update_all_courses(csv_horsages);
+        self.update_closed(csv_fermes);
+        closed
+            .into_iter()
+            .filter(|sigle_group| {
+                self.courses
+                    .get(&sigle_group.sigle)
+                    .is_some_and(|course| course.is_open(sigle_group))
+            })
+            .collect()
     }
 
     pub fn get_courses_name(&self) -> Vec<CourseName> {

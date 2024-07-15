@@ -19,7 +19,7 @@
 
 .card {
   background-color: $light-background;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   color: $background-color;
   text-align: center;
   border-radius: 5px;
@@ -99,12 +99,13 @@
 }
 
 @keyframes translateOpen {
-	0% {
-	  max-height: 22px;
-	}
-	100% {
-	  max-height: 100px;
-	}
+  0% {
+    max-height: 22px;
+  }
+
+  100% {
+    max-height: 100px;
+  }
 }
 
 .group-text-col:hover {
@@ -121,9 +122,10 @@
 
 .period-group {
   margin-left: auto;
+
   @media screen and (max-width: 1000px) {
-		display: none;
-	}
+    display: none;
+  }
 }
 
 .closed-group {
@@ -148,7 +150,7 @@
 .chips {
   padding: 5px 8px;
   border-radius: 15px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   font-size: 16px;
   display: flex;
   align-items: center;
@@ -214,4 +216,35 @@
   justify-content: center;
   align-items: center;
   border: none !important;
+}
+
+.notif-modal {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  z-index: 40;
+  backdrop-filter: blur(0.5em);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.notif-body {
+  width: 42em;
+  height: 15em;
+  background-color: $light-background;
+  display: flex;
+  padding: 5em;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  position: relative;
+}
+
+.close-button {
+  height: 2em;
+  width: 2em;
+  position: absolute;
+  right: 2em;
+  top: 2em;
 }
