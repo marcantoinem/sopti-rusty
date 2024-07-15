@@ -1,5 +1,6 @@
 /// Taken from https://github.com/SorenHolstHansen/phosphor-leptos/
 /// For performance reason, because compile time are horrendous with the full library
+pub mod bell_ringing;
 pub mod bug;
 pub mod calendar_check;
 pub mod calendar_x;

@@ -2,7 +2,11 @@ use crate::frontend::components::icons::{caret_double_right::CaretDoubleRight, I
 use crate::frontend::components::notifications::Notifications;
 use crate::frontend::components::{options::form::OptionsForms, schedules::SchedulesComponent};
 use aep_schedule_generator::algorithm::generation::SchedulesOptions;
+use aep_schedule_generator::data::group_sigle::SigleGroup;
 use leptos::*;
+
+#[derive(Clone, Copy)]
+pub struct SetModal(pub WriteSignal<Option<SigleGroup>>);
 
 #[component]
 pub fn GeneratorPage() -> impl IntoView {
@@ -15,6 +19,8 @@ pub fn GeneratorPage() -> impl IntoView {
     });
 
     let (modal, set_modal) = create_signal(None);
+
+    provide_context(SetModal(set_modal));
 
     view! {
         <aside class="left-panel" class=("hide-left-panel", hide)>

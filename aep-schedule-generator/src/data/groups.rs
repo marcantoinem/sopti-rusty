@@ -30,6 +30,13 @@ impl Groups {
         }
     }
 
+    pub fn merge(mut self, other: Groups) -> Self {
+        for group in other.into_iter() {
+            self.insert_or_push(group);
+        }
+        self
+    }
+
     pub fn into_iter(self) -> impl Iterator<Item = Group> {
         self.0.into_iter().filter_map(|g| g)
     }

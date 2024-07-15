@@ -3,35 +3,73 @@ use super::state::ReactiveCourse;
 use crate::backend::routes::get_courses;
 use crate::frontend::components::common::checkbox::CheckboxChip;
 use crate::frontend::components::common::tab::Tab;
+use crate::frontend::components::icons::bell_ringing::BellRinging;
 use crate::frontend::components::icons::calendar_x::CalendarX;
 use crate::frontend::components::icons::x::X;
 use crate::frontend::components::icons::IconWeight;
 use crate::frontend::components::options::personal::PersonalTimeSelector;
 use crate::frontend::components::options::search::SearchCourse;
 use crate::frontend::components::options::state::ReactiveCourseType;
-use aep_schedule_generator::data::time::period::Period;
+use crate::frontend::pages::generator::SetModal;
+use aep_schedule_generator::data::group::Group;
+use aep_schedule_generator::data::group_sigle::GroupType;
+use aep_schedule_generator::data::group_sigle::SigleGroup;
+use aep_schedule_generator::data::groups::Groups;
+use compact_str::CompactString;
 use leptos::*;
 
 #[component]
-fn GroupsSettings(groups: Vec<(bool, Vec<Period>)>, open: Vec<RwSignal<bool>>) -> impl IntoView {
+fn GroupsChips(
+    open: RwSignal<bool>,
+    open_style: &'static str,
+    group: Group,
+    course_sigle: CompactString,
+    group_type: GroupType,
+) -> impl IntoView {
+    let set_modal = use_context::<SetModal>().unwrap().0;
+
     view! {
-        {groups.into_iter().enumerate().map(|(i, (initially_open, periods))| {
-                let open_style = if initially_open {"group-chip"} else {"group-chip closed-group"};
-                let open = open[i];
-                view!{
-                    <CheckboxChip value=open class=open_style>
-                        <span>{i + 1}</span>
-                        <div class="col-container group-text-col">
-                            {periods.iter().map(|p| {
-                                view!{
-                                    <div class="row-container group-text">
-                                        <span>{p.day.to_string()}</span>
-                                        <span class="period-group">{p.hours.to_string()}</span>
-                                    </div>
-                                }
-                            }).collect_view()}
+        <CheckboxChip value=open class=open_style>
+            <span>{group.number.to_string()}</span>
+            <div class="col-container group-text-col">
+                {group.periods.iter().map(|p| {
+                    view!{
+                        <div class="row-container group-text">
+                            <span>{p.day.to_string()}</span>
+                            <span class="period-group">{p.hours.to_string()}</span>
                         </div>
-                    </CheckboxChip>
+                    }
+                }).collect_view()}
+            </div>
+            {match group.open {
+                false => Some(view !{
+                    <div on:click=move |ev| {
+                        ev.stop_propagation();
+                        let sigle_group = SigleGroup::new(course_sigle.clone(), group_type, group.number);
+                        set_modal.set(Some(sigle_group));
+                        }>
+                        <BellRinging size="1em"/>
+                    </div>
+                }),
+                true => None,
+            }}
+        </CheckboxChip>
+    }
+}
+
+#[component]
+fn GroupsSettings(
+    groups: Groups,
+    open: Vec<RwSignal<bool>>,
+    course_sigle: CompactString,
+    group_type: GroupType,
+) -> impl IntoView {
+    view! {
+        {groups.into_iter().enumerate().map(|(i, group)| {
+                let open_style = if group.open {"group-chip"} else {"group-chip closed-group"};
+                let open = open[i];
+                view! {
+                    <GroupsChips open open_style group course_sigle=course_sigle.clone() group_type/>
                 }
             }).collect_view()
         }
@@ -40,6 +78,7 @@ fn GroupsSettings(groups: Vec<(bool, Vec<Period>)>, open: Vec<RwSignal<bool>>) -
 
 #[component]
 fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl IntoView {
+    let course_sigle = course.sigle.clone();
     view! {
         <Tab active_tab tab_id=course.sigle.to_string()>
             <p>{course.name}</p>
@@ -47,48 +86,44 @@ fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl Int
                 {
                     match course.course_type {
                         ReactiveCourseType::TheoOnly { theo_open, theo_groups } => {
-                            let groups = theo_groups.into_iter().map(|g| (g.open, g.periods)).collect();
+                            let groups = theo_groups;
                             view!{
                                 <div>
                                     <h3>"Théorie"</h3>
-                                    <GroupsSettings groups open=theo_open/>
+                                    <GroupsSettings groups open=theo_open course_sigle group_type=GroupType::TheoGroup/>
                                 </div>
                             }.into_view()
                         },
                         ReactiveCourseType::LabOnly { lab_open, lab_groups } => {
-                            let groups = lab_groups.into_iter().map(|g| (g.open, g.periods)).collect();
+                            let groups = lab_groups;
                             view!{
                                 <div>
                                     <h3>"Laboratoire"</h3>
-                                    <GroupsSettings groups open=lab_open/>
+                                    <GroupsSettings groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup/>
                                 </div>
                             }.into_view()
                         },
                         ReactiveCourseType::Both { theo_open, theo_groups, lab_open, lab_groups } => {
-                            let theo_groups = theo_groups.into_iter().map(|g| (g.open, g.periods)).collect();
-                            let lab_groups = lab_groups.into_iter().map(|g| (g.open, g.periods)).collect();
+                            let theo_groups = theo_groups;
+                            let lab_groups = lab_groups;
                             view!{
                                 <div>
                                     <h3>"Théorie"</h3>
-                                    <GroupsSettings groups=theo_groups open=theo_open/>
+                                    <GroupsSettings groups=theo_groups open=theo_open course_sigle=course_sigle.clone() group_type=GroupType::TheoGroup/>
                                 </div>
                                 <div class="vertical-bar"></div>
                                 <div>
                                     <h3>"Laboratoire"</h3>
-                                    <GroupsSettings groups=lab_groups open=lab_open/>
+                                    <GroupsSettings groups=lab_groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup/>
                                 </div>
                             }.into_view()
                         },
                         ReactiveCourseType::Linked { both_open, theo_groups, lab_groups } => {
-                            let groups = theo_groups.into_iter().zip(lab_groups.into_iter()).map(|(g1, mut g2)| {
-                                let mut periods = g1.periods;
-                                periods.append(&mut g2.periods);
-                                (g1.open, periods)
-                            }).collect();
+                            let groups = theo_groups.merge(lab_groups);
                             view!{
                                 <div>
                                     <h3>"Théorie et laboratoire lié"</h3>
-                                    <GroupsSettings groups open=both_open/>
+                                    <GroupsSettings groups open=both_open course_sigle=course_sigle group_type=GroupType::LabGroup/>
                                 </div>
                             }.into_view()
                         },

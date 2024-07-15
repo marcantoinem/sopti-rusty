@@ -1,8 +1,6 @@
 use crate::frontend::app::App;
-use aep_schedule_generator::data::group_index::GroupIndex;
-use aep_schedule_generator::data::group_sigle::GroupType;
+use aep_schedule_generator::data::courses::Courses;
 use aep_schedule_generator::data::time::calendar::Calendar;
-use aep_schedule_generator::data::{courses::Courses, group_sigle::SigleGroup};
 use axum::{
     body::Body as AxumBody,
     extract::FromRef,
@@ -13,10 +11,10 @@ use axum::{
 use leptos::*;
 use leptos_axum::handle_server_fns_with_context;
 use leptos_router::RouteListing;
+use std::fs::File;
 use std::io::BufReader;
 use std::sync::Arc;
 use std::time::Duration;
-use std::{collections::HashSet, fs::File};
 use std::{fs, sync::Mutex};
 use tokio::sync::RwLock;
 
@@ -69,12 +67,6 @@ impl AppState {
             .user_agent("NCSA Mosaic/1.0 (X11;SunOS 4.1.4 sun4m)")
             .build()
             .unwrap();
-        let mut courses = HashSet::new();
-        courses.insert(SigleGroup::new(
-            "INF1900".into(),
-            GroupType::LabGroup,
-            GroupIndex::from(3u8),
-        ));
         loop {
             tokio::time::sleep(Duration::from_secs(15 * 60)).await;
             let Ok(horsage) = client.get(HORSAGE_URL).send().await else {

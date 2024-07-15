@@ -27,7 +27,7 @@ pub fn Notifications(
         };
 
         let user = UserBuilder::new(Email::new(email), group);
-
+        set_modal.set(None);
         spawn_local(async move {
             let _ = post_new_user_notification(user).await;
         });
