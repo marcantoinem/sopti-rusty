@@ -1,7 +1,33 @@
 services:
-  web:
-    build: .
+  reverse-proxy:
+    image: traefik:v3.1
+    command:
+      - "--providers.docker=true"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.email=EMAIL@PROVIDER.COM" # change this to your email
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
-      - "80:6942"
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  horaire:
+    image: registry.git.step.polymtl.ca/lemark/aep-schedule-generator-rusty:main
     labels:
-      - "traefik.http.routers.web.rule=Host('sopti-rusty.step.polymtl.ca')"
+      - "traefik.http.routers.horaire.rule=Host(`URL.COM`)" # Put the URL here
+      - "traefik.http.services.horaire.loadbalancer.server.port=6942"
+      - "traefik.http.routers.horaire.entrypoints=websecure"
+      - "traefik.http.routers.horaire.tls.certresolver=myresolver"
+    environment:
+      SMTP_USERNAME: "" # Put SMTP username here
+      SMTP_PASSWORD: "" # Put SMTP password here
+      SMTP_RELAY: "smtp.polymtl.ca"
+      SMTP_PORT: 587
