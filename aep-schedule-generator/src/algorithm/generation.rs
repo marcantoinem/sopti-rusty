@@ -1,4 +1,9 @@
-use super::{schedule::ScheduleBuilder, schedules::Schedules, scores::EvaluationOption};
+use super::{
+    //conflicts::Conflicts,
+    schedule::ScheduleBuilder,
+    schedules::Schedules,
+    scores::EvaluationOption,
+};
 use crate::data::{course::Course, time::week::Week};
 
 #[derive(Default, Debug, Clone, PartialEq)]
@@ -11,6 +16,15 @@ pub struct SchedulesOptions {
 }
 
 impl SchedulesOptions {
+    // pub fn get_simple_conflict<'a>(&'a self) -> Option<Conflicts> {
+
+    // }
+    pub fn get_nb_combinations<'a>(&'a self) -> usize {
+        self.courses_to_take
+            .iter()
+            .map(Course::nb_combinations)
+            .product()
+    }
     pub fn get_schedules<'a>(&'a self) -> Schedules<'a> {
         let mut schedules = Schedules::new(&self);
         if self.courses_to_take.len() == 0 {

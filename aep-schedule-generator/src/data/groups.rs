@@ -37,6 +37,10 @@ impl Groups {
         self
     }
 
+    pub fn len(&self) -> usize {
+        self.iter().count()
+    }
+
     pub fn into_iter(self) -> impl Iterator<Item = Group> {
         self.0.into_iter().filter_map(|g| g)
     }

@@ -120,7 +120,17 @@ impl Course {
             }
         }
     }
-
+    pub fn nb_combinations(&self) -> usize {
+        match &self.course_type {
+            CourseType::TheoOnly { theo_groups } => theo_groups.len(),
+            CourseType::LabOnly { lab_groups } => lab_groups.len(),
+            CourseType::Both {
+                theo_groups,
+                lab_groups,
+            } => theo_groups.len() * lab_groups.len(),
+            CourseType::Linked { theo_groups, .. } => theo_groups.len(),
+        }
+    }
     pub fn is_open(&self, sigle_group: &SigleGroup) -> bool {
         match &self.course_type {
             CourseType::TheoOnly { theo_groups } => theo_groups[sigle_group.group_index]
