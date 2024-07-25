@@ -8,17 +8,12 @@ use aep_schedule_generator::algorithm::{generation::SchedulesOptions, schedule::
 use leptos::*;
 
 #[component]
-pub fn OptionsForms(
-    action: Action<SchedulesOptions, Vec<Schedule>>,
-) -> impl IntoView {
+pub fn OptionsForms(action: Action<SchedulesOptions, Vec<Schedule>>) -> impl IntoView {
     let state = OptionState::default();
 
-    let submit = move || {
-        action.dispatch((&state).into())
-    };
+    let submit = move || action.dispatch((&state).into());
 
     view! {
-        <h1 class="title">"Options de générations"</h1>
         <CoursesSelector state=state submit/>
         <span class="spacer"></span>
         <div class="row-container input-item auto-bottom"><p>"Nombre de conflits maximum"</p><NumberInput value=state.max_nb_conflicts max=127/></div>

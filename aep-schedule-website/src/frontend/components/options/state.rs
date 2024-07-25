@@ -197,7 +197,7 @@ impl From<&OptionState> for SchedulesOptions {
             max_nb_conflicts,
             evaluation,
             user_conflicts,
-            max_size: 5,
+            max_size: 10,
         }
     }
 }
