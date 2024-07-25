@@ -59,7 +59,7 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
 
     view! {
         <div class="search-container ".to_owned() + &class>
-            <input type="text" class="search-bar" on:input=on_input placeholder=placeholder prop:value=input id=id on:keyup=move |ev| {
+            <input type="text" class="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" on:input=on_input placeholder=placeholder prop:value=input id=id on:keyup=move |ev| {
                 if ev.key() == "Enter" && is_ok.get() == "add-button" {
                     let input = input.get().trim().to_uppercase();
                     submit(input);
@@ -70,7 +70,7 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
                 let input = input.get().trim().to_uppercase();
                 submit(input);
             }>
-                <PlusCircle size="2.5em"/>
+                <PlusCircle size="2em"/>
             </button>
             <div class="result-box">
                 {suggestions.into_iter().enumerate().map(|(i, autocomplete)| view!{
