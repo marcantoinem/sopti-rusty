@@ -1,3 +1,5 @@
+use compact_str::CompactString;
+
 use super::{
     //conflicts::Conflicts,
     schedule::ScheduleBuilder,
@@ -19,6 +21,13 @@ impl SchedulesOptions {
     // pub fn get_simple_conflict<'a>(&'a self) -> Option<Conflicts> {
 
     // }
+    pub fn get_impossible_course<'a>(&'a self) -> Vec<CompactString> {
+        self.courses_to_take
+            .iter()
+            .filter(|c| c.is_impossible())
+            .map(|c| c.sigle.clone())
+            .collect()
+    }
     pub fn get_nb_combinations<'a>(&'a self) -> usize {
         self.courses_to_take
             .iter()

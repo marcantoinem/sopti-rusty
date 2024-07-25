@@ -61,6 +61,10 @@ impl Groups {
         self[index].as_mut()
     }
 
+    pub fn is_impossible(&self) -> bool {
+        self.iter().all(|c| !c.open)
+    }
+
     pub fn get_closed(&self, group_type: GroupType, sigle: &CompactString) -> Vec<SigleGroup> {
         self.iter()
             .filter(|g| !g.open)

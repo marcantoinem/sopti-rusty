@@ -155,4 +155,15 @@ impl Course {
                 .is_some_and(|g| g.open),
         }
     }
+    pub fn is_impossible(&self) -> bool {
+        match &self.course_type {
+            CourseType::TheoOnly { theo_groups } => theo_groups.is_impossible(),
+            CourseType::LabOnly { lab_groups } => lab_groups.is_impossible(),
+            CourseType::Both {
+                theo_groups,
+                lab_groups,
+            } => theo_groups.is_impossible() | lab_groups.is_impossible(),
+            CourseType::Linked { theo_groups, .. } => theo_groups.is_impossible(),
+        }
+    }
 }
