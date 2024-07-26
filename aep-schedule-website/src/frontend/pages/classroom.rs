@@ -51,7 +51,7 @@ pub fn ClassRoomComponent() -> impl IntoView {
 
     let on_submit = move |sigle: String| change_classroom.dispatch((sigle, set_periods));
     view! {
-        <div class="col-container classroom-page">
+        <section class="flex flex-col w-full justify-between items-center p-4">
             <div class="warning-box">
                 <WarningCircle size="5em"/>
                 <span>
@@ -73,6 +73,6 @@ pub fn ClassRoomComponent() -> impl IntoView {
             <Schedule last_day=5 col_height="0.6em">
                 {move || periods.get().iter().enumerate().map(|(i, p)| view!{<PeriodEvent i period_course=p/>}).collect_view()}
             </Schedule>
-        </div>
+        </section>
     }
 }
