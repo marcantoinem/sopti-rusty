@@ -3,7 +3,7 @@ use leptos::*;
 #[component]
 pub fn HomePage() -> impl IntoView {
     view! {
-        <section class="home">
+        <section class="p-1 w-full h-full">
             <h1>"Générateur d'horaire de l'AEP v2"</h1>
             <p>
                 "Vous en avez assez d'avoir des horaires horribles fait pas le registrariat? Vous êtes au bon endroit. Le générateur d'horaire v2 est une réécriture plus performante, intuive et moderne du générateur d'horaire. Il vous aidera à trouver un horaire parfait."

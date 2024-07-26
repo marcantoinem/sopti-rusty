@@ -1,18 +1,5 @@
 @import 'constant.scss';
 
-.submit {
-  background-color: $highlight-color;
-  border: none;
-  color: $highlight-text;
-  padding: 0.2em 0.5em;
-  text-decoration: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 20pt;
-  width: 12em;
-  align-self: center;
-}
-
 .relative {
   position: relative;
 }
@@ -130,13 +117,6 @@
 
 .closed-group {
   background-color: $error-color;
-}
-
-.input-item {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .vertical-bar {

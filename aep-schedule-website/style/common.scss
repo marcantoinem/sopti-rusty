@@ -41,10 +41,6 @@ input:focus~.result-box {
     background-color: #d4d4d4;
 }
 
-.spacer {
-    flex-grow: 1;
-}
-
 .warning-box {
     padding: 1em;
     gap: 1em;
@@ -55,8 +51,4 @@ input:focus~.result-box {
     text-justify: auto;
     background-color: $error-color;
     color: white;
-}
-
-.small-margin {
-    margin: 0.1em;
 }
