@@ -56,7 +56,7 @@ pub fn App() -> impl IntoView {
                     <span class="hamburger-bar"></span>
                 </div>
             </header>
-            <main>
+            <main class="h-full">
                 <Routes>
                     <Route path="/" view=GeneratorPage/>
                     <Route path="/apropos" view=HomePage/>

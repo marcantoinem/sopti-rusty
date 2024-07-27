@@ -79,7 +79,7 @@ where
                         }
                     };
                     view! {
-                        <div class="remove-touch" style=style class=class
+                        <div class="pointer-events-none touch-none" style=style class=class
                         on:pointerdown=move |e| {
                             set_initial.set(Some((i, j)));
                             set_positive.set((week[i].get() & (1 << j)) == 0);
@@ -87,8 +87,8 @@ where
                         }
                         on:pointerover=move |_| {
                             set_destination.set((i, j));
-                        }
-                        ></div>
+                        }>
+                        </div>
                     }
                 }).collect_view()
             }).collect_view()}
