@@ -30,7 +30,7 @@ where
             <div class="col-container">
                 <House weight=weight_house size="10vh"/>
                 <p>"Plus de congés"</p>
-                <input type="range" min="0" max="4" class="opti-slider" prop:value=state.day_off  on:input=move |ev| {
+                <input type="range" min="0" max="4" class="opti-slider accent-amber-500" prop:value=state.day_off  on:input=move |ev| {
                     state.day_off.set(event_target_value(&ev).parse::<u8>().unwrap());
                     submit();
                 }/>
@@ -41,7 +41,7 @@ where
                     <Sun weight=weight_morning size="10vh"/>
                 </div>
                 <p>"Cours plus tôt ou plus tard"</p>
-                <input type="range" min="-4" max="4" class="opti-slider" prop:value=state.morning  on:input=move |ev| {
+                <input type="range" min="-4" max="4" class="opti-slider accent-amber-500" prop:value=state.morning  on:input=move |ev| {
                     state.morning.set(event_target_value(&ev).parse::<i8>().unwrap());
                     submit();
                 }/>
@@ -49,7 +49,7 @@ where
             <div class="col-container">
                 <CalendarCheck weight=weight_finish size="10vh"/>
                 <p>"Finir plus tôt"</p>
-                <input type="range" min="0" max="4" class="opti-slider" prop:value=state.finish_early  on:input=move |ev| {
+                <input type="range" min="0" max="4" class="opti-slider accent-amber-500" prop:value=state.finish_early  on:input=move |ev| {
                     state.finish_early.set(event_target_value(&ev).parse::<u8>().unwrap());
                     submit();
                 }/>
