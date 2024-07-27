@@ -1,10 +1,14 @@
 use crate::frontend::components::options::todo::Todo;
 use crate::{backend::routes::get_calendar, frontend::components::schedule::ScheduleComponent};
+use aep_schedule_generator::algorithm::generation::SchedulesOptions;
 use aep_schedule_generator::algorithm::schedule::Schedule;
 use leptos::*;
 
 #[component]
-pub fn SchedulesComponent(read_signal: RwSignal<Option<Vec<Schedule>>>) -> impl IntoView {
+pub fn SchedulesComponent(
+    read_signal: RwSignal<Option<Vec<Schedule>>>,
+    action: Action<SchedulesOptions, Vec<Schedule>>,
+) -> impl IntoView {
     view! {
         <Await
             future=get_calendar
@@ -18,7 +22,7 @@ pub fn SchedulesComponent(read_signal: RwSignal<Option<Vec<Schedule>>>) -> impl 
                     }
                 }).collect_view(),
                     None => view ! {
-                        <Todo/>
+                        <Todo action/>
                     }
                 }
             }

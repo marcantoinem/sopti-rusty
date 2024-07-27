@@ -19,17 +19,21 @@ use compact_str::CompactString;
 use leptos::*;
 
 #[component]
-fn GroupsChips(
+fn GroupsChips<F>(
     open: RwSignal<bool>,
     open_style: &'static str,
     group: Group,
     course_sigle: CompactString,
     group_type: GroupType,
-) -> impl IntoView {
+    submit: F,
+) -> impl IntoView
+where
+    F: Fn() + Copy + 'static,
+{
     let set_modal = use_context::<SetModal>().unwrap().0;
 
     view! {
-        <CheckboxChip value=open class=open_style>
+        <CheckboxChip value=open class=open_style submit>
             <span>{group.number.to_string()}</span>
             <div class="col-container group-text-col">
                 {group.periods.iter().map(|p| {
@@ -58,18 +62,22 @@ fn GroupsChips(
 }
 
 #[component]
-fn GroupsSettings(
+fn GroupsSettings<F>(
     groups: Groups,
     open: Vec<RwSignal<bool>>,
     course_sigle: CompactString,
     group_type: GroupType,
-) -> impl IntoView {
+    submit: F,
+) -> impl IntoView
+where
+    F: Fn() + Copy + 'static,
+{
     view! {
         {groups.into_iter().enumerate().map(|(i, group)| {
                 let open_style = if group.open {"group-chip"} else {"group-chip closed-group"};
                 let open = open[i];
                 view! {
-                    <GroupsChips open open_style group course_sigle=course_sigle.clone() group_type/>
+                    <GroupsChips open open_style group course_sigle=course_sigle.clone() group_type submit/>
                 }
             }).collect_view()
         }
@@ -77,7 +85,10 @@ fn GroupsSettings(
 }
 
 #[component]
-fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl IntoView {
+fn CourseTab<F>(course: ReactiveCourse, active_tab: ReadSignal<String>, submit: F) -> impl IntoView
+where
+    F: Fn() + Copy + 'static,
+{
     let course_sigle = course.sigle.clone();
     view! {
         <Tab active_tab tab_id=course.sigle.to_string()>
@@ -90,7 +101,7 @@ fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl Int
                             view!{
                                 <div>
                                     <h3>"Théorie"</h3>
-                                    <GroupsSettings groups open=theo_open course_sigle group_type=GroupType::TheoGroup/>
+                                    <GroupsSettings groups open=theo_open course_sigle group_type=GroupType::TheoGroup submit/>
                                 </div>
                             }.into_view()
                         },
@@ -99,7 +110,7 @@ fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl Int
                             view!{
                                 <div>
                                     <h3>"Laboratoire"</h3>
-                                    <GroupsSettings groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup/>
+                                    <GroupsSettings groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
                                 </div>
                             }.into_view()
                         },
@@ -109,12 +120,12 @@ fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl Int
                             view!{
                                 <div>
                                     <h3>"Théorie"</h3>
-                                    <GroupsSettings groups=theo_groups open=theo_open course_sigle=course_sigle.clone() group_type=GroupType::TheoGroup/>
+                                    <GroupsSettings groups=theo_groups open=theo_open course_sigle=course_sigle.clone() group_type=GroupType::TheoGroup submit/>
                                 </div>
                                 <div class="vertical-bar"></div>
                                 <div>
                                     <h3>"Laboratoire"</h3>
-                                    <GroupsSettings groups=lab_groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup/>
+                                    <GroupsSettings groups=lab_groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
                                 </div>
                             }.into_view()
                         },
@@ -123,7 +134,7 @@ fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl Int
                             view!{
                                 <div>
                                     <h3>"Théorie et laboratoire lié"</h3>
-                                    <GroupsSettings groups open=both_open course_sigle=course_sigle group_type=GroupType::LabGroup/>
+                                    <GroupsSettings groups open=both_open course_sigle=course_sigle group_type=GroupType::LabGroup submit/>
                                 </div>
                             }.into_view()
                         },
@@ -146,7 +157,7 @@ where
             future=get_courses
             let:courses
         >
-            <SearchCourse courses=courses.clone() set_selections set_active_tab/>
+            <SearchCourse courses=courses.clone() set_selections set_active_tab submit/>
         </Await>
         <div class="row-container tab-width">
             <button class="tab-button chips" class=("tab-selected", move || active_tab.get() == "") id="personal" on:click={
@@ -171,7 +182,8 @@ where
                         <button class="close" on:click={
                             let sigle = sigle.clone();
                             move |_| {
-                                set_selections.update(|courses| courses.retain(|c| c.sigle.as_str() != sigle))
+                                set_selections.update(|courses| courses.retain(|c| c.sigle.as_str() != sigle));
+                                submit();
                             }
                         }><X weight=IconWeight::Regular size="16px"/></button>
                         </button>
@@ -187,7 +199,7 @@ where
             key=|c| c.sigle.clone()
             let:course
         >
-            <CourseTab course active_tab/>
+            <CourseTab course active_tab submit/>
         </For>
     }
 }

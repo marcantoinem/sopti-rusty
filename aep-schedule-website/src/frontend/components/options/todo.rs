@@ -1,4 +1,9 @@
+use aep_schedule_generator::algorithm::{generation::SchedulesOptions, schedule::Schedule};
 use leptos::*;
+
+use crate::frontend::{
+    components::options::state::OptionState, pages::generator::FirstGenerationDone,
+};
 
 #[component]
 pub fn Step(n: u8, title: &'static str, description: &'static str) -> impl IntoView {
@@ -26,7 +31,15 @@ pub fn Step(n: u8, title: &'static str, description: &'static str) -> impl IntoV
 }
 
 #[component]
-pub fn Todo() -> impl IntoView {
+pub fn Todo(action: Action<SchedulesOptions, Vec<Schedule>>) -> impl IntoView {
+    let state: OptionState = use_context().unwrap();
+    let first_generation_done: FirstGenerationDone = use_context().unwrap();
+
+    let submit = move |_| {
+        first_generation_done.0.set(true);
+        action.dispatch((&state).into())
+    };
+
     view! {
         <div class="px-4 py-4 mx-auto">
             <div class="grid gap-6 row-gap-10">
@@ -46,7 +59,7 @@ pub fn Todo() -> impl IntoView {
                             </div>
                         </div>
                         <div class="pt-1">
-                            <p class="mb-2 text-lg font-bold">"Générer un horaire"</p>
+                            <button on:click=submit class="select-none rounded-lg bg-amber-500 py-2 text-xl px-4 w-64 self-center text-center align-middle text-black shadow-md shadow-amber-500/20 transition-all hover:shadow-lg hover:shadow-amber-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">"Générer les horaires"</button>
                             <p class="text-gray-700"></p>
                         </div>
                     </div>

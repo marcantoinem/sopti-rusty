@@ -7,11 +7,15 @@ use aep_schedule_generator::data::course::CourseName;
 use leptos::*;
 
 #[component]
-pub fn SearchCourse(
+pub fn SearchCourse<F>(
     courses: Result<Vec<CourseName>, ServerFnError>,
     set_selections: WriteSignal<Vec<ReactiveCourse>>,
     set_active_tab: WriteSignal<String>,
-) -> impl IntoView {
+    submit: F,
+) -> impl IntoView
+where
+    F: Fn() + Copy + 'static,
+{
     let Ok(courses) = courses else {
         return None;
     };
@@ -21,7 +25,7 @@ pub fn SearchCourse(
         .collect();
 
     let add_course = create_action(
-        |(sigle, set): &(String, WriteSignal<Vec<ReactiveCourse>>)| {
+        move |(sigle, set): &(String, WriteSignal<Vec<ReactiveCourse>>)| {
             let sigle = sigle.clone();
             let set = *set;
             async move {
@@ -31,6 +35,7 @@ pub fn SearchCourse(
                             s.push(c.into())
                         }
                     });
+                    submit();
                 }
             }
         },
@@ -38,7 +43,7 @@ pub fn SearchCourse(
 
     let on_submit = move |sigle: String| {
         set_active_tab(sigle.clone());
-        add_course.dispatch((sigle, set_selections))
+        add_course.dispatch((sigle, set_selections));
     };
 
     Some(view! {

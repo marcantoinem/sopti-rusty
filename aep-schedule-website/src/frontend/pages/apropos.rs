@@ -16,7 +16,7 @@ pub fn HomePage() -> impl IntoView {
                     </div>
                     <div>
                         <h3 class="font-semibold">"Qui sont les auteurs de la refonte du générateur d'horaire?"</h3>
-                        <p class="mt-1 dark:text-gray-600">"Marc-Antoine Manningham - Création du frontend et du backend entièrement en Rust. Raphael Salvas, Achille Saint-Hillier, Sunnee Chevalier et Gabriel Billard - Inspiration de leur TP3 de LOG2420 pour l'interface la refonte du générateur"</p>
+                        <p class="mt-1 dark:text-gray-600">"Marc-Antoine Manningham - Création du frontend et du backend entièrement en Rust. Raphael Salvas, Achille Saint-Hillier, Sunnee Chevalier et Gabriel Billard - Inspiration de leur TP3 de LOG2420 pour l'interface de la refonte du générateur"</p>
                     </div>
                     <div>
                         <h3 class="font-semibold">"Comment le générateur génère aussi vite?"</h3>
