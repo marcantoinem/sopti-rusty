@@ -21,6 +21,11 @@ impl SchedulesOptions {
     // pub fn get_simple_conflict<'a>(&'a self) -> Option<Conflicts> {
 
     // }
+    pub fn apply_personal_schedule<'a>(&'a mut self) {
+        self.courses_to_take
+            .iter_mut()
+            .for_each(|c| c.apply_week_mask(&self.user_conflicts));
+    }
     pub fn get_impossible_course<'a>(&'a self) -> Vec<CompactString> {
         self.courses_to_take
             .iter()

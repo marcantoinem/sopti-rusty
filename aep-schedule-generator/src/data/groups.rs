@@ -2,6 +2,7 @@ use super::{
     group::Group,
     group_index::GroupIndex,
     group_sigle::{GroupType, SigleGroup},
+    time::week::Week,
 };
 use compact_str::CompactString;
 use serde::{Deserialize, Serialize};
@@ -70,6 +71,12 @@ impl Groups {
             .filter(|g| !g.open)
             .map(|g| SigleGroup::new(sigle.clone(), group_type, g.number))
             .collect()
+    }
+
+    pub fn apply_week_mask(&mut self, week: &Week<5>) {
+        self.iter_mut()
+            .filter(|g| g.periods.iter().any(|p| week.user_conflict_in_day(p)))
+            .for_each(|g| g.open = false);
     }
 }
 

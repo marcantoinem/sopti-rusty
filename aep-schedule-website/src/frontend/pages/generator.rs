@@ -17,10 +17,13 @@ pub fn GeneratorPage() -> impl IntoView {
     let (hide, set_hide) = create_signal(false);
     let first_generation_done = create_rw_signal(false);
 
+    let (step, set_step) = create_signal(1);
+
     // Creates a reactive value to update the button
     let action = create_action(move |s: &SchedulesOptions| {
-        let s = s.clone();
+        let mut s = s.clone();
         set_hide(true);
+        s.apply_personal_schedule();
         async move { s.get_schedules().into_sorted_vec() }
     });
 
@@ -28,16 +31,34 @@ pub fn GeneratorPage() -> impl IntoView {
 
     let state = OptionState::default();
 
+    let validate = move |state: OptionState| {
+        let mut options: SchedulesOptions = (&state).into();
+        if options.courses_to_take.is_empty() {
+            set_step.set(1);
+            return;
+        }
+        if !options.get_impossible_course().is_empty() {
+            set_step.set(2);
+            return;
+        }
+        options.apply_personal_schedule();
+        if !options.get_impossible_course().is_empty() {
+            set_step.set(3);
+            return;
+        }
+        set_step.set(5);
+    };
+
     provide_context(state);
     provide_context(SetModal(set_modal));
     provide_context(FirstGenerationDone(first_generation_done));
 
     view! {
         <aside class="left-panel" class=("hide-left-panel", hide)>
-            <OptionsForms action=action/>
+            <OptionsForms action=action validate step/>
         </aside>
-        <section class="right-panel ">
-            <SchedulesComponent action=action read_signal=action.value()/>
+        <section class="right-panel">
+            <SchedulesComponent action=action read_signal=action.value() step/>
         </section>
         <Notifications modal set_modal/>
         <button on:click=move |_| {set_hide(false)} id="go-back"><CaretDoubleRight weight=IconWeight::Regular size="3vh"/></button>

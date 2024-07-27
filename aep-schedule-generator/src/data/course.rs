@@ -3,6 +3,7 @@ use super::{
     group::Group,
     group_index::GroupIndex,
     group_sigle::{GroupType, SigleGroup},
+    time::week::Week,
 };
 use compact_str::CompactString;
 use serde::{Deserialize, Serialize};
@@ -164,6 +165,26 @@ impl Course {
                 lab_groups,
             } => theo_groups.is_impossible() | lab_groups.is_impossible(),
             CourseType::Linked { theo_groups, .. } => theo_groups.is_impossible(),
+        }
+    }
+    pub fn apply_week_mask(&mut self, week: &Week<5>) {
+        match &mut self.course_type {
+            CourseType::TheoOnly { theo_groups } => theo_groups.apply_week_mask(week),
+            CourseType::LabOnly { lab_groups } => lab_groups.apply_week_mask(week),
+            CourseType::Both {
+                theo_groups,
+                lab_groups,
+            } => {
+                theo_groups.apply_week_mask(week);
+                lab_groups.apply_week_mask(week);
+            }
+            CourseType::Linked {
+                theo_groups,
+                lab_groups,
+            } => {
+                theo_groups.apply_week_mask(week);
+                lab_groups.apply_week_mask(week);
+            }
         }
     }
 }

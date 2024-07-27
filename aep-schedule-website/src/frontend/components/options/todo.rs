@@ -46,7 +46,10 @@ pub fn Step(
 }
 
 #[component]
-pub fn Todo(action: Action<SchedulesOptions, Vec<Schedule>>) -> impl IntoView {
+pub fn Todo(
+    action: Action<SchedulesOptions, Vec<Schedule>>,
+    step: ReadSignal<u8>,
+) -> impl IntoView {
     let state: OptionState = use_context().unwrap();
     let first_generation_done: FirstGenerationDone = use_context().unwrap();
 
@@ -55,27 +58,40 @@ pub fn Todo(action: Action<SchedulesOptions, Vec<Schedule>>) -> impl IntoView {
         action.dispatch((&state).into())
     };
 
-    let (step, set_step) = create_signal(3);
+    let disab = move || {
+        let step = step.get();
+        match step {
+            0..=4 => "disabled",
+            _ => "",
+        }
+    };
+
+    let bg_color = move || {
+        match step.get().cmp(&5) {
+            Ordering::Less => "flex transition-colors items-center justify-center w-10 h-10 border rounded-full",
+            Ordering::Greater | Ordering::Equal => "flex transition-colors items-center justify-center w-10 h-10 border rounded-full bg-green-400",
+        }
+    };
 
     view! {
         <div class="px-4 py-4 mx-auto">
             <div class="grid gap-6 row-gap-10">
                 <div class="lg:py-6 lg:pr-16">
                     <Step n=1 step title="Ajoutez vos cours" description="Utilisez la barre de recherche à gauche pour trouver et sélectionner vos cours. Une fois les cours sélectionnés, ils apparaîtront comme un onglet."/>
-                    <Step n=2 step title="Forcer des heures libres" description="Sélectionnez une plage de temps à avoir absolument libre en pressant et relâchant sur votre horaire personnel."/>
-                    <Step n=3 step title="Ouvrez des sections" description="Assurez d'avoir au moins une section d'ouverte pour la théorie et la pratique. En sélectionnant l'onglet du cours et en appuyant sur les sections."/>
+                    <Step n=2 step title="Ouvrez des sections" description="Assurez d'avoir au moins une section d'ouverte pour la théorie et la pratique. En sélectionnant l'onglet du cours et en appuyant sur les sections."/>
+                    <Step n=3 step title="Forcer des heures libres" description="Sélectionnez une plage de temps à avoir absolument libre en pressant et relâchant sur votre horaire personnel."/>
                     <Step n=4 step title="Ajustez les paramètres" description="Bougez les curseurs en bas pour ajuster vos préférences. Vous pouvez choisir d'avoir plus de congés, de commencer en moyenne les cours plus tôt ou plus tard, ou de finir en moyenne plus tôt."/>
                     <div class="flex items-center">
                         <div class="flex flex-col items-center mr-4">
                             <div>
-                                <div class="flex items-center justify-center w-10 h-10 border rounded-full">
+                                <div class=bg_color>
                                     <svg class="w-6 text-gray-600" stroke="currentColor" viewBox="0 0 24 24">
                                         <polyline fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="6,12 10,16 18,8"></polyline>
                                     </svg>
                                 </div>
                             </div>
                         </div>
-                        <button on:click=submit class="select-none rounded-lg bg-amber-500 py-1 text-lg font-sans font-semibold px-2 w-64 self-center text-center align-middle text-black shadow-md shadow-amber-500/20 transition-all hover:shadow-lg hover:shadow-amber-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">"Générer les horaires"</button>
+                        <button on:click=submit class="select-none rounded-lg bg-amber-500 py-1 text-lg font-sans font-semibold px-2 w-64 self-center text-center align-middle text-black shadow-md shadow-amber-500/20 transition-all hover:shadow-lg hover:shadow-amber-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" prop:disabled=disab disabled>"Générer les horaires"</button>
                     </div>
                 </div>
             </div>

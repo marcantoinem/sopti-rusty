@@ -8,6 +8,7 @@ use leptos::*;
 pub fn SchedulesComponent(
     read_signal: RwSignal<Option<Vec<Schedule>>>,
     action: Action<SchedulesOptions, Vec<Schedule>>,
+    step: ReadSignal<u8>,
 ) -> impl IntoView {
     view! {
         <Await
@@ -22,7 +23,7 @@ pub fn SchedulesComponent(
                     }
                 }).collect_view(),
                     None => view ! {
-                        <Todo action/>
+                        <Todo action step/>
                     }
                 }
             }
