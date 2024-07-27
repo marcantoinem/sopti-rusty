@@ -56,7 +56,7 @@ impl Default for OptionState {
             max_nb_conflicts: create_rw_signal(0),
             week: std::array::from_fn(|_i| create_rw_signal(0)),
             day_off: create_rw_signal(3),
-            morning: create_rw_signal(0),
+            morning: create_rw_signal(1),
             finish_early: create_rw_signal(1),
         }
     }
