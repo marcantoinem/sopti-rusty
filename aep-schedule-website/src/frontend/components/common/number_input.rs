@@ -34,7 +34,7 @@ where
 
     view! {
         <div class="flex flex-row gap-8 items-center">
-            <p class="text-white font-sans">{label}</p>
+            <p class="text-white font-sans font-medium tracking-tight">{label}</p>
             <div class="relative flex items-center max-w-20">
                 <button on:click=minus type="button" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-1 h-7 focus:ring-gray-100 focus:ring-2 focus:outline-none">
                     <svg class="w-3 h-3 text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">

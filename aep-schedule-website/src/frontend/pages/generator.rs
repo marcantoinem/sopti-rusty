@@ -36,7 +36,7 @@ pub fn GeneratorPage() -> impl IntoView {
         <aside class="left-panel" class=("hide-left-panel", hide)>
             <OptionsForms action=action/>
         </aside>
-        <section class="right-panel">
+        <section class="right-panel ">
             <SchedulesComponent action=action read_signal=action.value()/>
         </section>
         <Notifications modal set_modal/>
