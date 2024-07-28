@@ -31,16 +31,16 @@ pub fn App() -> impl IntoView {
                     <span class="text-2xl font-semibold leading-none font-sans tracking-tight">"Générateur d'horaire de l'AEP"
                         <span class="text-amber-600">"v2"</span>
                     </span>
-                    <A class="rounded-md font-medium text-lg font-sans tracking-tight" href="/">"Générateur d'horaire"</A>
-                    <A class="rounded-md font-medium text-lg font-sans tracking-tight" href="/local">"Horaire d'un local"</A>
-                    <A class="rounded-md font-medium text-lg font-sans tracking-tight" href="/apropos">"À propos"</A>
+                    <A class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight" href="/">"Générateur d'horaire"</A>
+                    <A class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight" href="/local">"Horaire d'un local"</A>
+                    <A class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight" href="/apropos">"À propos"</A>
 
 
                     <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty/-/issues/new" class="sources pad-left"  target="_blank">
-                        <span class="rounded-md font-medium text-lg font-sans tracking-tight">"Signaler un bug"</span>
+                        <span class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight">"Signaler un bug"</span>
                         <Bug weight=IconWeight::Regular size="3vh"/>
                     </a>
-                    <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty" class="sources"  target="_blank" ><span class="rounded-md font-medium text-lg font-sans tracking-tight">"Sources "</span><GitlabLogo weight=IconWeight::Regular size="3vh"/></a>
+                    <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty" class="sources"  target="_blank" ><span class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight">"Sources "</span><GitlabLogo weight=IconWeight::Regular size="3vh"/></a>
                 </nav>
                 <div class=move || is_active.get() + " hamburger" on:click=move |_| {
                     set_active.update(|text| {

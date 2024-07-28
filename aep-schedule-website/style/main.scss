@@ -229,6 +229,7 @@ nav.active {
 }
 
 [aria-current]:not([aria-current="false"]) {
-	font-weight: bold;
+	color: black;
 	text-decoration: underline rgb(245 158 11);
+	text-decoration-thickness: 2px;
 }

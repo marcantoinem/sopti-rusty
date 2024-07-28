@@ -150,14 +150,16 @@ pub fn CoursesSelector<F>(state: OptionState, submit: F) -> impl IntoView
 where
     F: Fn() + Copy + 'static,
 {
-    let (selections, set_selections) = state.selections;
     let (active_tab, set_active_tab) = create_signal("".to_string());
+
+    let action_courses = state.action_courses;
+
     view! {
         <Await
             future=get_courses
             let:courses
         >
-            <SearchCourse courses=courses.clone() set_selections set_active_tab submit/>
+            <SearchCourse courses=courses.clone() action_courses set_active_tab/>
         </Await>
         <div class="row-container tab-width">
             <button class="tab-button chips" class=("tab-selected", move || active_tab.get() == "") id="personal" on:click={
@@ -167,7 +169,7 @@ where
                 {"Horaire personnel"}
             </button>
             <For
-                each=selections
+                each=move || {action_courses.value().get().unwrap_or_default()}
                 key=|c| c.sigle.clone()
                 children=move |course| {
                     let sigle = course.sigle.to_string();
@@ -182,7 +184,11 @@ where
                         <button class="close" on:click={
                             let sigle = sigle.clone();
                             move |_| {
-                                set_selections.update(|courses| courses.retain(|c| c.sigle.as_str() != sigle));
+                                action_courses.value().update(|courses| {
+                                    if let Some(courses) = courses {
+                                        courses.retain(|c| c.sigle.as_str() != sigle);
+                                    }}
+                                );
                                 submit();
                             }
                         }><X weight=IconWeight::Regular size="16px"/></button>
@@ -195,7 +201,7 @@ where
             <PersonalTimeSelector week=state.week submit></PersonalTimeSelector>
         </Tab>
         <For
-            each=selections
+            each=move || {action_courses.value().get().unwrap_or_default()}
             key=|c| c.sigle.clone()
             let:course
         >

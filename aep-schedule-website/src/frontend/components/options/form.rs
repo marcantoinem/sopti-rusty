@@ -31,6 +31,11 @@ where
         action.dispatch((&state).into());
     };
 
+    create_local_resource(state.action_courses.pending(), move |_| {
+        submit();
+        async move {}
+    });
+
     let submit_mobile = move |_| action.dispatch((&state).into());
 
     view! {

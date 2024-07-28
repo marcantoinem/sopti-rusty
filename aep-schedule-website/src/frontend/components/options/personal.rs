@@ -73,13 +73,13 @@ where
                         let day = week[i].get();
                         let hour = day & (1 << j);
                         if hour != 0 {
-                            "selected-hour"
+                            "touch-none selected-hour"
                         } else {
-                            ""
+                            "touch-none"
                         }
                     };
                     view! {
-                        <div class="pointer-events-none touch-none" style=style class=class
+                        <div style=style class=class
                         on:pointerdown=move |e| {
                             set_initial.set(Some((i, j)));
                             set_positive.set((week[i].get() & (1 << j)) == 0);
