@@ -103,7 +103,7 @@ where
                         ReactiveCourseType::TheoOnly { theo_open, theo_groups } => {
                             let groups = theo_groups;
                             view!{
-                                <div class="flex gap-2 flex-col pb-2">
+                                <div class="flex gap-2 flex-col pb-2 max-h-[26rem] overflow-y-auto">
                                     <h3>"Théorie"</h3>
                                     <GroupsSettings groups open=theo_open course_sigle group_type=GroupType::TheoGroup submit/>
                                 </div>
@@ -112,7 +112,7 @@ where
                         ReactiveCourseType::LabOnly { lab_open, lab_groups } => {
                             let groups = lab_groups;
                             view!{
-                                <div class="flex gap-2 flex-col pb-2">
+                                <div class="flex gap-2 flex-col pb-2 max-h-[26rem] overflow-y-auto">
                                     <h3>"Laboratoire"</h3>
                                     <GroupsSettings groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
                                 </div>
@@ -122,12 +122,12 @@ where
                             let theo_groups = theo_groups;
                             let lab_groups = lab_groups;
                             view!{
-                                <div class="flex gap-2 flex-col pb-2">
+                                <div class="flex gap-2 flex-col pb-2 max-h-[26rem] overflow-y-auto">
                                     <h3>"Théorie"</h3>
                                     <GroupsSettings groups=theo_groups open=theo_open course_sigle=course_sigle.clone() group_type=GroupType::TheoGroup submit/>
                                 </div>
                                 <div class="vertical-bar"></div>
-                                <div class="flex gap-2 flex-col pb-2">
+                                <div class="flex gap-2 flex-col pb-2 max-h-[26rem] overflow-y-auto">
                                     <h3>"Laboratoire"</h3>
                                     <GroupsSettings groups=lab_groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
                                 </div>
@@ -136,7 +136,7 @@ where
                         ReactiveCourseType::Linked { both_open, theo_groups, lab_groups } => {
                             let groups = theo_groups.merge(lab_groups);
                             view!{
-                                <div class="flex gap-2 flex-col pb-2">
+                                <div class="flex gap-2 flex-col pb-2 max-h-[26rem] overflow-y-auto">
                                     <h3>"Théorie et laboratoire lié"</h3>
                                     <GroupsSettings groups open=both_open course_sigle=course_sigle group_type=GroupType::LabGroup submit/>
                                 </div>
