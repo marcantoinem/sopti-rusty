@@ -40,10 +40,10 @@ where
             class=("bg-red-500", move || {!open.get()})
         >
             <span class="text-lg text-bold text-sans">{group.number.to_string()}</span>
-            <div class="flex flex-col group-text-col">
+            <div class="flex flex-col justify-between w-full">
                 {group.periods.iter().map(|p| {
                     view!{
-                        <div class="flex group-text">
+                        <div class="flex group-text w-full justify-between">
                             <span>{p.day.to_string()}</span>
                             <span class="period-group">{p.hours.to_string()}</span>
                         </div>

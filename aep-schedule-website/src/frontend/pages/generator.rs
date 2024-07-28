@@ -52,6 +52,7 @@ pub fn GeneratorPage() -> impl IntoView {
             set_step.set(2);
             return;
         }
+        section_error.set("".to_string());
         options.apply_personal_schedule();
         let mut impossible_courses = options.get_impossible_course().into_iter();
         if let Some(first_impossible_course) = impossible_courses.next() {
@@ -65,6 +66,7 @@ pub fn GeneratorPage() -> impl IntoView {
             set_step.set(3);
             return;
         }
+        personal_error.set("".to_string());
         set_step.set(5);
     };
 
