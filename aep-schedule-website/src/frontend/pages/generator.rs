@@ -31,18 +31,37 @@ pub fn GeneratorPage() -> impl IntoView {
 
     let state = OptionState::default();
 
+    let section_error = create_rw_signal("".to_string());
+    let personal_error = create_rw_signal("".to_string());
+
     let validate = move |state: OptionState| {
         let mut options: SchedulesOptions = (&state).into();
         if options.courses_to_take.is_empty() {
             set_step.set(1);
             return;
         }
-        if !options.get_impossible_course().is_empty() {
+        let mut impossible_courses = options.get_impossible_course().into_iter();
+        if let Some(first_impossible_course) = impossible_courses.next() {
+            let mut error = format!("Les sections des/du cours {}", first_impossible_course);
+            for impossible_course in impossible_courses {
+                error.push_str(", ");
+                error.push_str(&impossible_course);
+            }
+            error.push_str(" sont toutes fermées.");
+            section_error.set(error);
             set_step.set(2);
             return;
         }
         options.apply_personal_schedule();
-        if !options.get_impossible_course().is_empty() {
+        let mut impossible_courses = options.get_impossible_course().into_iter();
+        if let Some(first_impossible_course) = impossible_courses.next() {
+            let mut error = format!("Les sections des/du cours {}", first_impossible_course);
+            for impossible_course in impossible_courses {
+                error.push_str(", ");
+                error.push_str(&impossible_course);
+            }
+            error.push_str(" sont en conflits avec les heures libres sélectionnées.");
+            personal_error.set(error);
             set_step.set(3);
             return;
         }
@@ -55,10 +74,10 @@ pub fn GeneratorPage() -> impl IntoView {
 
     view! {
         <aside class="left-panel" class=("hide-left-panel", hide)>
-            <OptionsForms action=action validate step/>
+            <OptionsForms action validate step/>
         </aside>
         <section class="right-panel">
-            <SchedulesComponent action=action read_signal=action.value() step/>
+            <SchedulesComponent section_error personal_error action=action read_signal=action.value() step/>
         </section>
         <Notifications modal set_modal/>
         <button on:click=move |_| {set_hide(false)} id="go-back"><CaretDoubleRight weight=IconWeight::Regular size="3vh"/></button>

@@ -13,6 +13,7 @@ pub fn Step(
     step: ReadSignal<u8>,
     title: &'static str,
     description: &'static str,
+    #[prop(optional)] children: Option<Children>,
 ) -> impl IntoView {
     let bg_color = move || {
         match n.cmp(&step.get()) {
@@ -40,6 +41,7 @@ pub fn Step(
           <p class="text-gray-700">
             {description}
           </p>
+          {children.map(|c| c())}
         </div>
       </div>
     }
@@ -49,6 +51,8 @@ pub fn Step(
 pub fn Todo(
     action: Action<SchedulesOptions, Vec<Schedule>>,
     step: ReadSignal<u8>,
+    section_error: RwSignal<String>,
+    personal_error: RwSignal<String>,
 ) -> impl IntoView {
     let state: OptionState = use_context().unwrap();
     let first_generation_done: FirstGenerationDone = use_context().unwrap();
@@ -71,8 +75,12 @@ pub fn Todo(
             <div class="grid gap-6 row-gap-10">
                 <div class="lg:py-6 lg:pr-16">
                     <Step n=1 step title="Ajoutez vos cours" description="Utilisez la barre de recherche à gauche pour trouver et sélectionner vos cours. Une fois les cours sélectionnés, ils apparaîtront comme un onglet."/>
-                    <Step n=2 step title="Ouvrez des sections" description="Assurez d'avoir au moins une section d'ouverte pour la théorie et la pratique. En sélectionnant l'onglet du cours et en appuyant sur les sections."/>
-                    <Step n=3 step title="Forcer des heures libres" description="Sélectionnez une plage de temps à avoir absolument libre en pressant et relâchant sur votre horaire personnel."/>
+                    <Step n=2 step title="Ouvrez des sections" description="Assurez d'avoir au moins une section d'ouverte pour la théorie et la pratique. En sélectionnant l'onglet du cours et en appuyant sur les sections.">
+                        <span class="text-red-800">{section_error}</span>
+                    </Step>
+                    <Step n=3 step title="Forcer des heures libres" description="Sélectionnez une plage de temps à avoir absolument libre en pressant et relâchant sur votre horaire personnel.">
+                        <span class="text-red-800">{personal_error}</span>
+                    </Step>
                     <Step n=4 step title="Ajustez les paramètres" description="Bougez les curseurs en bas pour ajuster vos préférences. Vous pouvez choisir d'avoir plus de congés, de commencer en moyenne les cours plus tôt ou plus tard, ou de finir en moyenne plus tôt."/>
                     <div class="flex items-center">
                         <div class="flex flex-col items-center mr-4">
