@@ -1,7 +1,6 @@
 use super::state::OptionState;
 use super::state::ReactiveCourse;
 use crate::backend::routes::get_courses;
-use crate::frontend::components::common::checkbox::CheckboxChip;
 use crate::frontend::components::common::tab::Tab;
 use crate::frontend::components::icons::bell_ringing::BellRinging;
 use crate::frontend::components::icons::calendar_x::CalendarX;
@@ -21,7 +20,6 @@ use leptos::*;
 #[component]
 fn GroupsChips<F>(
     open: RwSignal<bool>,
-    open_style: &'static str,
     group: Group,
     course_sigle: CompactString,
     group_type: GroupType,
@@ -33,12 +31,19 @@ where
     let set_modal = use_context::<SetModal>().unwrap().0;
 
     view! {
-        <CheckboxChip value=open class=open_style submit>
-            <span>{group.number.to_string()}</span>
-            <div class="col-container group-text-col">
+        <div on:click=move |_| {
+                open.update(|b| *b = !*b);
+                submit();
+            }
+            class="chips gap-2"
+            class=("bg-green-500", move || {open.get()})
+            class=("bg-red-500", move || {!open.get()})
+        >
+            <span class="text-lg text-bold text-sans">{group.number.to_string()}</span>
+            <div class="flex flex-col group-text-col">
                 {group.periods.iter().map(|p| {
                     view!{
-                        <div class="row-container group-text">
+                        <div class="flex group-text">
                             <span>{p.day.to_string()}</span>
                             <span class="period-group">{p.hours.to_string()}</span>
                         </div>
@@ -57,7 +62,7 @@ where
                 }),
                 true => None,
             }}
-        </CheckboxChip>
+        </div>
     }
 }
 
@@ -74,10 +79,9 @@ where
 {
     view! {
         {groups.into_iter().enumerate().map(|(i, group)| {
-                let open_style = if group.open {"group-chip"} else {"group-chip closed-group"};
                 let open = open[i];
                 view! {
-                    <GroupsChips open open_style group course_sigle=course_sigle.clone() group_type submit/>
+                    <GroupsChips open group course_sigle=course_sigle.clone() group_type submit/>
                 }
             }).collect_view()
         }
@@ -93,13 +97,13 @@ where
     view! {
         <Tab active_tab tab_id=course.sigle.to_string()>
             <p>{course.name}</p>
-            <div class="row-container row-evenly">
+            <div class="flex justify-around">
                 {
                     match course.course_type {
                         ReactiveCourseType::TheoOnly { theo_open, theo_groups } => {
                             let groups = theo_groups;
                             view!{
-                                <div>
+                                <div class="flex gap-2 flex-col pb-2">
                                     <h3>"Théorie"</h3>
                                     <GroupsSettings groups open=theo_open course_sigle group_type=GroupType::TheoGroup submit/>
                                 </div>
@@ -108,7 +112,7 @@ where
                         ReactiveCourseType::LabOnly { lab_open, lab_groups } => {
                             let groups = lab_groups;
                             view!{
-                                <div>
+                                <div class="flex gap-2 flex-col pb-2">
                                     <h3>"Laboratoire"</h3>
                                     <GroupsSettings groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
                                 </div>
@@ -118,12 +122,12 @@ where
                             let theo_groups = theo_groups;
                             let lab_groups = lab_groups;
                             view!{
-                                <div>
+                                <div class="flex gap-2 flex-col pb-2">
                                     <h3>"Théorie"</h3>
                                     <GroupsSettings groups=theo_groups open=theo_open course_sigle=course_sigle.clone() group_type=GroupType::TheoGroup submit/>
                                 </div>
                                 <div class="vertical-bar"></div>
-                                <div>
+                                <div class="flex gap-2 flex-col pb-2">
                                     <h3>"Laboratoire"</h3>
                                     <GroupsSettings groups=lab_groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
                                 </div>
@@ -132,7 +136,7 @@ where
                         ReactiveCourseType::Linked { both_open, theo_groups, lab_groups } => {
                             let groups = theo_groups.merge(lab_groups);
                             view!{
-                                <div>
+                                <div class="flex gap-2 flex-col pb-2">
                                     <h3>"Théorie et laboratoire lié"</h3>
                                     <GroupsSettings groups open=both_open course_sigle=course_sigle group_type=GroupType::LabGroup submit/>
                                 </div>
@@ -161,7 +165,7 @@ where
         >
             <SearchCourse courses=courses.clone() action_courses set_active_tab/>
         </Await>
-        <div class="row-container tab-width">
+        <div class="flex tab-width">
             <button class="tab-button chips" class=("tab-selected", move || active_tab.get() == "") id="personal" on:click={
                 move |_| set_active_tab.set("".to_string())
             }>
