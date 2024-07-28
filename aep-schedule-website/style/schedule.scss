@@ -20,7 +20,6 @@ $days: $time-width 10px repeat(5, 1fr);
   width: 100%;
   display: grid;
   grid-template-rows: $days-height auto;
-  margin-bottom: 0.4em;
 }
 
 .days {
@@ -49,7 +48,7 @@ $days: $time-width 10px repeat(5, 1fr);
   align-self: end;
   font-size: 80%;
   position: relative;
-  bottom: -1ex;
+  bottom: -1.4ex;
   color: black;
   padding-right: 2px;
 }
@@ -116,10 +115,6 @@ $days: $time-width 10px repeat(5, 1fr);
   cursor: pointer;
 }
 
-.remove-touch {
-  touch-action: none;
-}
-
 .color1 {
   background-color: #41AAE6;
 }
@@ -134,4 +129,20 @@ $days: $time-width 10px repeat(5, 1fr);
 
 .color4 {
   background-color: #B91E32;
+}
+
+.color5 {
+  background-color: #950de4;
+}
+
+.color6 {
+  background-color: #007706;
+}
+
+.color7 {
+  background-color: #ffd20b;
+}
+
+.color8 {
+  background-color: #ff008c;
 }

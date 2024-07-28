@@ -5,12 +5,12 @@ use aep_schedule_generator::{
 use compact_str::CompactString;
 use leptos::*;
 
+use crate::backend::routes::get_course;
+
 #[derive(Copy, Clone)]
 pub struct OptionState {
-    pub selections: (
-        ReadSignal<Vec<ReactiveCourse>>,
-        WriteSignal<Vec<ReactiveCourse>>,
-    ),
+    pub stored_courses: StoredValue<Vec<ReactiveCourse>>,
+    pub action_courses: Action<String, Vec<ReactiveCourse>>,
     pub week: [RwSignal<u64>; 5],
     pub max_nb_conflicts: RwSignal<u8>,
     pub day_off: RwSignal<u8>,
@@ -51,12 +51,31 @@ pub struct ReactiveCourse {
 
 impl Default for OptionState {
     fn default() -> Self {
+        let stored_courses: StoredValue<Vec<ReactiveCourse>> = store_value(vec![]);
+
+        let action_courses = create_action(move |sigle: &String| {
+            let sigle = sigle.clone();
+            async move {
+                if let Ok(c) = get_course(sigle).await {
+                    if !stored_courses
+                        .get_value()
+                        .iter()
+                        .any(|react_c| react_c.sigle == c.sigle)
+                    {
+                        stored_courses.update_value(|courses| courses.push(c.into()));
+                    }
+                }
+                stored_courses.get_value()
+            }
+        });
+
         Self {
-            selections: create_signal(vec![]),
+            stored_courses,
+            action_courses,
             max_nb_conflicts: create_rw_signal(0),
             week: std::array::from_fn(|_i| create_rw_signal(0)),
             day_off: create_rw_signal(3),
-            morning: create_rw_signal(0),
+            morning: create_rw_signal(1),
             finish_early: create_rw_signal(1),
         }
     }
@@ -179,9 +198,10 @@ impl From<Course> for ReactiveCourse {
 impl From<&OptionState> for SchedulesOptions {
     fn from(state: &OptionState) -> Self {
         let courses_to_take = state
-            .selections
-            .0
+            .action_courses
+            .value()
             .get()
+            .unwrap_or_default()
             .into_iter()
             .map(|c| c.into())
             .collect();
@@ -197,7 +217,7 @@ impl From<&OptionState> for SchedulesOptions {
             max_nb_conflicts,
             evaluation,
             user_conflicts,
-            max_size: 5,
+            max_size: 10,
         }
     }
 }

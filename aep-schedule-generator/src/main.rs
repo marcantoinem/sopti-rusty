@@ -31,14 +31,16 @@ fn main() {
         max_size: 20,
         user_conflicts: Week::default(),
     };
+    let nb_combination = options.get_nb_combinations();
     let instant = Instant::now();
     let schedules = options.get_schedules();
     let number = schedules.number;
     let result = schedules.into_sorted_vec();
     println!(
-        "{:?} computed in {:?} {} combinations evaluated",
+        "{:?} computed in {:?} {} combinations evaluated of {} total",
         result.len(),
         instant.elapsed().as_secs_f64(),
         number,
+        nb_combination,
     );
 }

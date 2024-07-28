@@ -2,12 +2,11 @@
 @import 'options.scss';
 @import 'constant.scss';
 @import 'common.scss';
-@import 'fonts.scss';
 
 body {
 	font-family: lato, sans-serif;
 	margin: 0;
-	min-height: calc(100vh - 3em);
+	height: auto;
 	$background-color: $light-background;
 }
 
@@ -17,11 +16,13 @@ nav {
 		top: -100%;
 		transition: 0.3s;
 	}
+
 	@media screen and (min-width: 1000px) {
 		flex-direction: row;
 		height: 3em;
 		left: 0;
 	}
+
 	width: 100%;
 	display: flex;
 	box-sizing: border-box;
@@ -36,45 +37,45 @@ nav {
 	z-index: 42;
 }
 
-nav > a {
+nav>a {
 	display: block;
 }
 
 @keyframes slideInFromLeft {
 	0% {
-	  transform: translateX(-100%);
+		transform: translateX(-100%);
 	}
+
 	100% {
-	  transform: translateX(0);
+		transform: translateX(0);
 	}
 }
 
 @keyframes slideOutToLeft {
 	0% {
-	  transform: translateX(0);
+		transform: translateX(0);
 	}
+
 	100% {
-	  transform: translateX(-100%);
-	  display: none;
+		transform: translateX(-100%);
+		display: none;
 	}
 }
 
 main {
 	display: flex;
 	justify-content: flex-end;
-	min-height: calc(100vh - 3em);
 	background-color: $light-background;
+
 	@media screen and (max-width: 1000px) {
+		min-height: calc(100vh);
 		margin-top: 0;
 	}
+
 	@media screen and (min-width: 1000px) {
+		min-height: calc(100vh - 3em);
 		margin-top: 3em;
 	}
-}
-
-section {
-	width: 100%;
-	height: 100%;
 }
 
 .hide-left-panel.left-panel {
@@ -90,11 +91,13 @@ section {
 		width: 100%;
 		height: 100%;
 	}
+
 	@media screen and (min-width: 1000px) {
 		top: 3em;
 		height: calc(100vh - 3em);
 		width: 42%;
 	}
+
 	box-sizing: border-box;
 	z-index: 20;
 	position: fixed;
@@ -104,7 +107,7 @@ section {
 	flex-direction: column;
 	justify-items: center;
 	background-color: $background-color;
-	padding: 0.2em 0.69em;
+	padding: 1.0rem;
 	gap: 0.2em;
 	animation: 0.5s ease-out 0s 1 slideInFromLeft;
 }
@@ -113,6 +116,7 @@ section {
 	@media screen and (max-width: 1000px) {
 		width: 100%;
 	}
+
 	@media screen and (min-width: 1000px) {
 		width: 58%;
 	}
@@ -121,20 +125,22 @@ section {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 10px;
-	padding: 0.42em;
+	gap: 3rem;
+	padding: 1rem;
 	background-color: $light-background;
 }
 
 #go-back {
 	position: fixed;
+
 	@media screen and (max-width: 1000px) {
 		top: 0.42em;
 	}
-	
+
 	@media screen and (min-width: 1000px) {
 		display: none;
 	}
+
 	left: 0.42em;
 	width: 3em;
 	height: 3em;
@@ -149,7 +155,7 @@ section {
 	cursor: pointer;
 }
 
-a:link { 
+a:link {
 	text-decoration: none;
 }
 
@@ -165,11 +171,7 @@ a:hover {
 	text-decoration: underline;
 }
 
-.home {
-	padding: 0em 1em;
-}
-
-nav > a {
+nav>a {
 	color: black;
 }
 
@@ -190,7 +192,7 @@ nav > a {
 	@media screen and (min-width: 1000px) {
 		display: none;
 	}
-	
+
 	z-index: 100;
 	position: fixed;
 	top: 0.42em;
@@ -226,7 +228,8 @@ nav.active {
 	}
 }
 
-.classroom-page {
-	justify-content: space-between;
-	padding: 2em;
+[aria-current]:not([aria-current="false"]) {
+	color: black;
+	text-decoration: underline rgb(245 158 11);
+	text-decoration-thickness: 2px;
 }

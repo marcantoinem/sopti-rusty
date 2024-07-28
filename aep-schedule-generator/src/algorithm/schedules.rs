@@ -46,12 +46,11 @@ impl<'a> Schedules<'a> {
         };
         let min = self.get_min();
         let e = self.options.evaluation;
-        let c = self.options.user_conflicts;
         match &course.course_type {
             CourseType::LabOnly { lab_groups } => {
                 for lab_group in lab_groups.iter().filter(|g| g.open) {
                     let course = TakenCourseBuilder::new(i, GroupIndex::none(), lab_group.into());
-                    if let Some(schedule) = schedule.add_check_conflicts(n, min, &c, e, course) {
+                    if let Some(schedule) = schedule.add_check_conflicts(n, min, e, course) {
                         self.get_schedules_rec(schedule, n, i + 1);
                     }
                 }
@@ -59,7 +58,7 @@ impl<'a> Schedules<'a> {
             CourseType::TheoOnly { theo_groups } => {
                 for theo_group in theo_groups.iter().filter(|g| g.open) {
                     let course = TakenCourseBuilder::new(i, theo_group.into(), GroupIndex::none());
-                    if let Some(schedule) = schedule.add_check_conflicts(n, min, &c, e, course) {
+                    if let Some(schedule) = schedule.add_check_conflicts(n, min, e, course) {
                         self.get_schedules_rec(schedule, n, i + 1);
                     }
                 }
@@ -72,8 +71,7 @@ impl<'a> Schedules<'a> {
                     for lab_group in lab_groups.iter().filter(|g| g.open) {
                         let course =
                             TakenCourseBuilder::new(i, theo_group.into(), lab_group.into());
-                        if let Some(schedule) = schedule.add_check_conflicts(n, min, &c, e, course)
-                        {
+                        if let Some(schedule) = schedule.add_check_conflicts(n, min, e, course) {
                             self.get_schedules_rec(schedule, n, i + 1);
                         }
                     }
@@ -89,7 +87,7 @@ impl<'a> Schedules<'a> {
                     .zip(lab_groups.iter().filter(|g| g.open))
                 {
                     let course = TakenCourseBuilder::new(i, theo_group.into(), lab_group.into());
-                    if let Some(schedule) = schedule.add_check_conflicts(n, min, &c, e, course) {
+                    if let Some(schedule) = schedule.add_check_conflicts(n, min, e, course) {
                         self.get_schedules_rec(schedule, n, i + 1);
                     }
                 }

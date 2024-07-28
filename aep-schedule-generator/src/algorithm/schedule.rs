@@ -10,7 +10,6 @@ use crate::data::{
         day::Day,
         hours::NO_HOUR,
         period::Period,
-        week::Week,
         weeks::Weeks,
     },
 };
@@ -74,7 +73,6 @@ impl<'a> ScheduleBuilder<'a> {
         &self,
         n: u8,
         min: f64,
-        user_conflicts: &Week<5>,
         options: EvaluationOption,
         new_course: TakenCourseBuilder,
     ) -> Option<Self> {
@@ -82,10 +80,6 @@ impl<'a> ScheduleBuilder<'a> {
         let mut is_cancelled = false;
         new_course.for_each_group(self.courses, |group| {
             for period in &group.periods {
-                if user_conflicts.user_conflict_in_day(period) {
-                    is_cancelled = true;
-                    return;
-                }
                 if new_schedule.week.conflict_in_day(period) {
                     new_schedule.conflicts += 1;
                     if new_schedule.conflicts > n {

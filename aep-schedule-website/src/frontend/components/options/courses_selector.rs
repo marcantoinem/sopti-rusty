@@ -1,7 +1,6 @@
 use super::state::OptionState;
 use super::state::ReactiveCourse;
 use crate::backend::routes::get_courses;
-use crate::frontend::components::common::checkbox::CheckboxChip;
 use crate::frontend::components::common::tab::Tab;
 use crate::frontend::components::icons::bell_ringing::BellRinging;
 use crate::frontend::components::icons::calendar_x::CalendarX;
@@ -19,22 +18,32 @@ use compact_str::CompactString;
 use leptos::*;
 
 #[component]
-fn GroupsChips(
+fn GroupsChips<F>(
     open: RwSignal<bool>,
-    open_style: &'static str,
     group: Group,
     course_sigle: CompactString,
     group_type: GroupType,
-) -> impl IntoView {
+    submit: F,
+) -> impl IntoView
+where
+    F: Fn() + Copy + 'static,
+{
     let set_modal = use_context::<SetModal>().unwrap().0;
 
     view! {
-        <CheckboxChip value=open class=open_style>
-            <span>{group.number.to_string()}</span>
-            <div class="col-container group-text-col">
+        <div on:click=move |_| {
+                open.update(|b| *b = !*b);
+                submit();
+            }
+            class="chips gap-2"
+            class=("bg-green-500", move || {open.get()})
+            class=("bg-red-500", move || {!open.get()})
+        >
+            <span class="text-lg text-bold text-sans">{group.number.to_string()}</span>
+            <div class="flex flex-col justify-between w-full">
                 {group.periods.iter().map(|p| {
                     view!{
-                        <div class="row-container group-text">
+                        <div class="flex group-text w-full justify-between">
                             <span>{p.day.to_string()}</span>
                             <span class="period-group">{p.hours.to_string()}</span>
                         </div>
@@ -53,23 +62,26 @@ fn GroupsChips(
                 }),
                 true => None,
             }}
-        </CheckboxChip>
+        </div>
     }
 }
 
 #[component]
-fn GroupsSettings(
+fn GroupsSettings<F>(
     groups: Groups,
     open: Vec<RwSignal<bool>>,
     course_sigle: CompactString,
     group_type: GroupType,
-) -> impl IntoView {
+    submit: F,
+) -> impl IntoView
+where
+    F: Fn() + Copy + 'static,
+{
     view! {
         {groups.into_iter().enumerate().map(|(i, group)| {
-                let open_style = if group.open {"group-chip"} else {"group-chip closed-group"};
                 let open = open[i];
                 view! {
-                    <GroupsChips open open_style group course_sigle=course_sigle.clone() group_type/>
+                    <GroupsChips open group course_sigle=course_sigle.clone() group_type submit/>
                 }
             }).collect_view()
         }
@@ -77,29 +89,32 @@ fn GroupsSettings(
 }
 
 #[component]
-fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl IntoView {
+fn CourseTab<F>(course: ReactiveCourse, active_tab: ReadSignal<String>, submit: F) -> impl IntoView
+where
+    F: Fn() + Copy + 'static,
+{
     let course_sigle = course.sigle.clone();
     view! {
         <Tab active_tab tab_id=course.sigle.to_string()>
             <p>{course.name}</p>
-            <div class="row-container row-evenly">
+            <div class="flex justify-around">
                 {
                     match course.course_type {
                         ReactiveCourseType::TheoOnly { theo_open, theo_groups } => {
                             let groups = theo_groups;
                             view!{
-                                <div>
+                                <div class="flex gap-2 flex-col pb-2">
                                     <h3>"Théorie"</h3>
-                                    <GroupsSettings groups open=theo_open course_sigle group_type=GroupType::TheoGroup/>
+                                    <GroupsSettings groups open=theo_open course_sigle group_type=GroupType::TheoGroup submit/>
                                 </div>
                             }.into_view()
                         },
                         ReactiveCourseType::LabOnly { lab_open, lab_groups } => {
                             let groups = lab_groups;
                             view!{
-                                <div>
+                                <div class="flex gap-2 flex-col pb-2">
                                     <h3>"Laboratoire"</h3>
-                                    <GroupsSettings groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup/>
+                                    <GroupsSettings groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
                                 </div>
                             }.into_view()
                         },
@@ -107,23 +122,23 @@ fn CourseTab(course: ReactiveCourse, active_tab: ReadSignal<String>) -> impl Int
                             let theo_groups = theo_groups;
                             let lab_groups = lab_groups;
                             view!{
-                                <div>
+                                <div class="flex gap-2 flex-col pb-2">
                                     <h3>"Théorie"</h3>
-                                    <GroupsSettings groups=theo_groups open=theo_open course_sigle=course_sigle.clone() group_type=GroupType::TheoGroup/>
+                                    <GroupsSettings groups=theo_groups open=theo_open course_sigle=course_sigle.clone() group_type=GroupType::TheoGroup submit/>
                                 </div>
                                 <div class="vertical-bar"></div>
-                                <div>
+                                <div class="flex gap-2 flex-col pb-2">
                                     <h3>"Laboratoire"</h3>
-                                    <GroupsSettings groups=lab_groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup/>
+                                    <GroupsSettings groups=lab_groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
                                 </div>
                             }.into_view()
                         },
                         ReactiveCourseType::Linked { both_open, theo_groups, lab_groups } => {
                             let groups = theo_groups.merge(lab_groups);
                             view!{
-                                <div>
+                                <div class="flex gap-2 flex-col pb-2">
                                     <h3>"Théorie et laboratoire lié"</h3>
-                                    <GroupsSettings groups open=both_open course_sigle=course_sigle group_type=GroupType::LabGroup/>
+                                    <GroupsSettings groups open=both_open course_sigle=course_sigle group_type=GroupType::LabGroup submit/>
                                 </div>
                             }.into_view()
                         },
@@ -139,16 +154,18 @@ pub fn CoursesSelector<F>(state: OptionState, submit: F) -> impl IntoView
 where
     F: Fn() + Copy + 'static,
 {
-    let (selections, set_selections) = state.selections;
     let (active_tab, set_active_tab) = create_signal("".to_string());
+
+    let action_courses = state.action_courses;
+
     view! {
         <Await
             future=get_courses
             let:courses
         >
-            <SearchCourse courses=courses.clone() set_selections set_active_tab/>
+            <SearchCourse courses=courses.clone() action_courses set_active_tab/>
         </Await>
-        <div class="row-container tab-width">
+        <div class="flex tab-width">
             <button class="tab-button chips" class=("tab-selected", move || active_tab.get() == "") id="personal" on:click={
                 move |_| set_active_tab.set("".to_string())
             }>
@@ -156,7 +173,7 @@ where
                 {"Horaire personnel"}
             </button>
             <For
-                each=selections
+                each=move || {action_courses.value().get().unwrap_or_default()}
                 key=|c| c.sigle.clone()
                 children=move |course| {
                     let sigle = course.sigle.to_string();
@@ -171,7 +188,12 @@ where
                         <button class="close" on:click={
                             let sigle = sigle.clone();
                             move |_| {
-                                set_selections.update(|courses| courses.retain(|c| c.sigle.as_str() != sigle))
+                                action_courses.value().update(|courses| {
+                                    if let Some(courses) = courses {
+                                        courses.retain(|c| c.sigle.as_str() != sigle);
+                                    }}
+                                );
+                                submit();
                             }
                         }><X weight=IconWeight::Regular size="16px"/></button>
                         </button>
@@ -183,11 +205,11 @@ where
             <PersonalTimeSelector week=state.week submit></PersonalTimeSelector>
         </Tab>
         <For
-            each=selections
+            each=move || {action_courses.value().get().unwrap_or_default()}
             key=|c| c.sigle.clone()
             let:course
         >
-            <CourseTab course active_tab/>
+            <CourseTab course active_tab submit/>
         </For>
     }
 }

@@ -7,13 +7,7 @@
     display: none;
 }
 
-.search-bar {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 4pt;
-}
-
-input:focus ~ .result-box {
+input:focus~.result-box {
     display: block;
 }
 
@@ -35,20 +29,16 @@ input:focus ~ .result-box {
     z-index: 69;
 }
 
-.result-box > div {
+.result-box>div {
     z-index: 70;
     cursor: pointer;
     background-color: #fff;
     padding: 4pt;
-    border-bottom: 1px solid #d4d4d4; 
+    border-bottom: 1px solid #d4d4d4;
 }
 
-.result-box > div:hover {
+.result-box>div:hover {
     background-color: #d4d4d4;
-}
-
-.spacer {
-    flex-grow: 1;
 }
 
 .warning-box {

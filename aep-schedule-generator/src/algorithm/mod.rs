@@ -1,3 +1,4 @@
+//pub mod conflicts;
 pub mod generation;
 pub mod schedule;
 pub mod schedules;

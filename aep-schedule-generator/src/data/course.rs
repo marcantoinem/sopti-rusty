@@ -3,6 +3,7 @@ use super::{
     group::Group,
     group_index::GroupIndex,
     group_sigle::{GroupType, SigleGroup},
+    time::week::Week,
 };
 use compact_str::CompactString;
 use serde::{Deserialize, Serialize};
@@ -120,7 +121,17 @@ impl Course {
             }
         }
     }
-
+    pub fn nb_combinations(&self) -> usize {
+        match &self.course_type {
+            CourseType::TheoOnly { theo_groups } => theo_groups.len(),
+            CourseType::LabOnly { lab_groups } => lab_groups.len(),
+            CourseType::Both {
+                theo_groups,
+                lab_groups,
+            } => theo_groups.len() * lab_groups.len(),
+            CourseType::Linked { theo_groups, .. } => theo_groups.len(),
+        }
+    }
     pub fn is_open(&self, sigle_group: &SigleGroup) -> bool {
         match &self.course_type {
             CourseType::TheoOnly { theo_groups } => theo_groups[sigle_group.group_index]
@@ -143,6 +154,37 @@ impl Course {
             CourseType::Linked { theo_groups, .. } => theo_groups[sigle_group.group_index]
                 .as_ref()
                 .is_some_and(|g| g.open),
+        }
+    }
+    pub fn is_impossible(&self) -> bool {
+        match &self.course_type {
+            CourseType::TheoOnly { theo_groups } => theo_groups.is_impossible(),
+            CourseType::LabOnly { lab_groups } => lab_groups.is_impossible(),
+            CourseType::Both {
+                theo_groups,
+                lab_groups,
+            } => theo_groups.is_impossible() | lab_groups.is_impossible(),
+            CourseType::Linked { theo_groups, .. } => theo_groups.is_impossible(),
+        }
+    }
+    pub fn apply_week_mask(&mut self, week: &Week<5>) {
+        match &mut self.course_type {
+            CourseType::TheoOnly { theo_groups } => theo_groups.apply_week_mask(week),
+            CourseType::LabOnly { lab_groups } => lab_groups.apply_week_mask(week),
+            CourseType::Both {
+                theo_groups,
+                lab_groups,
+            } => {
+                theo_groups.apply_week_mask(week);
+                lab_groups.apply_week_mask(week);
+            }
+            CourseType::Linked {
+                theo_groups,
+                lab_groups,
+            } => {
+                theo_groups.apply_week_mask(week);
+                lab_groups.apply_week_mask(week);
+            }
         }
     }
 }

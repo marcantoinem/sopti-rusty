@@ -40,9 +40,9 @@ where
         for day in initial_x..=destination_x {
             week[day].update(|v| {
                 if is_positive {
-                    *v |= 2u64.pow(destination_y as u32 + 1) - 2u64.pow(initial_y as u32);
+                    *v |= 2u64.pow(destination_y as u32 + 2) - 2u64.pow(initial_y as u32);
                 } else {
-                    *v &= !(2u64.pow(destination_y as u32 + 1) - 2u64.pow(initial_y as u32));
+                    *v &= !(2u64.pow(destination_y as u32 + 2) - 2u64.pow(initial_y as u32));
                 }
             });
         }
@@ -73,22 +73,22 @@ where
                         let day = week[i].get();
                         let hour = day & (1 << j);
                         if hour != 0 {
-                            "selected-hour"
+                            "touch-none selected-hour"
                         } else {
-                            ""
+                            "touch-none"
                         }
                     };
                     view! {
-                        <div class="remove-touch" style=style class=class
-                        on:pointerdown=move |e| {
-                            set_initial.set(Some((i, j)));
-                            set_positive.set((week[i].get() & (1 << j)) == 0);
-                            let _ = e.target().unwrap().dyn_ref::<Element>().unwrap().release_pointer_capture(e.pointer_id());
-                        }
-                        on:pointerover=move |_| {
-                            set_destination.set((i, j));
-                        }
-                        ></div>
+                        <div style=style class=class
+                            on:pointerdown=move |e| {
+                                set_initial.set(Some((i, j)));
+                                set_positive.set((week[i].get() & (1 << j)) == 0);
+                                let _ = e.target().unwrap().dyn_ref::<Element>().unwrap().release_pointer_capture(e.pointer_id());
+                            }
+                            on:pointerover=move |_| {
+                                set_destination.set((i, j));
+                            }>
+                        </div>
                     }
                 }).collect_view()
             }).collect_view()}

@@ -2,6 +2,7 @@ use super::{
     group::Group,
     group_index::GroupIndex,
     group_sigle::{GroupType, SigleGroup},
+    time::week::Week,
 };
 use compact_str::CompactString;
 use serde::{Deserialize, Serialize};
@@ -37,6 +38,10 @@ impl Groups {
         self
     }
 
+    pub fn len(&self) -> usize {
+        self.iter().count()
+    }
+
     pub fn into_iter(self) -> impl Iterator<Item = Group> {
         self.0.into_iter().filter_map(|g| g)
     }
@@ -57,11 +62,21 @@ impl Groups {
         self[index].as_mut()
     }
 
+    pub fn is_impossible(&self) -> bool {
+        self.iter().all(|c| !c.open)
+    }
+
     pub fn get_closed(&self, group_type: GroupType, sigle: &CompactString) -> Vec<SigleGroup> {
         self.iter()
             .filter(|g| !g.open)
             .map(|g| SigleGroup::new(sigle.clone(), group_type, g.number))
             .collect()
+    }
+
+    pub fn apply_week_mask(&mut self, week: &Week<5>) {
+        self.iter_mut()
+            .filter(|g| g.periods.iter().any(|p| week.user_conflict_in_day(p)))
+            .for_each(|g| g.open = false);
     }
 }
 
