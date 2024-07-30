@@ -193,6 +193,9 @@ where
                                         courses.retain(|c| c.sigle.as_str() != sigle);
                                     }}
                                 );
+                                state.stored_courses.update_value(|courses| {
+                                    courses.retain(|c| c.sigle.as_str() != sigle);
+                                });
                                 submit();
                             }
                         }><X weight=IconWeight::Regular size="16px"/></button>
