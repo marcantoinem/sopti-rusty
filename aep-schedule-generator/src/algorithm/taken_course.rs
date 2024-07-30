@@ -81,7 +81,7 @@ impl TakenCourseBuilder {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum TakenCourseType {
     TheoOnly { theo_group: Group },
     LabOnly { lab_group: Group },
@@ -89,7 +89,7 @@ pub enum TakenCourseType {
     Linked { theo_group: Group, lab_group: Group },
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TakenCourse {
     pub sigle: String,
     pub name: String,

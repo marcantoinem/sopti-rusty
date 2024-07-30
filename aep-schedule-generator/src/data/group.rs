@@ -4,7 +4,7 @@ use super::{
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone, Hash)]
 pub struct Group {
     pub number: GroupIndex,
     pub open: bool,

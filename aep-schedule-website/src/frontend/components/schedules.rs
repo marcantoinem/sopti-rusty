@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use crate::frontend::components::options::todo::Todo;
 use crate::{backend::routes::get_calendar, frontend::components::schedule::ScheduleComponent};
 use aep_schedule_generator::algorithm::generation::SchedulesOptions;
@@ -17,13 +19,21 @@ pub fn SchedulesComponent(
             future=get_calendar
             children=move |calendar| {
                 match (read_signal.get(), step.get() == 5) {
-                   (Some(result), true) => result.into_iter().rev().map(|schedule| {
-                                        let calendar = calendar.clone().unwrap();
-                                        let schedule = schedule.clone();
-                                        view! {
-                                            <ScheduleComponent schedule calendar/>
-                                        }
-                                    }).collect_view(),
+                    (Some(_), true) => {
+                        let calendar = Rc::new(calendar.clone().unwrap());
+                        view !{
+                            <For
+                                each=move || {read_signal.get().unwrap()}
+                                key= |course| course.id
+                                children= move |schedule| {
+                                    let calendar = Rc::clone(&calendar);
+                                    view !{
+                                        <ScheduleComponent schedule calendar/>
+                                    }
+                                }
+                            />
+                        }
+                   },
                     _ => view ! {
                         <Todo action step section_error personal_error/>
                     }
