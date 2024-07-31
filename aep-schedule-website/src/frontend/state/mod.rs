@@ -23,6 +23,7 @@ pub struct OptionState {
     pub step: RwSignal<u8>,
     pub hide: RwSignal<bool>,
     pub schedule: RwSignal<Vec<Schedule>>,
+    pub max_size: StoredValue<usize>,
 }
 
 impl OptionState {
@@ -67,6 +68,18 @@ impl OptionState {
     }
 
     pub fn generate(&self) {
+        self.max_size.set_value(5);
+        self.gen();
+    }
+
+    pub fn regenerate(&self) {
+        self.max_size.update_value(|size| {
+            *size = std::cmp::max(*size * 2, 2usize.pow(16));
+        });
+        self.gen();
+    }
+
+    fn gen(&self) {
         let mut schedule_option: SchedulesOptions = self.into();
         schedule_option.apply_personal_schedule();
         let schedules = schedule_option.get_schedules().into_sorted_vec();
@@ -107,6 +120,7 @@ impl Default for OptionState {
             step: create_rw_signal(0),
             schedule: create_rw_signal(vec![]),
             hide: create_rw_signal(false),
+            max_size: store_value(5usize),
         }
     }
 }
@@ -121,6 +135,7 @@ impl From<&OptionState> for SchedulesOptions {
             .into_iter()
             .map(|c| c.into())
             .collect();
+        let max_size = state.max_size.get_value();
         let max_nb_conflicts = state.max_nb_conflicts.get();
         let evaluation = EvaluationOption {
             day_off: state.day_off.get(),
@@ -133,7 +148,7 @@ impl From<&OptionState> for SchedulesOptions {
             max_nb_conflicts,
             evaluation,
             user_conflicts,
-            max_size: 10,
+            max_size,
         }
     }
 }
