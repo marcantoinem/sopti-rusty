@@ -1,5 +1,7 @@
-use super::state::ReactiveCourse;
-use crate::frontend::components::common::autocomplete::{AutoComplete, AutoCompleteOption};
+use crate::frontend::{
+    components::common::autocomplete::{AutoComplete, AutoCompleteOption},
+    state::reactive_course::ReactiveCourse,
+};
 use aep_schedule_generator::data::course::CourseName;
 use leptos::*;
 

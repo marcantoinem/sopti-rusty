@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
-use crate::frontend::components::options::state::OptionState;
 use crate::frontend::components::options::todo::Todo;
+use crate::frontend::state::OptionState;
 use crate::{backend::routes::get_calendar, frontend::components::schedule::ScheduleComponent};
 use aep_schedule_generator::algorithm::generation::SchedulesOptions;
 use aep_schedule_generator::algorithm::schedule::Schedule;

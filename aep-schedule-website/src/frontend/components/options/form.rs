@@ -1,12 +1,10 @@
 use crate::frontend::{
     components::{
         common::number_input::NumberInput,
-        options::{
-            courses_selector::CoursesSelector, optimizations::SelectOptimizations,
-            state::OptionState,
-        },
+        options::{courses_selector::CoursesSelector, optimizations::SelectOptimizations},
     },
     pages::generator::FirstGenerationDone,
+    state::OptionState,
 };
 use aep_schedule_generator::algorithm::{generation::SchedulesOptions, schedule::Schedule};
 use leptos::*;

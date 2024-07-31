@@ -1,6 +1,8 @@
-use super::state::OptionState;
-use crate::frontend::components::icons::{
-    calendar_check::CalendarCheck, house::House, sun::Sun, sun_horizon::SunHorizon, IconWeight,
+use crate::frontend::{
+    components::icons::{
+        calendar_check::CalendarCheck, house::House, sun::Sun, sun_horizon::SunHorizon, IconWeight,
+    },
+    state::OptionState,
 };
 use leptos::*;
 use std::cmp;

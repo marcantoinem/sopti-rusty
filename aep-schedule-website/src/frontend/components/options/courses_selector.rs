@@ -1,5 +1,3 @@
-use super::state::OptionState;
-use super::state::ReactiveCourse;
 use crate::backend::routes::get_courses;
 use crate::frontend::components::common::tab::Tab;
 use crate::frontend::components::icons::bell_ringing::BellRinging;
@@ -8,8 +6,10 @@ use crate::frontend::components::icons::x::X;
 use crate::frontend::components::icons::IconWeight;
 use crate::frontend::components::options::personal::PersonalTimeSelector;
 use crate::frontend::components::options::search::SearchCourse;
-use crate::frontend::components::options::state::ReactiveCourseType;
 use crate::frontend::pages::generator::SetModal;
+use crate::frontend::state::reactive_course::ReactiveCourse;
+use crate::frontend::state::reactive_course::ReactiveCourseType;
+use crate::frontend::state::OptionState;
 use aep_schedule_generator::data::group::Group;
 use aep_schedule_generator::data::group_sigle::GroupType;
 use aep_schedule_generator::data::group_sigle::SigleGroup;

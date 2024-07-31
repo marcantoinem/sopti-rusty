@@ -3,9 +3,7 @@ use std::cmp::Ordering;
 use aep_schedule_generator::algorithm::{generation::SchedulesOptions, schedule::Schedule};
 use leptos::*;
 
-use crate::frontend::{
-    components::options::state::OptionState, pages::generator::FirstGenerationDone,
-};
+use crate::frontend::{pages::generator::FirstGenerationDone, state::OptionState};
 
 #[component]
 pub fn Step(

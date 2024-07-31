@@ -1,7 +1,7 @@
 use crate::frontend::components::icons::{caret_double_right::CaretDoubleRight, IconWeight};
 use crate::frontend::components::notifications::Notifications;
-use crate::frontend::components::options::state::OptionState;
 use crate::frontend::components::{options::form::OptionsForms, schedules::SchedulesComponent};
+use crate::frontend::state::OptionState;
 use aep_schedule_generator::algorithm::generation::SchedulesOptions;
 use aep_schedule_generator::data::group_sigle::SigleGroup;
 use leptos::*;
