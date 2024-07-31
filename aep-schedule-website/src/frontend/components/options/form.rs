@@ -12,20 +12,13 @@ use aep_schedule_generator::algorithm::{generation::SchedulesOptions, schedule::
 use leptos::*;
 
 #[component]
-pub fn OptionsForms<F>(
-    action: Action<SchedulesOptions, Vec<Schedule>>,
-    step: ReadSignal<u8>,
-    validate: F,
-) -> impl IntoView
-where
-    F: Fn(OptionState) + Copy + 'static,
-{
-    let state: OptionState = use_context().unwrap();
+pub fn OptionsForms(action: Action<SchedulesOptions, Vec<Schedule>>) -> impl IntoView {
+    let state = OptionState::from_context();
 
     let first_generation_done: FirstGenerationDone = use_context().unwrap();
     let submit = move || {
-        validate(state);
-        if !first_generation_done.0.get() || step.get() != 5 {
+        state.validate();
+        if !first_generation_done.0.get() || state.step.get() != 5 {
             return;
         }
         action.dispatch((&state).into());

@@ -1,5 +1,6 @@
 use std::rc::Rc;
 
+use crate::frontend::components::options::state::OptionState;
 use crate::frontend::components::options::todo::Todo;
 use crate::{backend::routes::get_calendar, frontend::components::schedule::ScheduleComponent};
 use aep_schedule_generator::algorithm::generation::SchedulesOptions;
@@ -10,10 +11,8 @@ use leptos::*;
 pub fn SchedulesComponent(
     read_signal: RwSignal<Option<Vec<Schedule>>>,
     action: Action<SchedulesOptions, Vec<Schedule>>,
-    section_error: RwSignal<String>,
-    personal_error: RwSignal<String>,
-    step: ReadSignal<u8>,
 ) -> impl IntoView {
+    let step = OptionState::from_context().step;
     view! {
         <Await
             future=get_calendar
@@ -35,7 +34,7 @@ pub fn SchedulesComponent(
                         }
                    },
                     _ => view ! {
-                        <Todo action step section_error personal_error/>
+                        <Todo action/>
                     }
                 }
             }

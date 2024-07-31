@@ -59,7 +59,7 @@ where
         }
     };
     view! {
-        <Schedule col_height="0.35em">
+        <Schedule col_height="0.4em">
             {(0..5).into_iter().map(|i| {
                 (0..26).into_iter().map(|j| {
                     let j = 2 * j;

@@ -28,7 +28,7 @@ fn GroupsChips<F>(
 where
     F: Fn() + Copy + 'static,
 {
-    let set_modal = use_context::<SetModal>().unwrap().0;
+    let set_modal = SetModal::from_context();
 
     view! {
         <div on:click=move |_| {

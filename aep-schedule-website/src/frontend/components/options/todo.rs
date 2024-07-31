@@ -10,7 +10,7 @@ use crate::frontend::{
 #[component]
 pub fn Step(
     n: u8,
-    step: ReadSignal<u8>,
+    step: RwSignal<u8>,
     title: &'static str,
     description: &'static str,
     #[prop(optional)] children: Option<Children>,
@@ -48,19 +48,16 @@ pub fn Step(
 }
 
 #[component]
-pub fn Todo(
-    action: Action<SchedulesOptions, Vec<Schedule>>,
-    step: ReadSignal<u8>,
-    section_error: RwSignal<String>,
-    personal_error: RwSignal<String>,
-) -> impl IntoView {
-    let state: OptionState = use_context().unwrap();
+pub fn Todo(action: Action<SchedulesOptions, Vec<Schedule>>) -> impl IntoView {
+    let state = OptionState::from_context();
     let first_generation_done: FirstGenerationDone = use_context().unwrap();
 
     let submit = move |_| {
         first_generation_done.0.set(true);
         action.dispatch((&state).into())
     };
+
+    let step = state.step;
 
     let disab = move || {
         let step = step.get();
@@ -76,10 +73,10 @@ pub fn Todo(
                 <div class="lg:py-6 lg:pr-16">
                     <Step n=1 step title="Ajoutez vos cours" description="Utilisez la barre de recherche à gauche pour trouver et sélectionner vos cours. Une fois les cours sélectionnés, ils apparaîtront comme un onglet."/>
                     <Step n=2 step title="Ouvrez des sections" description="Assurez d'avoir au moins une section d'ouverte pour la théorie et la pratique. En sélectionnant l'onglet du cours et en appuyant sur les sections.">
-                        <span class="text-red-800">{section_error}</span>
+                        <span class="text-red-800">{state.section_error}</span>
                     </Step>
                     <Step n=3 step title="Forcer des heures libres" description="Sélectionnez une plage de temps à avoir absolument libre en pressant et relâchant sur votre horaire personnel.">
-                        <span class="text-red-800">{personal_error}</span>
+                        <span class="text-red-800">{state.personal_error}</span>
                     </Step>
                     <Step n=4 step title="Ajustez les paramètres" description="Bougez les curseurs en bas pour ajuster vos préférences. Vous pouvez choisir d'avoir plus de congés, de commencer en moyenne les cours plus tôt ou plus tard, ou de finir en moyenne plus tôt."/>
                     <div class="flex items-center">

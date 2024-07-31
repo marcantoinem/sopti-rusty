@@ -16,6 +16,51 @@ pub struct OptionState {
     pub day_off: RwSignal<u8>,
     pub morning: RwSignal<i8>,
     pub finish_early: RwSignal<u8>,
+    pub section_error: RwSignal<String>,
+    pub personal_error: RwSignal<String>,
+    pub step: RwSignal<u8>,
+}
+
+impl OptionState {
+    pub fn from_context() -> Self {
+        use_context().unwrap()
+    }
+
+    pub fn validate(self) {
+        let mut options: SchedulesOptions = (&self).into();
+        if options.courses_to_take.is_empty() {
+            self.step.set(1);
+            return;
+        }
+        let mut impossible_courses = options.get_impossible_course().into_iter();
+        if let Some(first_impossible_course) = impossible_courses.next() {
+            let mut error = format!("Les sections des/du cours {}", first_impossible_course);
+            for impossible_course in impossible_courses {
+                error.push_str(", ");
+                error.push_str(&impossible_course);
+            }
+            error.push_str(" sont toutes fermées.");
+            self.section_error.set(error);
+            self.step.set(2);
+            return;
+        }
+        self.section_error.set("".to_string());
+        options.apply_personal_schedule();
+        let mut impossible_courses = options.get_impossible_course().into_iter();
+        if let Some(first_impossible_course) = impossible_courses.next() {
+            let mut error = format!("Les sections des/du cours {}", first_impossible_course);
+            for impossible_course in impossible_courses {
+                error.push_str(", ");
+                error.push_str(&impossible_course);
+            }
+            error.push_str(" sont en conflits avec les heures libres sélectionnées.");
+            self.personal_error.set(error);
+            self.step.set(3);
+            return;
+        }
+        self.personal_error.set("".to_string());
+        self.step.set(5);
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -77,6 +122,9 @@ impl Default for OptionState {
             day_off: create_rw_signal(3),
             morning: create_rw_signal(1),
             finish_early: create_rw_signal(1),
+            section_error: create_rw_signal("".to_string()),
+            personal_error: create_rw_signal("".to_string()),
+            step: create_rw_signal(0),
         }
     }
 }
