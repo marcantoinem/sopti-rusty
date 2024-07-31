@@ -18,7 +18,10 @@ use ical::{
     ical_property,
     property::Property,
 };
-use std::cmp::Ordering;
+use std::{
+    cmp::Ordering,
+    hash::{DefaultHasher, Hash, Hasher},
+};
 use uuid::Uuid;
 
 #[derive(PartialEq, Debug, Clone)]
@@ -121,14 +124,20 @@ impl<'a> ScheduleBuilder<'a> {
         } else {
             7
         };
-        let taken_courses = self
+        let taken_courses: Vec<TakenCourse> = self
             .taken_courses
             .iter()
             .map(|c| c.build(self.courses))
             .collect();
+
+        let mut hasher = DefaultHasher::new();
+        taken_courses.hash(&mut hasher);
+        let id = hasher.finish();
+
         Schedule {
             taken_courses,
             last_day,
+            id,
         }
     }
 }
@@ -137,6 +146,7 @@ impl<'a> ScheduleBuilder<'a> {
 pub struct Schedule {
     pub taken_courses: Vec<TakenCourse>,
     pub last_day: u8,
+    pub id: u64,
 }
 
 impl Schedule {

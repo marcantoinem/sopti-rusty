@@ -1,34 +1,24 @@
 use crate::frontend::{
     components::{
         common::number_input::NumberInput,
-        options::{
-            courses_selector::CoursesSelector, optimizations::SelectOptimizations,
-            state::OptionState,
-        },
+        options::{courses_selector::CoursesSelector, optimizations::SelectOptimizations},
     },
     pages::generator::FirstGenerationDone,
+    state::OptionState,
 };
-use aep_schedule_generator::algorithm::{generation::SchedulesOptions, schedule::Schedule};
 use leptos::*;
 
 #[component]
-pub fn OptionsForms<F>(
-    action: Action<SchedulesOptions, Vec<Schedule>>,
-    step: ReadSignal<u8>,
-    validate: F,
-) -> impl IntoView
-where
-    F: Fn(OptionState) + Copy + 'static,
-{
-    let state: OptionState = use_context().unwrap();
+pub fn OptionsForms() -> impl IntoView {
+    let state = OptionState::from_context();
 
     let first_generation_done: FirstGenerationDone = use_context().unwrap();
     let submit = move || {
-        validate(state);
-        if !first_generation_done.0.get() || step.get() != 5 {
+        state.validate();
+        if !first_generation_done.0.get() || state.step.get() != 5 {
             return;
         }
-        action.dispatch((&state).into());
+        state.generate();
     };
 
     create_local_resource(state.action_courses.pending(), move |_| {
@@ -36,7 +26,7 @@ where
         async move {}
     });
 
-    let submit_mobile = move |_| action.dispatch((&state).into());
+    let submit_mobile = move |_| state.generate();
 
     view! {
         <CoursesSelector state=state submit/>

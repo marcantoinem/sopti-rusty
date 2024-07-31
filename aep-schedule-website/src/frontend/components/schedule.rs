@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use crate::frontend::components::common::schedule::{Schedule, ScheduleEvent};
 use crate::frontend::components::icons::download::Download;
 use crate::frontend::components::icons::IconWeight;
@@ -112,7 +114,7 @@ fn CoursePeriods<'a>(i: usize, course: &'a TakenCourse) -> impl IntoView {
 }
 
 #[component]
-pub fn ScheduleComponent(schedule: Schedule, calendar: Calendar) -> impl IntoView {
+pub fn ScheduleComponent(schedule: Schedule, calendar: Rc<Calendar>) -> impl IntoView {
     let schedule2 = schedule.clone();
     let (download, set_download) = create_signal("".to_string());
     let link: NodeRef<A> = create_node_ref();

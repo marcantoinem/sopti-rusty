@@ -1,6 +1,8 @@
-use super::state::OptionState;
-use crate::frontend::components::icons::{
-    calendar_check::CalendarCheck, house::House, sun::Sun, sun_horizon::SunHorizon, IconWeight,
+use crate::frontend::{
+    components::icons::{
+        calendar_check::CalendarCheck, house::House, sun::Sun, sun_horizon::SunHorizon, IconWeight,
+    },
+    state::OptionState,
 };
 use leptos::*;
 use std::cmp;
@@ -52,7 +54,8 @@ where
                 <input type="range" min="0" max="4" class="lg:w-24 w-16 accent-amber-500" prop:value=state.finish_early  on:input=move |ev| {
                     state.finish_early.set(event_target_value(&ev).parse::<u8>().unwrap());
                     submit();
-                }/>
+                }
+                />
             </div>
         </div>
     }

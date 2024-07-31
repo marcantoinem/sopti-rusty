@@ -102,11 +102,6 @@
   transition-duration: 150ms;
 }
 
-.tab-width {
-  flex-wrap: wrap;
-  width: 100%;
-}
-
 .tab-selected {
   background-color: $highlight-color;
   color: $tern-text;
@@ -119,25 +114,12 @@
   align-items: center;
 }
 
-.number-input {
-  height: 22pt;
-  margin-left: auto;
-}
-
-.title {
-  line-height: 0.1;
-}
-
 .selected-hour {
   background-color: rgb(87, 104, 175);
 }
 
 .unselected-hour {
   background-color: $light-background;
-}
-
-.selection {
-  pointer-events: none;
 }
 
 .notif-modal {

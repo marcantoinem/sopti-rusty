@@ -1,5 +1,5 @@
 $background-color: #151420;
-$highlight-color: #F28A00;
+$highlight-color: rgb(245 158 11);
 $highlight-text: #0F1741;
 $tern-color: #daa662;
 $tern-text: #3b3b3b;
@@ -11,9 +11,10 @@ $success: #0FCC3B;
 
 @keyframes fadeIn {
 	0% {
-	  opacity: 0;
+		opacity: 0;
 	}
+
 	100% {
-	  opacity: 1;
+		opacity: 1;
 	}
 }

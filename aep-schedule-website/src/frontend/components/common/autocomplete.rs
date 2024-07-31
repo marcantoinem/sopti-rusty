@@ -27,14 +27,11 @@ fn get_suggestions(
         .partition_point(|c| c.value[0..cmp::min(i, c.value.len())] < input_value[0..i]);
     let top = sorted_possibilities
         .partition_point(|c| c.value[0..cmp::min(i, c.value.len())] <= input_value[0..i]);
-    if bottom < sorted_possibilities.len() && sorted_possibilities[bottom].value == input_value {
-        is_hidden.set(false);
-        return;
-    }
-
-    is_hidden.set(true);
 
     suggestion_range.set(bottom..top);
+    is_hidden.set(
+        !(bottom < sorted_possibilities.len() && sorted_possibilities[bottom].value == input_value),
+    );
 }
 
 #[component]

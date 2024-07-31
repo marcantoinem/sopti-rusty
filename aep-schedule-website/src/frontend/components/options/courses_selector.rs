@@ -1,5 +1,3 @@
-use super::state::OptionState;
-use super::state::ReactiveCourse;
 use crate::backend::routes::get_courses;
 use crate::frontend::components::common::tab::Tab;
 use crate::frontend::components::icons::bell_ringing::BellRinging;
@@ -8,8 +6,10 @@ use crate::frontend::components::icons::x::X;
 use crate::frontend::components::icons::IconWeight;
 use crate::frontend::components::options::personal::PersonalTimeSelector;
 use crate::frontend::components::options::search::SearchCourse;
-use crate::frontend::components::options::state::ReactiveCourseType;
 use crate::frontend::pages::generator::SetModal;
+use crate::frontend::state::reactive_course::ReactiveCourse;
+use crate::frontend::state::reactive_course::ReactiveCourseType;
+use crate::frontend::state::OptionState;
 use aep_schedule_generator::data::group::Group;
 use aep_schedule_generator::data::group_sigle::GroupType;
 use aep_schedule_generator::data::group_sigle::SigleGroup;
@@ -28,7 +28,7 @@ fn GroupsChips<F>(
 where
     F: Fn() + Copy + 'static,
 {
-    let set_modal = use_context::<SetModal>().unwrap().0;
+    let set_modal = SetModal::from_context();
 
     view! {
         <div on:click=move |_| {
@@ -112,7 +112,7 @@ where
                         ReactiveCourseType::LabOnly { lab_open, lab_groups } => {
                             let groups = lab_groups;
                             view!{
-                                <div class="flex gap-2 flex-col pb-2 max-h-[26rem] overflow-y-auto">
+                                <div class="flex gap-2 flex-col pb-2 overflow-y-auto">
                                     <h3>"Laboratoire"</h3>
                                     <GroupsSettings groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
                                 </div>
@@ -122,12 +122,12 @@ where
                             let theo_groups = theo_groups;
                             let lab_groups = lab_groups;
                             view!{
-                                <div class="flex gap-2 flex-col pb-2 max-h-[26rem] overflow-y-auto">
+                                <div class="flex gap-2 flex-col pb-2 overflow-y-auto">
                                     <h3>"Théorie"</h3>
                                     <GroupsSettings groups=theo_groups open=theo_open course_sigle=course_sigle.clone() group_type=GroupType::TheoGroup submit/>
                                 </div>
                                 <div class="vertical-bar"></div>
-                                <div class="flex gap-2 flex-col pb-2 max-h-[26rem] overflow-y-auto">
+                                <div class="flex gap-2 flex-col pb-2 overflow-y-auto">
                                     <h3>"Laboratoire"</h3>
                                     <GroupsSettings groups=lab_groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
                                 </div>
@@ -136,7 +136,7 @@ where
                         ReactiveCourseType::Linked { both_open, theo_groups, lab_groups } => {
                             let groups = theo_groups.merge(lab_groups);
                             view!{
-                                <div class="flex gap-2 flex-col pb-2 max-h-[26rem] overflow-y-auto">
+                                <div class="flex gap-2 flex-col pb-2 overflow-y-auto">
                                     <h3>"Théorie et laboratoire lié"</h3>
                                     <GroupsSettings groups open=both_open course_sigle=course_sigle group_type=GroupType::LabGroup submit/>
                                 </div>
@@ -165,7 +165,7 @@ where
         >
             <SearchCourse courses=courses.clone() action_courses set_active_tab/>
         </Await>
-        <div class="flex tab-width">
+        <div class="flex w-full flex-wrap">
             <button class="tab-button chips" class=("tab-selected", move || active_tab.get() == "") id="personal" on:click={
                 move |_| set_active_tab.set("".to_string())
             }>

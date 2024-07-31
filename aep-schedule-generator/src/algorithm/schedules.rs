@@ -34,7 +34,6 @@ impl<'a> Schedules<'a> {
             .into_sorted_vec()
             .into_iter()
             .map(|r| r.0.build())
-            .rev()
             .collect()
     }
 

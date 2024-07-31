@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
 #[repr(u8)]
-#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum WeekNumber {
     B1 = 0,
     B2 = 1,

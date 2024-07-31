@@ -6,7 +6,7 @@ use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Deref};
 
 pub const NO_HOUR: Hours = Hours(0);
 
-#[derive(Serialize, Deserialize, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default)]
+#[derive(Serialize, Deserialize, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default, Hash)]
 pub struct Hours(pub u64);
 
 impl Debug for Hours {
