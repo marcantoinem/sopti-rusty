@@ -26,7 +26,14 @@ pub fn OptionsForms() -> impl IntoView {
         async move {}
     });
 
-    let submit_mobile = move |_| state.generate();
+    let submit_mobile = move |_| {
+        state.validate();
+        if state.step.get() < 5 {
+            state.hide.set(true);
+            return;
+        }
+        state.generate();
+    };
 
     view! {
         <CoursesSelector state=state submit/>
