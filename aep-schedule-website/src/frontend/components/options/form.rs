@@ -15,7 +15,7 @@ pub fn OptionsForms() -> impl IntoView {
     let first_generation_done: FirstGenerationDone = use_context().unwrap();
     let submit = move || {
         state.validate();
-        if !first_generation_done.0.get() || state.step.get() != 5 {
+        if !first_generation_done.0.get() || state.step.get() < 5 {
             return;
         }
         state.generate();
