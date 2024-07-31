@@ -19,7 +19,6 @@ pub struct FirstGenerationDone(pub RwSignal<bool>);
 
 #[component]
 pub fn GeneratorPage() -> impl IntoView {
-    let (hide, set_hide) = create_signal(false);
     let first_generation_done = create_rw_signal(false);
     let (modal, set_modal) = create_signal(None);
     let state = OptionState::default();
@@ -29,7 +28,7 @@ pub fn GeneratorPage() -> impl IntoView {
     provide_context(FirstGenerationDone(first_generation_done));
 
     view! {
-        <aside class="left-panel" class=("hide-left-panel", hide)>
+        <aside class="left-panel" class=("hide-left-panel", state.hide)>
             <OptionsForms/>
         </aside>
         <section class="right-panel" on:scroll=move |ev| {
@@ -41,7 +40,9 @@ pub fn GeneratorPage() -> impl IntoView {
                 .dyn_into::<web_sys::Element>()
                 .unwrap();
             let scroll_top = target.scroll_top() as f64;
-            if (scroll_top + target.client_height() as f64 >= target.scroll_height() as f64 - 500.0) && state.step.get() == 5 {
+            let client_height = target.client_height() as f64;
+            let scroll_height = target.scroll_height() as f64;
+            if (scroll_top + client_height >= scroll_height - 500.0) && state.step.get() == 6 {
                 state.regenerate();
             }
 
@@ -49,6 +50,6 @@ pub fn GeneratorPage() -> impl IntoView {
             <SchedulesComponent/>
         </section>
         <Notifications modal set_modal/>
-        <button on:click=move |_| {set_hide(false)} id="go-back"><CaretDoubleRight weight=IconWeight::Regular size="3vh"/></button>
+        <button on:click=move |_| {state.hide.set(false)} id="go-back"><CaretDoubleRight weight=IconWeight::Regular size="3vh"/></button>
     }
 }

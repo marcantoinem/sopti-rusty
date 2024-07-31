@@ -115,10 +115,12 @@ main {
 .right-panel {
 	@media screen and (max-width: 1000px) {
 		width: 100%;
+		max-height: calc(100vh);
 	}
 
 	@media screen and (min-width: 1000px) {
 		width: 58%;
+		max-height: calc(100vh - 3em);
 	}
 
 	box-sizing: border-box;
@@ -126,7 +128,6 @@ main {
 	flex-direction: column;
 	align-items: center;
 	overflow-y: auto;
-	max-height: calc(100vh - 3em);
 	gap: 3rem;
 	padding: 1rem;
 	background-color: $light-background;

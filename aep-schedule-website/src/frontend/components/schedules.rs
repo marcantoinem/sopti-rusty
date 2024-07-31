@@ -1,7 +1,6 @@
 use std::rc::Rc;
 
 use crate::frontend::components::options::todo::Todo;
-use crate::frontend::pages::generator::FirstGenerationDone;
 use crate::frontend::state::OptionState;
 use crate::{backend::routes::get_calendar, frontend::components::schedule::ScheduleComponent};
 use leptos::*;
@@ -9,13 +8,12 @@ use leptos::*;
 #[component]
 pub fn SchedulesComponent() -> impl IntoView {
     let state = OptionState::from_context();
-    let first_generation_done: FirstGenerationDone = use_context().unwrap();
 
     view! {
         <Await
             future=get_calendar
             children=move |calendar| {
-                match state.step.get() == 5 && first_generation_done.0.get() {
+                match state.step.get() == 6 {
                     true => {
                         let calendar = Rc::new(calendar.clone().unwrap());
                         view !{

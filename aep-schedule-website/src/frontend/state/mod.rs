@@ -66,13 +66,19 @@ impl OptionState {
             return;
         }
         self.personal_error.set("".to_string());
-        self.step.set(5);
+        self.step.update(|v| {
+            if *v != 6 {
+                *v = 5
+            }
+        });
     }
 
     pub fn generate(&self) {
         self.max_size
             .update_value(|v| v.store(8, Ordering::Relaxed));
+        self.hide.set(true);
         self.gen();
+        self.step.set(6);
     }
 
     pub fn regenerate(&self) {
