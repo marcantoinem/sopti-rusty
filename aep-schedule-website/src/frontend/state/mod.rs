@@ -1,5 +1,5 @@
 use aep_schedule_generator::{
-    algorithm::{generation::SchedulesOptions, scores::EvaluationOption},
+    algorithm::{generation::SchedulesOptions, schedule::Schedule, scores::EvaluationOption},
     data::time::week::Week,
 };
 use leptos::*;
@@ -21,6 +21,8 @@ pub struct OptionState {
     pub section_error: RwSignal<String>,
     pub personal_error: RwSignal<String>,
     pub step: RwSignal<u8>,
+    pub hide: RwSignal<bool>,
+    pub schedule: RwSignal<Vec<Schedule>>,
 }
 
 impl OptionState {
@@ -63,6 +65,13 @@ impl OptionState {
         self.personal_error.set("".to_string());
         self.step.set(5);
     }
+
+    pub fn generate(&self) {
+        let mut schedule_option: SchedulesOptions = self.into();
+        schedule_option.apply_personal_schedule();
+        let schedules = schedule_option.get_schedules().into_sorted_vec();
+        self.schedule.set(schedules);
+    }
 }
 
 impl Default for OptionState {
@@ -96,6 +105,8 @@ impl Default for OptionState {
             section_error: create_rw_signal("".to_string()),
             personal_error: create_rw_signal("".to_string()),
             step: create_rw_signal(0),
+            schedule: create_rw_signal(vec![]),
+            hide: create_rw_signal(false),
         }
     }
 }

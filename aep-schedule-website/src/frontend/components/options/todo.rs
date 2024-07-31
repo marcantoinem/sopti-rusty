@@ -1,6 +1,5 @@
 use std::cmp::Ordering;
 
-use aep_schedule_generator::algorithm::{generation::SchedulesOptions, schedule::Schedule};
 use leptos::*;
 
 use crate::frontend::{pages::generator::FirstGenerationDone, state::OptionState};
@@ -46,13 +45,13 @@ pub fn Step(
 }
 
 #[component]
-pub fn Todo(action: Action<SchedulesOptions, Vec<Schedule>>) -> impl IntoView {
+pub fn Todo() -> impl IntoView {
     let state = OptionState::from_context();
     let first_generation_done: FirstGenerationDone = use_context().unwrap();
 
     let submit = move |_| {
         first_generation_done.0.set(true);
-        action.dispatch((&state).into())
+        state.generate();
     };
 
     let step = state.step;

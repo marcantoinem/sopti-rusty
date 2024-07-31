@@ -2,7 +2,6 @@ use crate::frontend::components::icons::{caret_double_right::CaretDoubleRight, I
 use crate::frontend::components::notifications::Notifications;
 use crate::frontend::components::{options::form::OptionsForms, schedules::SchedulesComponent};
 use crate::frontend::state::OptionState;
-use aep_schedule_generator::algorithm::generation::SchedulesOptions;
 use aep_schedule_generator::data::group_sigle::SigleGroup;
 use leptos::*;
 
@@ -22,17 +21,7 @@ pub struct FirstGenerationDone(pub RwSignal<bool>);
 pub fn GeneratorPage() -> impl IntoView {
     let (hide, set_hide) = create_signal(false);
     let first_generation_done = create_rw_signal(false);
-
-    // Creates a reactive value to update the button
-    let action = create_action(move |s: &SchedulesOptions| {
-        let mut s = s.clone();
-        set_hide(true);
-        s.apply_personal_schedule();
-        async move { s.get_schedules().into_sorted_vec() }
-    });
-
     let (modal, set_modal) = create_signal(None);
-
     let state = OptionState::default();
 
     provide_context(state);
@@ -41,10 +30,10 @@ pub fn GeneratorPage() -> impl IntoView {
 
     view! {
         <aside class="left-panel" class=("hide-left-panel", hide)>
-            <OptionsForms action/>
+            <OptionsForms/>
         </aside>
         <section class="right-panel">
-            <SchedulesComponent action=action read_signal=action.value()/>
+            <SchedulesComponent/>
         </section>
         <Notifications modal set_modal/>
         <button on:click=move |_| {set_hide(false)} id="go-back"><CaretDoubleRight weight=IconWeight::Regular size="3vh"/></button>
