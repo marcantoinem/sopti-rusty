@@ -41,7 +41,6 @@ pub fn GeneratorPage() -> impl IntoView {
                 .dyn_into::<web_sys::Element>()
                 .unwrap();
             let scroll_top = target.scroll_top() as f64;
-            logging::log!("{} {}", scroll_top, target.client_height());
             if (scroll_top + target.client_height() as f64 >= target.scroll_height() as f64 - 500.0) && state.step.get() == 5 {
                 state.regenerate();
             }

@@ -165,7 +165,7 @@ where
         >
             <SearchCourse courses=courses.clone() action_courses set_active_tab/>
         </Await>
-        <div class="flex w-full">
+        <div class="flex w-full flex-wrap">
             <button class="tab-button chips" class=("tab-selected", move || active_tab.get() == "") id="personal" on:click={
                 move |_| set_active_tab.set("".to_string())
             }>

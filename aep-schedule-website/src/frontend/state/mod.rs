@@ -1,3 +1,5 @@
+use std::sync::atomic::{AtomicUsize, Ordering};
+
 use aep_schedule_generator::{
     algorithm::{generation::SchedulesOptions, schedule::Schedule, scores::EvaluationOption},
     data::time::week::Week,
@@ -23,7 +25,7 @@ pub struct OptionState {
     pub step: RwSignal<u8>,
     pub hide: RwSignal<bool>,
     pub schedule: RwSignal<Vec<Schedule>>,
-    pub max_size: StoredValue<usize>,
+    pub max_size: StoredValue<AtomicUsize>,
 }
 
 impl OptionState {
@@ -68,13 +70,16 @@ impl OptionState {
     }
 
     pub fn generate(&self) {
-        self.max_size.set_value(5);
+        self.max_size
+            .update_value(|v| v.store(8, Ordering::Relaxed));
         self.gen();
     }
 
     pub fn regenerate(&self) {
         self.max_size.update_value(|size| {
-            *size = std::cmp::max(*size * 2, 2usize.pow(16));
+            let _ = size.fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| {
+                Some(std::cmp::min(v * 2, 2usize.pow(12)))
+            });
         });
         self.gen();
     }
@@ -120,7 +125,7 @@ impl Default for OptionState {
             step: create_rw_signal(0),
             schedule: create_rw_signal(vec![]),
             hide: create_rw_signal(false),
-            max_size: store_value(5usize),
+            max_size: store_value(AtomicUsize::from(8)),
         }
     }
 }
@@ -135,7 +140,10 @@ impl From<&OptionState> for SchedulesOptions {
             .into_iter()
             .map(|c| c.into())
             .collect();
-        let max_size = state.max_size.get_value();
+        let mut max_size = 8;
+        state
+            .max_size
+            .update_value(|v| max_size = v.load(Ordering::Relaxed));
         let max_nb_conflicts = state.max_nb_conflicts.get();
         let evaluation = EvaluationOption {
             day_off: state.day_off.get(),
