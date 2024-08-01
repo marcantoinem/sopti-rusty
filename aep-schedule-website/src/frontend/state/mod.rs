@@ -84,7 +84,7 @@ impl OptionState {
     pub fn regenerate(&self) {
         self.max_size.update_value(|size| {
             let _ = size.fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| {
-                Some(std::cmp::min(v * 2, 2usize.pow(12)))
+                Some(std::cmp::min(v * 2, 2usize.pow(10)))
             });
         });
         self.gen();
