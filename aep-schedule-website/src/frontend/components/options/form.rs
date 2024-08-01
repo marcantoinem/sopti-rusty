@@ -15,7 +15,7 @@ pub fn OptionsForms() -> impl IntoView {
     let first_generation_done: FirstGenerationDone = use_context().unwrap();
     let submit = move || {
         state.validate();
-        if !first_generation_done.0.get() || state.step.get() != 5 {
+        if !first_generation_done.0.get() || state.step.get() < 5 {
             return;
         }
         state.generate();
@@ -26,7 +26,14 @@ pub fn OptionsForms() -> impl IntoView {
         async move {}
     });
 
-    let submit_mobile = move |_| state.generate();
+    let submit_mobile = move |_| {
+        state.validate();
+        if state.step.get() < 5 {
+            state.hide.set(true);
+            return;
+        }
+        state.generate();
+    };
 
     view! {
         <CoursesSelector state=state submit/>

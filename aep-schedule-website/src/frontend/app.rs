@@ -13,7 +13,7 @@ pub fn App() -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context();
 
-    let (is_active, set_active) = create_signal(String::new());
+    let (is_active, set_active) = create_signal(false);
 
     view! {
 
@@ -27,10 +27,11 @@ pub fn App() -> impl IntoView {
         // content for this welcome page
         <Router>
             <header>
-                <nav class=is_active>
+                <nav class=("active", is_active) class="flex-wrap overflow-x-hidden">
                     <span class="text-2xl font-semibold leading-none font-sans tracking-tight">"Générateur d'horaire de l'AEP"
                         <span class="text-amber-600">"v2"</span>
                     </span>
+                    <span class="bg-red-200 text-red-800 text-lg font-sans tracking-tight font-medium me-2 px-2.5 py-0.5 rounded-full shrink">"Beta - "<a class="text-gray-800" href="https://horaires.aep.polymtl.ca/">"Retourner à l'ancien générateur"</a></span>
                     <A class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight" href="/">"Générateur d'horaire"</A>
                     <A class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight" href="/local">"Horaire d'un local"</A>
                     <A class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight" href="/apropos">"À propos"</A>
@@ -40,15 +41,11 @@ pub fn App() -> impl IntoView {
                         <span class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight">"Signaler un bug"</span>
                         <Bug weight=IconWeight::Regular size="3vh"/>
                     </a>
-                    <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty" class="sources"  target="_blank" ><span class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight">"Sources "</span><GitlabLogo weight=IconWeight::Regular size="3vh"/></a>
+                    <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty" class="sources" target="_blank" ><span class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight">"Sources "</span><GitlabLogo weight=IconWeight::Regular size="3vh"/></a>
                 </nav>
-                <div class=move || is_active.get() + " hamburger" on:click=move |_| {
-                    set_active.update(|text| {
-                        if text == "active" {
-                            text.clear();
-                        } else {
-                            text.push_str("active");
-                        }
+                <div class=("active", is_active) class="hamburger" on:click=move |_| {
+                    set_active.update(|active| {
+                        *active = !*active;
                     });
                 }>
                     <span class="hamburger-bar"></span>
