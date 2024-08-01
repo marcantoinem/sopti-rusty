@@ -8,12 +8,16 @@ All notable changes to this project will be documented in this file.
 
 - Improve schedule rerendering
 - Implement infinite scroll
+- Add beta banner for release preparation
 
 ### 🐛 Bug Fixes
 
 - Localstorage not updated
 - Autocomplete now take in charge the last character
 - Improve accessibility by shrinking automatically the tab
+- Mobile view not showing with refactor of schedule generation call
+- [**breaking**] Autoregeneration was broken by changement to autogen
+- Mobile error reporting
 
 ### 🚜 Refactor
 
