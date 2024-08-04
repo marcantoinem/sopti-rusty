@@ -31,7 +31,7 @@ where
     let set_modal = SetModal::from_context();
 
     view! {
-        <div on:mousedown=move |_| {
+        <div on:pointerdown=move |_| {
                 open.update(|b| *b = !*b);
                 submit();
             }
@@ -52,7 +52,7 @@ where
             </div>
             //{match group.open {
             //    false => Some(view !{
-            //        <div on:mousedown=move |ev| {
+            //        <div on:pointerdown=move |ev| {
             //            ev.stop_propagation();
             //            let sigle_group = SigleGroup::new(course_sigle.clone(), group_type, group.number);
             //            set_modal.set(Some(sigle_group));
@@ -166,7 +166,7 @@ where
             <SearchCourse courses=courses.clone() action_courses set_active_tab/>
         </Await>
         <div class="flex w-full flex-wrap">
-            <button class="tab-button chips" class=("tab-selected", move || active_tab.get() == "") id="personal" on:mousedown={
+            <button class="tab-button chips" class=("tab-selected", move || active_tab.get() == "") id="personal" on:pointerdown={
                 move |_| set_active_tab.set("".to_string())
             }>
                 <CalendarX weight=IconWeight::Regular size="16px"/>
@@ -180,12 +180,12 @@ where
                     let add_hidden = move || sigle == active_tab.get();
                     let sigle = course.sigle.to_string();
                     view!{
-                        <button class="tab-button chips" class=("tab-selected", add_hidden) id=&sigle on:mousedown={
+                        <button class="tab-button chips" class=("tab-selected", add_hidden) id=&sigle on:pointerdown={
                             let sigle = sigle.clone();
                             move |_| set_active_tab.set(sigle.clone())
                         }>
                         {&sigle}
-                        <button class="close" on:mousedown={
+                        <button class="close" on:pointerdown={
                             let sigle = sigle.clone();
                             move |_| {
                                 action_courses.value().update(|courses| {

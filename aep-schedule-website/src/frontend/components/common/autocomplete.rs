@@ -73,7 +73,7 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
                 }
             }
             />
-            <button class=button_theme on:mousedown=move |_| {
+            <button class=button_theme on:pointerdown=move |_| {
                 let input = input.get().trim().to_uppercase();
                 submit(input);
             }>
@@ -83,7 +83,7 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
                 {suggestions.into_iter().enumerate().map(|(i, autocomplete)| view!{
                     <div
                         class=("hidden", move || {!suggestion_range.get().contains(&i)})
-                        on:mousedown=move |_| submit(autocomplete.value.clone())
+                        on:pointerdown=move |_| submit(autocomplete.value.clone())
                     >
                         {autocomplete.label}
                     </div>

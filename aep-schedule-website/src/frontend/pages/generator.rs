@@ -50,6 +50,6 @@ pub fn GeneratorPage() -> impl IntoView {
             <SchedulesComponent/>
         </section>
         <Notifications modal set_modal/>
-        <button on:mousedown=move |_| {state.hide.set(false)} id="go-back"><CaretDoubleRight weight=IconWeight::Regular size="3vh"/></button>
+        <button on:pointerdown=move |_| {state.hide.set(false)} id="go-back"><CaretDoubleRight weight=IconWeight::Regular size="3vh"/></button>
     }
 }
