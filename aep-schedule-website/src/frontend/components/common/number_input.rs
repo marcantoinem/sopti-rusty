@@ -36,7 +36,7 @@ where
         <div class="flex flex-row gap-8 items-center">
             <p class="text-white font-sans font-medium tracking-tight">{label}</p>
             <div class="relative flex items-center max-w-20">
-                <button on:click=minus type="button" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-1 h-7 focus:ring-gray-100 focus:ring-2 focus:outline-none">
+                <button on:mousedown=minus type="button" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-1 h-7 focus:ring-gray-100 focus:ring-2 focus:outline-none">
                     <svg class="w-3 h-3 text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                     </svg>
@@ -51,7 +51,7 @@ where
                     max=max
                     prop:value=value
                     required />
-                <button on:click=plus type="button" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-1 h-7 focus:ring-gray-100 focus:ring-2 focus:outline-none">
+                <button on:mousedown=plus type="button" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-1 h-7 focus:ring-gray-100 focus:ring-2 focus:outline-none">
                     <svg class="w-3 h-3 text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
                     </svg>

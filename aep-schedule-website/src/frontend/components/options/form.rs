@@ -40,6 +40,6 @@ pub fn OptionsForms() -> impl IntoView {
         <span class="grow"></span>
         <NumberInput value=state.max_nb_conflicts max=127 label="Nombre de période de cours en conflits maximum: " submit/>
         <SelectOptimizations state=state submit/>
-        <button on:click=submit_mobile class="lg:hidden select-none rounded-lg bg-amber-500 py-2 text-xl px-4 w-64 self-center text-center align-middle text-black shadow-md shadow-amber-500/20 transition-all hover:shadow-lg hover:shadow-amber-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">"Générer les horaires"</button>
+        <button on:mousedown=submit_mobile class="lg:hidden select-none rounded-lg bg-amber-500 py-2 text-xl px-4 w-64 self-center text-center align-middle text-black shadow-md shadow-amber-500/20 transition-all hover:shadow-lg hover:shadow-amber-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">"Générer les horaires"</button>
     }
 }

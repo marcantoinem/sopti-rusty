@@ -43,7 +43,7 @@ pub fn App() -> impl IntoView {
                     </a>
                     <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty" class="sources" target="_blank" ><span class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight">"Sources "</span><GitlabLogo weight=IconWeight::Regular size="3vh"/></a>
                 </nav>
-                <div class=("active", is_active) class="hamburger" on:click=move |_| {
+                <div class=("active", is_active) class="hamburger" on:mousedown=move |_| {
                     set_active.update(|active| {
                         *active = !*active;
                     });

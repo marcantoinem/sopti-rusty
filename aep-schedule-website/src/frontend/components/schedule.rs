@@ -128,15 +128,15 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Rc<Calendar>) -> impl Int
             <Schedule last_day=schedule.last_day>
                 {schedule.taken_courses.iter().enumerate().map(|(i, c)| view!{<CoursePeriods i course=c />}).collect_view()}
             </Schedule>
-            <button class="button-download flex" on:click=move |_| {
-                let ics = schedule2.generate_ics(&calendar);
-                let url = url_escape::encode_fragment(&ics);
-                set_download("data:text/plain;charset=utf-8,".to_string() + &url);
-                link().unwrap().click();
-            }>
-                <Download weight=IconWeight::Regular size="3vh"/>
-                <span>"Télécharger le calendrier de cet horaire"</span>
-            </button>
+            //<button class="button-download flex" on:mousedown=move |_| {
+            //    let ics = schedule2.generate_ics(&calendar);
+            //    let url = url_escape::encode_fragment(&ics);
+            //    set_download("data:text/plain;charset=utf-8,".to_string() + &url);
+            //    link().unwrap().click();
+            //}>
+            //    <Download weight=IconWeight::Regular size="3vh"/>
+            //    <span>"Télécharger le calendrier de cet horaire"</span>
+            //</button>
         </div>
     }
 }

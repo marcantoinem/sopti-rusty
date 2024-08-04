@@ -44,7 +44,7 @@ pub fn Notifications(
     view! {
         <div class=class>
             <div class="notif-body">
-                <div class="close-button" on:click=move |_| {
+                <div class="close-button" on:mousedown=move |_| {
                     set_modal.set(None);
                 }>
                     <X size="2em"></X>

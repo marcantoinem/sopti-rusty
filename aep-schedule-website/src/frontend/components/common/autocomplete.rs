@@ -66,12 +66,14 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
         <div class="relative search-container ".to_owned() + &class>
             <input type="text" class="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none text-black" on:input=on_input placeholder=placeholder prop:value=input id=id on:keyup=move |ev| {
                 if ev.key() == "Enter" && !is_hidden.get() {
-                    let input = input.get().trim().to_uppercase();
-                    submit(input);
+                    let course = input.get().trim().to_uppercase();
+                    input.update(|s| s.clear());
+                    set_suggestion_range.set(0..0);
+                    submit(course);
                 }
             }
             />
-            <button class=button_theme on:click=move |_| {
+            <button class=button_theme on:mousedown=move |_| {
                 let input = input.get().trim().to_uppercase();
                 submit(input);
             }>
@@ -81,7 +83,7 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
                 {suggestions.into_iter().enumerate().map(|(i, autocomplete)| view!{
                     <div
                         class=("hidden", move || {!suggestion_range.get().contains(&i)})
-                        on:click=move |_| submit(autocomplete.value.clone())
+                        on:mousedown=move |_| submit(autocomplete.value.clone())
                     >
                         {autocomplete.label}
                     </div>
