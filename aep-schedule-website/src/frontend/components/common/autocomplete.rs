@@ -54,6 +54,14 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
         get_suggestions(suggestion_list, is_hidden, value, set_suggestion_range);
     };
 
+    let mut select_choice = move |choice: String| {
+        input.update(|s| s.clear());
+        set_suggestion_range.set(0..0);
+        is_hidden.set(true);
+
+        submit(choice);
+    };
+
     let button_theme = move || {
         let is_hidden = is_hidden.get();
         match is_hidden {
@@ -67,15 +75,13 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
             <input type="text" class="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none text-black" on:input=on_input placeholder=placeholder prop:value=input id=id on:keyup=move |ev| {
                 if ev.key() == "Enter" && !is_hidden.get() {
                     let course = input.get().trim().to_uppercase();
-                    input.update(|s| s.clear());
-                    set_suggestion_range.set(0..0);
-                    submit(course);
+                    select_choice(course);
                 }
             }
             />
             <button class=button_theme on:pointerdown=move |_| {
                 let input = input.get().trim().to_uppercase();
-                submit(input);
+                select_choice(input);
             }>
                 <PlusCircle size="2em"/>
             </button>
@@ -83,7 +89,7 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
                 {suggestions.into_iter().enumerate().map(|(i, autocomplete)| view!{
                     <div
                         class=("hidden", move || {!suggestion_range.get().contains(&i)})
-                        on:pointerdown=move |_| submit(autocomplete.value.clone())
+                        on:pointerdown=move |_| select_choice(autocomplete.value.clone())
                     >
                         {autocomplete.label}
                     </div>
