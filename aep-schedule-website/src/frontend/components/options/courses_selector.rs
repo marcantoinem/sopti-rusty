@@ -46,6 +46,7 @@ where
                         <div class="flex group-text w-full justify-between">
                             <span>{p.day.to_string()}</span>
                             <span class="period-group">{p.hours.to_string()}</span>
+                            <span>{p.week_nb.to_string()}</span>
                         </div>
                     }
                 }).collect_view()}
