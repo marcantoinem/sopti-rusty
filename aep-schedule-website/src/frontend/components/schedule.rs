@@ -120,7 +120,7 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Rc<Calendar>) -> impl Int
     let link: NodeRef<A> = create_node_ref();
 
     view! {
-        <div class="flex flex-col w-full items-center">
+        <div class="flex flex-col w-full items-center card p-2">
             <a class="hidden" download="cours.ics" href=move || download.get() node_ref=link></a>
             <table class="cours">
                 {schedule.taken_courses.iter().enumerate().map(|(i, c)| view!{<Course i course={c} />}).collect_view()}

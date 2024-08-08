@@ -35,7 +35,7 @@ where
                 open.update(|b| *b = !*b);
                 submit();
             }
-            class="gap-2 items-center py-1.5 px-3 rounded-lg flex"
+            class="gap-2 cursor-pointer items-center py-1.5 px-3 rounded-lg flex"
             class=("bg-green-500", move || {open.get()})
             class=("bg-red-500", move || {!open.get()})
         >
