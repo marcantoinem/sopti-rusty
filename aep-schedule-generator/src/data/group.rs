@@ -31,8 +31,7 @@ impl Group {
                 let new_hour = new_period.hours | p.hours;
                 let is_mergeable = p.day == new_period.day
                     && p.room == new_period.room
-                    && (p.hours.start() == new_hour.start() + 4
-                        || p.hours.end() + 4 == new_hour.end());
+                    && (p.hours.is_contiguous(new_hour));
                 let keep = !is_mergeable || new_hours == Hours::default();
                 if is_mergeable {
                     new_hours |= new_hour;
@@ -49,8 +48,7 @@ impl Group {
                         let new_hour = new_period.hours | p.hours;
                         p.day == new_period.day
                             && p.room == new_period.room
-                            && (p.hours.start() == new_hour.start() + 4
-                                || p.hours.end() + 4 == new_hour.end())
+                            && (p.hours.is_contiguous(new_hour))
                     })
                     .unwrap();
                 first_period.hours |= new_hours;

@@ -53,6 +53,10 @@ impl Hours {
         (self.end() >> 2) + 8
     }
 
+    pub fn is_contiguous(self, other: Self) -> bool {
+        self.start().abs_diff(other.start()) <= 5 || self.end().abs_diff(other.end()) <= 5
+    }
+
     pub fn starting_text(self) -> String {
         let mut hour = self.starting_hour().to_string();
         let minute = self.start_minutes();
