@@ -72,7 +72,7 @@ $days: $time-width 10px repeat(5, 1fr);
 .event {
   border-radius: 0.5em;
   padding: 1px;
-  margin: 0 2px;
+  margin: 1px 1px 2px 2px;
   font-weight: bold;
   font-size: 70%;
   text-align: center;
@@ -91,13 +91,13 @@ $days: $time-width 10px repeat(5, 1fr);
 }
 
 .b1 {
-  width: 45%;
-  margin-right: 55%;
+  width: calc(50% - 2px);
+  margin-right: calc(50% + 1px);
 }
 
 .b2 {
-  width: 45%;
-  margin-left: 55%;
+  width: calc(50% - 2px);
+  margin-left: calc(50% + 1px);
 }
 
 .button-download {

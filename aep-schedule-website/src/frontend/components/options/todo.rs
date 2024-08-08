@@ -1,8 +1,8 @@
 use std::cmp::Ordering;
 
-use leptos::*;
-
+use crate::frontend::components::icons::warning_circle::WarningCircle;
 use crate::frontend::{pages::generator::FirstGenerationDone, state::OptionState};
+use leptos::*;
 
 #[component]
 pub fn Step(
@@ -70,16 +70,26 @@ pub fn Todo() -> impl IntoView {
                 <div class="lg:py-6 lg:pr-16">
                     <Step n=1 step title="Ajoutez vos cours" description="Utilisez la barre de recherche à gauche pour trouver et sélectionner vos cours. Une fois les cours sélectionnés, ils apparaîtront comme un onglet."/>
                     <Step n=2 step title="Ouvrez des sections" description="Assurez d'avoir au moins une section d'ouverte pour la théorie et la pratique. En sélectionnant l'onglet du cours et en appuyant sur les sections.">
-                        <span class="text-red-800">{state.section_error}</span>
+                        <div class="warning-box" class=("hidden", move || state.section_error.get().is_empty())>
+                            <WarningCircle size="2em"/>
+                            <span>
+                                {state.section_error}
+                            </span>
+                        </div>
                     </Step>
                     <Step n=3 step title="Forcer des heures libres" description="Sélectionnez une plage de temps à avoir absolument libre en pressant et relâchant sur votre horaire personnel.">
-                        <span class="text-red-800">{state.personal_error}</span>
+                        <div class="warning-box" class=("hidden", move || state.personal_error.get().is_empty())>
+                            <WarningCircle size="2em"/>
+                            <span>
+                                {state.personal_error}
+                            </span>
+                        </div>
                     </Step>
                     <Step n=4 step title="Ajustez les paramètres" description="Bougez les curseurs en bas pour ajuster vos préférences. Vous pouvez choisir d'avoir plus de congés, de commencer en moyenne les cours plus tôt ou plus tard, ou de finir en moyenne plus tôt."/>
                     <div class="flex items-center">
                         <div class="flex flex-col items-center mr-4">
                             <div>
-                                <div class="flex transition-colors items-center justify-center w-10 h-10 border rounded-full" class=("bg-gray-100", move || step.get() != 5) class=("bg-green-400", move || step.get() == 5)>
+                                <div class="flex transition-colors items-center justify-center w-10 h-10 border rounded-full" class=("bg-gray-100", move || step.get() < 5) class=("bg-green-400", move || step.get() == 5)  class=("bg-amber-400", move || step.get() == 6) >
                                     <svg class="w-6 text-gray-600" stroke="currentColor" viewBox="0 0 24 24">
                                         <polyline fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="6,12 10,16 18,8"></polyline>
                                     </svg>

@@ -47,7 +47,7 @@ fn PeriodEvent<'a>(
     course: &'a TakenCourse,
     period_type: &'static str,
 ) -> impl IntoView {
-    let location = period.hours.to_string() + " - " + period.room.as_str();
+    let mut location = period.hours.to_string() + " - " + period.room.as_str();
     let sigle = course.sigle.to_string() + " - " + period_type;
     let mut class = match i % 8 {
         0 => " color1".to_string(),
@@ -60,8 +60,14 @@ fn PeriodEvent<'a>(
         _ => " color8".to_string(),
     };
     match period.week_nb {
-        WeekNumber::B1 => class.push_str(" b1"),
-        WeekNumber::B2 => class.push_str(" b2"),
+        WeekNumber::B1 => {
+            class.push_str(" b1");
+            location.push_str(" B1");
+        }
+        WeekNumber::B2 => {
+            class.push_str(" b2");
+            location.push_str(" B2");
+        }
         _ => (),
     }
 
@@ -120,7 +126,7 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Rc<Calendar>) -> impl Int
     let link: NodeRef<A> = create_node_ref();
 
     view! {
-        <div class="flex flex-col w-full items-center">
+        <div class="flex flex-col w-full items-center card p-2">
             <a class="hidden" download="cours.ics" href=move || download.get() node_ref=link></a>
             <table class="cours">
                 {schedule.taken_courses.iter().enumerate().map(|(i, c)| view!{<Course i course={c} />}).collect_view()}

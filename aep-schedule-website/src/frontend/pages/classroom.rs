@@ -66,7 +66,7 @@ pub fn ClassRoomComponent() -> impl IntoView {
                 {classrooms.as_ref().map(|classrooms| {
                     let classrooms = classrooms.iter().map(|c| AutoCompleteOption::new(c.to_string(), c.to_string())).collect();
                     view!{
-                        <AutoComplete suggestion_list=classrooms placeholder="Local" class="w-96" submit=on_submit id="input-classroom"/>
+                        <AutoComplete suggestion_list=classrooms placeholder="Local" class="w-96 shadow-2xl border-b-4 border-amber-500 focus:outline-none focus:ring-0" submit=on_submit id="input-classroom"/>
                     }
                 }).ok()}
             </Await>
