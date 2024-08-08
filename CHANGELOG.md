@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Improve schedule rerendering
 - Implement infinite scroll
 - Add beta banner for release preparation
+- Add more B1 / B2 indicator
 
 ### 🐛 Bug Fixes
 
@@ -18,6 +19,11 @@ All notable changes to this project will be documented in this file.
 - Mobile view not showing with refactor of schedule generation call
 - [**breaking**] Autoregeneration was broken by changement to autogen
 - Mobile error reporting
+- Prepare for deployment
+- Safari not touching
+- Improve merge algorithm
+- Improve error message
+- Many small UI tweaks
 
 ### 🚜 Refactor
 
