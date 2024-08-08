@@ -40,7 +40,7 @@ pub fn SchedulesComponent() -> impl IntoView {
                                     <div class="warning-box">
                                         <WarningCircle size="4em"/>
                                         <span>
-                                            "Aucun horaire n'a pu être généré, augmentez le nombre de conflits ou ouvrez des sections. Probablement que deux cours sont toujours en conflits."
+                                            "Aucun horaire n'a pu être généré, augmentez le nombre de conflits ou ouvrez des sections. Probablement que deux groupes sont toujours en conflits."
                                         </span>
                                     </div>
                                 }),
