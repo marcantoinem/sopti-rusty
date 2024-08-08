@@ -37,7 +37,7 @@ pub fn App() -> impl IntoView {
                     <A class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight" href="/apropos">"À propos"</A>
 
 
-                    <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty/-/issues/new" class="sources pad-left"  target="_blank">
+                    <a href="https://forms.gle/u5AWgGx7vcLbCPCc7" class="sources pad-left"  target="_blank">
                         <span class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight">"Signaler un bug"</span>
                         <Bug weight=IconWeight::Regular size="3vh"/>
                     </a>

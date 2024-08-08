@@ -35,7 +35,7 @@ where
                 open.update(|b| *b = !*b);
                 submit();
             }
-            class="chips gap-2"
+            class="gap-2 items-center py-1.5 px-3 rounded-lg flex"
             class=("bg-green-500", move || {open.get()})
             class=("bg-red-500", move || {!open.get()})
         >
@@ -165,8 +165,8 @@ where
         >
             <SearchCourse courses=courses.clone() action_courses set_active_tab/>
         </Await>
-        <div class="flex w-full flex-wrap">
-            <button class="tab-button chips" class=("tab-selected", move || active_tab.get() == "") id="personal" on:pointerdown={
+        <div class="flex w-full flex-wrap gap-1">
+            <button class="flex items-center py-1 px-2 rounded-xl bg-amber-500 text-black transition" class=("opacity-75", move || active_tab.get() != "") id="personal" on:pointerdown={
                 move |_| set_active_tab.set("".to_string())
             }>
                 <CalendarX weight=IconWeight::Regular size="16px"/>
@@ -177,10 +177,10 @@ where
                 key=|c| c.sigle.clone()
                 children=move |course| {
                     let sigle = course.sigle.to_string();
-                    let add_hidden = move || sigle == active_tab.get();
+                    let add_hidden = move || sigle != active_tab.get();
                     let sigle = course.sigle.to_string();
                     view!{
-                        <button class="tab-button chips" class=("tab-selected", add_hidden) id=&sigle on:pointerdown={
+                        <button class="flex items-center py-1 px-2 rounded-xl bg-amber-500 text-black transition" class=("opacity-75", add_hidden) id=&sigle on:pointerdown={
                             let sigle = sigle.clone();
                             move |_| set_active_tab.set(sigle.clone())
                         }>
