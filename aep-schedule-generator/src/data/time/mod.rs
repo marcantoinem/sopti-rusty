@@ -4,4 +4,3 @@ pub mod period;
 pub mod week;
 pub mod week_number;
 pub mod weeks;
-pub mod calendar;

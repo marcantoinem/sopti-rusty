@@ -1,6 +1,6 @@
 use crate::frontend::app::App;
 use aep_schedule_generator::data::courses::Courses;
-use aep_schedule_generator::data::time::calendar::Calendar;
+use aep_schedule_generator::icalendar::calendar::Calendar;
 use axum::{
     body::Body as AxumBody,
     extract::FromRef,

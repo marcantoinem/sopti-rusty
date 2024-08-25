@@ -1,6 +1,9 @@
-use aep_schedule_generator::data::{
-    course::{Course, CourseName},
-    time::{calendar::Calendar, period::PeriodCourse},
+use aep_schedule_generator::{
+    data::{
+        course::{Course, CourseName},
+        time::period::PeriodCourse,
+    },
+    icalendar::calendar::Calendar,
 };
 use compact_str::CompactString;
 use leptos::*;

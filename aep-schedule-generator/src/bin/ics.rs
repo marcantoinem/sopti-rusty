@@ -1,10 +1,7 @@
 use aep_schedule_generator::{
     algorithm::{generation::SchedulesOptions, scores::EvaluationOption},
-    data::{
-        course::Course,
-        courses::Courses,
-        time::{calendar::Calendar, week::Week},
-    },
+    data::{course::Course, courses::Courses, time::week::Week},
+    icalendar::calendar::Calendar,
 };
 use std::{fs::File, io::BufReader};
 
@@ -36,10 +33,11 @@ fn main() {
 
     let result = options.get_schedules().into_sorted_vec();
     let result = result.first().unwrap();
-    println!("{:?}", result);
 
     let days = BufReader::new(File::open("alternance.csv").unwrap());
     let calendar = Calendar::from_csv(days);
 
-    let _ = std::fs::write("test.ics", result.generate_ics(&calendar));
+    println!("{:#?}", calendar);
+
+    let _ = std::fs::write("test.ics", calendar.generate_ics(&result));
 }

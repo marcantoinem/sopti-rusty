@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use chrono::Weekday;
 use serde::{Deserialize, Serialize};
 
 // There is no course the saturday at Poly, but knowing them, it wouldn't be far
@@ -14,6 +15,20 @@ pub enum Day {
     Friday = 4,
     Sunday = 5,
     Saturday = 6,
+}
+
+impl From<u8> for Day {
+    fn from(value: u8) -> Self {
+        match value {
+            0 => Self::Monday,
+            1 => Self::Tuesday,
+            2 => Self::Wednesday,
+            3 => Self::Thursday,
+            4 => Self::Friday,
+            5 => Self::Sunday,
+            _ => Self::Saturday,
+        }
+    }
 }
 
 impl From<&str> for Day {
@@ -42,5 +57,11 @@ impl Display for Day {
             Day::Sunday => f.write_str("samedi"),
             Day::Saturday => f.write_str("dimanche"),
         }
+    }
+}
+
+impl PartialEq<Weekday> for Day {
+    fn eq(&self, other: &Weekday) -> bool {
+        *self as u8 == *other as u8
     }
 }

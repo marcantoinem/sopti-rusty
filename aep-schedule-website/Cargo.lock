@@ -65,7 +65,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "compact_str",
- "ical",
+ "icalendar",
  "log",
  "rand",
  "serde",
@@ -461,6 +461,7 @@ dependencies = [
  "iana-time-zone",
  "js-sys",
  "num-traits",
+ "serde",
  "wasm-bindgen",
  "windows-targets 0.52.6",
 ]
@@ -1417,12 +1418,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "ical"
-version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9b7cab7543a8b7729a19e2c04309f902861293dcdae6558dfbeb634454d279f6"
+name = "icalendar"
+version = "0.16.3"
+source = "git+https://github.com/marcantoinem/icalendar-rs?branch=fix/wrapping-behaviour#2827a053f6fa62453643e35691b6e024bafed16e"
 dependencies = [
- "thiserror",
+ "chrono",
+ "iso8601",
+ "nom",
+ "uuid",
 ]
 
 [[package]]
@@ -1486,6 +1489,15 @@ name = "ipnet"
 version = "2.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f518f335dce6725a761382244631d86cf0ccb2863413590b31338feb467f9c3"
+
+[[package]]
+name = "iso8601"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "924e5d73ea28f59011fec52a0d12185d496a9b075d360657aed2a5707f701153"
+dependencies = [
+ "nom",
+]
 
 [[package]]
 name = "itertools"
@@ -3502,6 +3514,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "81dfa00651efa65069b0b6b651f4aaa31ba9e3c3ce0137aaad053604ee7e0314"
 dependencies = [
  "getrandom",
+ "wasm-bindgen",
 ]
 
 [[package]]
