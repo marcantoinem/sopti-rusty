@@ -1,7 +1,7 @@
-use crate::data::course::Course;
 use crate::data::course_type::CourseType;
 use crate::data::group::Group;
 use crate::data::group_index::GroupIndex;
+use crate::data::{course::Course, group_sigle::GroupType};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -114,10 +114,10 @@ impl TakenCourse {
             _ => None,
         }
     }
-    pub fn for_each_group(&self, mut function: impl FnMut(&Group)) {
+    pub fn for_each_group(&self, mut function: impl FnMut(&Group, GroupType)) {
         match &self.taken_course_type {
-            TakenCourseType::LabOnly { lab_group } => function(lab_group),
-            TakenCourseType::TheoOnly { theo_group } => function(theo_group),
+            TakenCourseType::LabOnly { lab_group } => function(lab_group, GroupType::LabGroup),
+            TakenCourseType::TheoOnly { theo_group } => function(theo_group, GroupType::TheoGroup),
             TakenCourseType::Linked {
                 theo_group,
                 lab_group,
@@ -126,8 +126,8 @@ impl TakenCourse {
                 theo_group,
                 lab_group,
             } => {
-                function(theo_group);
-                function(lab_group)
+                function(theo_group, GroupType::TheoGroup);
+                function(lab_group, GroupType::LabGroup)
             }
         }
     }

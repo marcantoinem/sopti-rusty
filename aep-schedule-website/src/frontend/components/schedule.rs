@@ -3,12 +3,13 @@ use std::rc::Rc;
 use crate::frontend::components::common::schedule::{Schedule, ScheduleEvent};
 use crate::frontend::components::icons::download::Download;
 use crate::frontend::components::icons::IconWeight;
+use aep_schedule_generator::icalendar::calendar::Calendar;
 use aep_schedule_generator::{
     algorithm::{
         schedule::Schedule,
         taken_course::{TakenCourse, TakenCourseType},
     },
-    data::time::{calendar::Calendar, period::Period, week_number::WeekNumber},
+    data::time::{period::Period, week_number::WeekNumber},
 };
 use leptos::{html::A, *};
 
@@ -134,15 +135,15 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Rc<Calendar>) -> impl Int
             <Schedule last_day=schedule.last_day>
                 {schedule.taken_courses.iter().enumerate().map(|(i, c)| view!{<CoursePeriods i course=c />}).collect_view()}
             </Schedule>
-            //<button class="button-download flex" on:pointerdown=move |_| {
-            //    let ics = schedule2.generate_ics(&calendar);
-            //    let url = url_escape::encode_fragment(&ics);
-            //    set_download("data:text/plain;charset=utf-8,".to_string() + &url);
-            //    link().unwrap().click();
-            //}>
-            //    <Download weight=IconWeight::Regular size="3vh"/>
-            //    <span>"Télécharger le calendrier de cet horaire"</span>
-            //</button>
+            <button class="button-download flex" on:pointerdown=move |_| {
+               let ics = calendar.generate_ics(&schedule2);
+               let url = url_escape::encode_fragment(&ics);
+               set_download("data:text/plain;charset=utf-8,".to_string() + &url);
+               link().unwrap().click();
+            }>
+               <Download weight=IconWeight::Regular size="3vh"/>
+               <span>"Télécharger le calendrier de cet horaire"</span>
+            </button>
         </div>
     }
 }

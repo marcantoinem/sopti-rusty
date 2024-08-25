@@ -5,24 +5,12 @@ use super::{
 };
 use crate::data::{
     course::Course,
-    time::{
-        calendar::{date_to_timestamp, Calendar},
-        day::Day,
-        hours::NO_HOUR,
-        period::Period,
-        weeks::Weeks,
-    },
-};
-use ical::{
-    generator::{Emitter, IcalCalendarBuilder, IcalEventBuilder},
-    ical_property,
-    property::Property,
+    time::{day::Day, hours::NO_HOUR, period::Period, weeks::Weeks},
 };
 use std::{
     cmp::Ordering,
     hash::{DefaultHasher, Hash, Hasher},
 };
-use uuid::Uuid;
 
 #[derive(PartialEq, Debug, Clone)]
 pub struct ScheduleBuilder<'a> {
@@ -147,39 +135,4 @@ pub struct Schedule {
     pub taken_courses: Vec<TakenCourse>,
     pub last_day: u8,
     pub id: u64,
-}
-
-impl Schedule {
-    pub fn generate_ics(&self, calendar: &Calendar) -> String {
-        let mut cal = IcalCalendarBuilder::version("2.0")
-            .gregorian()
-            .prodid("-//ical-rs//github.com//")
-            .build();
-
-        for course in self.taken_courses.iter() {
-            course.for_each_group(|g| {
-                for p in g.periods.iter() {
-                    calendar.iter_apply(p.week_nb, p.day, |d| {
-                        let start =
-                            date_to_timestamp(&d, p.hours.starting_hour(), p.hours.start_minutes());
-                        let end =
-                            date_to_timestamp(&d, p.hours.last_hour(), p.hours.last_minutes());
-                        let event = IcalEventBuilder::tzid("America/New_York")
-                            .uid(Uuid::new_v4())
-                            .changed(chrono::Local::now().format("%Y%m%dT%H%M%S").to_string())
-                            .start(start)
-                            .end(end)
-                            .set(ical_property!(
-                                "SUMMARY",
-                                format!("Laboratoire {}", course.sigle)
-                            ))
-                            .set(ical_property!("DESCRIPTION", p.room.to_string()))
-                            .build();
-                        cal.events.push(event);
-                    });
-                }
-            });
-        }
-        cal.generate()
-    }
 }
