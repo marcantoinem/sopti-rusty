@@ -9,7 +9,7 @@ fn main() {
     let horsage = BufReader::new(File::open("horsage.csv").unwrap());
     let fermes = BufReader::new(File::open("fermes.csv").unwrap());
     let courses = Courses::from_csv(horsage, fermes);
-    let courses_to_take = vec!["INF2705", "LOG2990", "MTH2302D", "SSH3201", "SSH3501D"];
+    let courses_to_take = vec!["INF2705"];
     let mut courses_to_take: Vec<Course> = courses_to_take
         .into_iter()
         .map(|sigle| courses.get_course(sigle).unwrap())

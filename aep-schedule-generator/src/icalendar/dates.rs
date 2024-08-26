@@ -1,4 +1,4 @@
-use chrono::{NaiveDate, NaiveDateTime};
+use chrono::NaiveDate;
 use icalendar::{Calendar, Component, Event, EventLike};
 use serde::{Deserialize, Serialize};
 
@@ -31,48 +31,31 @@ impl Dates {
         };
 
         let mut main = Event::new();
-
         main.summary(&format!("{} {}", labo, course.sigle))
             .description(p.room.as_str())
             .location(p.room.as_str());
 
         match self {
             Dates::Week(all_dates) => {
-                let session_start = all_dates[0];
-                let start = session_start
-                    .and_hms_opt(
-                        p.hours.starting_hour() as u32,
-                        p.hours.start_minutes() as u32,
-                        0,
-                    )
-                    .unwrap();
-                let end = session_start
-                    .and_hms_opt(p.hours.last_hour() as u32, p.hours.last_minutes() as u32, 0)
-                    .unwrap();
+                for date in all_dates {
+                    let mut event = main.clone();
+                    let start = date
+                        .and_hms_opt(
+                            p.hours.starting_hour() as u32,
+                            p.hours.start_minutes() as u32,
+                            0,
+                        )
+                        .unwrap();
+                    let end = date
+                        .and_hms_opt(p.hours.last_hour() as u32, p.hours.last_minutes() as u32, 0)
+                        .unwrap();
 
-                main.starts(start).ends(end);
-
-                if all_dates.len() > 1 {
-                    let start_dates: Vec<NaiveDateTime> = all_dates
-                        .into_iter()
-                        .map(|d| {
-                            d.and_hms_opt(
-                                p.hours.starting_hour() as u32,
-                                p.hours.start_minutes() as u32,
-                                0,
-                            )
-                            .unwrap()
-                        })
-                        .collect();
-
-                    let mut rdate = start_dates[0].format(NAIVE_DATE_TIME_FORMAT).to_string();
-                    for date in start_dates[1..].iter() {
-                        let date = date.format(NAIVE_DATE_TIME_FORMAT);
-                        rdate.push(',');
-                        rdate.push_str(&date.to_string());
-                    }
-
-                    main.add_property("RDATE", &rdate);
+                    event
+                        .starts(start)
+                        .ends(end)
+                        .add_property("CATEGORIES", &course.sigle)
+                        .add_property("RELATED-TO", &course.sigle);
+                    cal.push(event.done());
                 }
             }
             Dates::Weekend {
@@ -100,9 +83,8 @@ impl Dates {
                 let rrule = format!("FREQ=WEEKLY;UNTIL={}", last);
 
                 main.starts(start).ends(end).add_property("RRULE", &rrule);
+                cal.push(main.done());
             }
         }
-
-        cal.push(main.done());
     }
 }
