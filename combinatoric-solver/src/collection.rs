@@ -6,16 +6,21 @@ where
     S: Score,
     V: ItemVariant,
 {
-    pub score: S,
-    pub item_variant: [V; MAX_ITEMS],
+    score: S,
+    item_variant: [V; MAX_ITEMS],
 }
 
 impl<const MAX_ITEMS: usize, S: Score, V: ItemVariant> Collection<MAX_ITEMS, S, V> {
     #[inline]
     pub fn push(&self, iteration: usize, item_variant: V) -> Self {
         let mut new = self.clone();
+
         new.item_variant[iteration] = item_variant;
         new
+    }
+    #[inline]
+    pub fn item_variant(&self, iteration: usize) -> &[V] {
+        &self.item_variant[0..iteration]
     }
 }
 
