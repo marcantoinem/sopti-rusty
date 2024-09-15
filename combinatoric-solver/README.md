@@ -23,4 +23,4 @@ It function on the following assumptions:
 
 - It iterate recursively on all variants until it has a variant for each item.
 - If an incomplete collection doesn't respect the constraint the rest of combination will not be explored.
-- If an incomplete collection have a worst score than the worst of the best n scores, the rest of the combination of this collection will not be explored.
+- If an incomplete collection have a worst score than the worst of the best n collection, the rest of the combination of this collection will not be explored. (Branch and bound)
