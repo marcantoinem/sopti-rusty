@@ -49,7 +49,7 @@ where
         }
 
         for variant in items[i].variants() {
-            let collections = collection.push(variant);
+            let collections = collection.push(i, variant);
             Self::rec_iter(i + 1, collections, items, top_items);
         }
     }
