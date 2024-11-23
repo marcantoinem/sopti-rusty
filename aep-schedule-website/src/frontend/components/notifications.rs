@@ -1,5 +1,5 @@
 use aep_schedule_generator::data::group_sigle::SigleGroup;
-use leptos::*;
+use leptos::{html, prelude::*, task::spawn_local};
 
 use crate::{
     backend::{
@@ -14,11 +14,11 @@ pub fn Notifications(
     modal: ReadSignal<Option<SigleGroup>>,
     set_modal: WriteSignal<Option<SigleGroup>>,
 ) -> impl IntoView {
-    let input_element: NodeRef<html::Input> = create_node_ref();
+    let input_element: NodeRef<html::Input> = NodeRef::new();
 
     let on_submit = move |ev: leptos::ev::SubmitEvent| {
         ev.prevent_default();
-        let email = input_element().unwrap().value();
+        let email = input_element.get().unwrap().value();
         if email.is_empty() {
             return;
         }

@@ -1,34 +1,34 @@
 use crate::backend::routes::get_courses;
 use crate::frontend::components::common::tab::Tab;
-use crate::frontend::components::icons::bell_ringing::BellRinging;
+// use crate::frontend::components::icons::bell_ringing::BellRinging;
 use crate::frontend::components::icons::calendar_x::CalendarX;
 use crate::frontend::components::icons::x::X;
 use crate::frontend::components::icons::IconWeight;
 use crate::frontend::components::options::personal::PersonalTimeSelector;
 use crate::frontend::components::options::search::SearchCourse;
-use crate::frontend::pages::generator::SetModal;
+// use crate::frontend::pages::generator::SetModal;
 use crate::frontend::state::reactive_course::ReactiveCourse;
 use crate::frontend::state::reactive_course::ReactiveCourseType;
 use crate::frontend::state::OptionState;
 use aep_schedule_generator::data::group::Group;
 use aep_schedule_generator::data::group_sigle::GroupType;
-use aep_schedule_generator::data::group_sigle::SigleGroup;
+// use aep_schedule_generator::data::group_sigle::SigleGroup;
 use aep_schedule_generator::data::groups::Groups;
 use compact_str::CompactString;
-use leptos::*;
+use leptos::prelude::*;
 
 #[component]
 fn GroupsChips<F>(
     open: RwSignal<bool>,
     group: Group,
-    course_sigle: CompactString,
-    group_type: GroupType,
+    _course_sigle: CompactString,
+    _group_type: GroupType,
     submit: F,
 ) -> impl IntoView
 where
     F: Fn() + Copy + 'static,
 {
-    let set_modal = SetModal::from_context();
+    // let set_modal = SetModal::from_context();
 
     view! {
         <div on:pointerdown=move |_| {
@@ -82,7 +82,7 @@ where
         {groups.into_iter().enumerate().map(|(i, group)| {
                 let open = open[i];
                 view! {
-                    <GroupsChips open group course_sigle=course_sigle.clone() group_type submit/>
+                    <GroupsChips open group _course_sigle=course_sigle.clone() _group_type=group_type submit/>
                 }
             }).collect_view()
         }
@@ -92,7 +92,7 @@ where
 #[component]
 fn CourseTab<F>(course: ReactiveCourse, active_tab: ReadSignal<String>, submit: F) -> impl IntoView
 where
-    F: Fn() + Copy + 'static,
+    F: Fn() + Copy + 'static + Send,
 {
     let course_sigle = course.sigle.clone();
     view! {
@@ -108,7 +108,7 @@ where
                                     <h3>"Théorie"</h3>
                                     <GroupsSettings groups open=theo_open course_sigle group_type=GroupType::TheoGroup submit/>
                                 </div>
-                            }.into_view()
+                            }.into_any()
                         },
                         ReactiveCourseType::LabOnly { lab_open, lab_groups } => {
                             let groups = lab_groups;
@@ -117,7 +117,7 @@ where
                                     <h3>"Laboratoire"</h3>
                                     <GroupsSettings groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
                                 </div>
-                            }.into_view()
+                            }.into_any()
                         },
                         ReactiveCourseType::Both { theo_open, theo_groups, lab_open, lab_groups } => {
                             let theo_groups = theo_groups;
@@ -132,7 +132,7 @@ where
                                     <h3>"Laboratoire"</h3>
                                     <GroupsSettings groups=lab_groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
                                 </div>
-                            }.into_view()
+                            }.into_any()
                         },
                         ReactiveCourseType::Linked { both_open, theo_groups, lab_groups } => {
                             let groups = theo_groups.merge(lab_groups);
@@ -141,7 +141,7 @@ where
                                     <h3>"Théorie et laboratoire lié"</h3>
                                     <GroupsSettings groups open=both_open course_sigle=course_sigle group_type=GroupType::LabGroup submit/>
                                 </div>
-                            }.into_view()
+                            }.into_any()
                         },
                     }
                 }
@@ -153,15 +153,15 @@ where
 #[component]
 pub fn CoursesSelector<F>(state: OptionState, submit: F) -> impl IntoView
 where
-    F: Fn() + Copy + 'static,
+    F: Fn() + Copy + 'static + Send,
 {
-    let (active_tab, set_active_tab) = create_signal("".to_string());
+    let (active_tab, set_active_tab) = signal("".to_string());
 
     let action_courses = state.action_courses;
 
     view! {
         <Await
-            future=get_courses
+            future=get_courses()
             let:courses
         >
             <SearchCourse courses=courses.clone() action_courses set_active_tab/>
@@ -180,12 +180,14 @@ where
                     let sigle = course.sigle.to_string();
                     let add_hidden = move || sigle != active_tab.get();
                     let sigle = course.sigle.to_string();
+                    let sigle2 = course.sigle.to_string();
+                    let sigle3 = course.sigle.to_string();
                     view!{
-                        <button class="flex items-center py-1 px-2 rounded-xl bg-amber-500 text-black transition" class=("opacity-75", add_hidden) id=&sigle on:pointerdown={
+                        <button class="flex items-center py-1 px-2 rounded-xl bg-amber-500 text-black transition" class=("opacity-75", add_hidden) id=sigle3 on:pointerdown={
                             let sigle = sigle.clone();
                             move |_| set_active_tab.set(sigle.clone())
                         }>
-                        {&sigle}
+                        {sigle2}
                         <button class="close" on:pointerdown={
                             let sigle = sigle.clone();
                             move |_| {
@@ -199,7 +201,8 @@ where
                                 });
                                 submit();
                             }
-                        }><X weight=IconWeight::Regular size="16px"/></button>
+                        }>
+                        <X weight=IconWeight::Regular size="16px"/></button>
                         </button>
                     }
                 }

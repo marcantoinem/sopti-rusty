@@ -8,7 +8,7 @@ use axum::{
     http::Request,
     response::{IntoResponse, Response},
 };
-use leptos::*;
+use leptos::prelude::*;
 use leptos_axum::handle_server_fns_with_context;
 use leptos_router::RouteListing;
 use std::fs::File;

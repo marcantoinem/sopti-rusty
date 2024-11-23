@@ -1,4 +1,4 @@
-use leptos::*;
+use leptos::prelude::*;
 
 #[component]
 pub fn Tab(active_tab: ReadSignal<String>, tab_id: String, children: Children) -> impl IntoView {

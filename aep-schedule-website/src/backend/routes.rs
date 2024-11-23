@@ -6,7 +6,7 @@ use aep_schedule_generator::{
     icalendar::calendar::Calendar,
 };
 use compact_str::CompactString;
-use leptos::*;
+use leptos::prelude::*;
 
 use super::shared::user_builder::UserBuilder;
 

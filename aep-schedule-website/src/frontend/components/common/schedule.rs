@@ -1,5 +1,5 @@
 use aep_schedule_generator::data::time::period::Period;
-use leptos::*;
+use leptos::prelude::*;
 use std::array;
 
 #[component]
@@ -38,8 +38,8 @@ pub fn Schedule(
 }
 
 #[component]
-pub fn ScheduleEvent<'a>(
-    period: &'a Period,
+pub fn ScheduleEvent(
+    period: Period,
     children: Children,
     #[prop(optional)] class: String,
 ) -> impl IntoView {

@@ -3,7 +3,7 @@ use crate::frontend::components::notifications::Notifications;
 use crate::frontend::components::{options::form::OptionsForms, schedules::SchedulesComponent};
 use crate::frontend::state::OptionState;
 use aep_schedule_generator::data::group_sigle::SigleGroup;
-use leptos::*;
+use leptos::prelude::*;
 
 #[derive(Clone, Copy)]
 pub struct SetModal(WriteSignal<Option<SigleGroup>>);
@@ -19,8 +19,8 @@ pub struct FirstGenerationDone(pub RwSignal<bool>);
 
 #[component]
 pub fn GeneratorPage() -> impl IntoView {
-    let first_generation_done = create_rw_signal(false);
-    let (modal, set_modal) = create_signal(None);
+    let first_generation_done = RwSignal::new(false);
+    let (modal, set_modal) = signal(None);
     let state = OptionState::default();
 
     provide_context(state);

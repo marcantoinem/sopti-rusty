@@ -6,7 +6,7 @@ use crate::frontend::{
     pages::generator::FirstGenerationDone,
     state::OptionState,
 };
-use leptos::*;
+use leptos::prelude::*;
 
 #[component]
 pub fn OptionsForms() -> impl IntoView {
@@ -21,7 +21,8 @@ pub fn OptionsForms() -> impl IntoView {
         state.generate();
     };
 
-    create_local_resource(state.action_courses.pending(), move |_| {
+    Effect::new(move |_| {
+        state.action_courses.pending().track();
         submit();
         async move {}
     });

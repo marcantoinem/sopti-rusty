@@ -3,7 +3,7 @@ pub mod backend;
 pub mod frontend;
 
 cfg_if::cfg_if! { if #[cfg(feature = "hydrate")] {
-    use leptos::*;
+    use leptos::prelude::*;
     use wasm_bindgen::prelude::wasm_bindgen;
     use crate::frontend::app::App;
 

@@ -5,7 +5,7 @@ cfg_if::cfg_if!(if #[cfg(feature = "ssr")] {
     };
     use std::future::IntoFuture;
     use leptos_axum::{generate_route_list, LeptosRoutes};
-    use leptos::*;
+    use leptos::prelude::*;
     use tower_http::compression::CompressionLayer;
     use aep_schedule_website::backend::fileserv::file_and_error_handler;
     use aep_schedule_website::frontend::app::App;

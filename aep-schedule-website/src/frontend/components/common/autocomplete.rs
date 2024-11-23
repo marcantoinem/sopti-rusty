@@ -1,5 +1,5 @@
 use crate::frontend::components::icons::plus_circle::PlusCircle;
-use leptos::*;
+use leptos::prelude::*;
 use std::{cmp, ops::Range};
 
 #[derive(Clone, PartialEq)]
@@ -42,10 +42,10 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
     id: &'static str,
     mut submit: F,
 ) -> impl IntoView {
-    let input = create_rw_signal(String::new());
-    let (suggestion_range, set_suggestion_range) = create_signal(0..0);
+    let input = RwSignal::new(String::new());
+    let (suggestion_range, set_suggestion_range) = signal(0..0);
     let suggestions = suggestion_list.clone();
-    let is_hidden = create_rw_signal(true);
+    let is_hidden = RwSignal::new(true);
 
     let on_input = move |ev| {
         let value = event_target_value(&ev);

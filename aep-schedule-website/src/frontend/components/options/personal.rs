@@ -1,5 +1,5 @@
 use crate::frontend::components::common::schedule::Schedule;
-use leptos::*;
+use leptos::{ev, prelude::*};
 use web_sys::wasm_bindgen::JsCast;
 use web_sys::Element;
 
@@ -8,9 +8,9 @@ pub fn PersonalTimeSelector<F>(week: [RwSignal<u64>; 5], submit: F) -> impl Into
 where
     F: Fn() + Copy + 'static,
 {
-    let (initial, set_initial) = create_signal(None);
-    let (destination, set_destination) = create_signal((0, 0));
-    let (is_positive, set_positive) = create_signal(true);
+    let (initial, set_initial) = signal(None);
+    let (destination, set_destination) = signal((0, 0));
+    let (is_positive, set_positive) = signal(true);
     let selection = move || {
         let Some((initial_x, initial_y)) = initial.get() else {
             return String::from("display: none;");

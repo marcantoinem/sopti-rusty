@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 
 use crate::frontend::components::icons::warning_circle::WarningCircle;
 use crate::frontend::{pages::generator::FirstGenerationDone, state::OptionState};
-use leptos::*;
+use leptos::prelude::*;
 
 #[component]
 pub fn Step(

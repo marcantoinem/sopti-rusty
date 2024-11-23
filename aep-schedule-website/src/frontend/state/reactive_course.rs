@@ -1,6 +1,6 @@
 use aep_schedule_generator::data::{course::Course, course_type::CourseType, groups::Groups};
 use compact_str::CompactString;
-use leptos::*;
+use leptos::prelude::*;
 
 #[derive(Clone, Debug)]
 pub enum ReactiveCourseType {

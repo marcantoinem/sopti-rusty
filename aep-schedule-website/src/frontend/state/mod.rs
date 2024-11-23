@@ -4,7 +4,7 @@ use aep_schedule_generator::{
     algorithm::{generation::SchedulesOptions, schedule::Schedule, scores::EvaluationOption},
     data::time::week::Week,
 };
-use leptos::*;
+use leptos::prelude::*;
 use reactive_course::ReactiveCourse;
 
 use crate::backend::routes::get_course;
@@ -100,9 +100,9 @@ impl OptionState {
 
 impl Default for OptionState {
     fn default() -> Self {
-        let stored_courses: StoredValue<Vec<ReactiveCourse>> = store_value(vec![]);
+        let stored_courses: StoredValue<Vec<ReactiveCourse>> = StoredValue::new(vec![]);
 
-        let action_courses = create_action(move |sigle: &String| {
+        let action_courses = Action::new(move |sigle: &String| {
             let sigle = sigle.clone();
             async move {
                 if let Ok(c) = get_course(sigle).await {
@@ -121,17 +121,17 @@ impl Default for OptionState {
         Self {
             stored_courses,
             action_courses,
-            max_nb_conflicts: create_rw_signal(0),
-            week: std::array::from_fn(|_i| create_rw_signal(0)),
-            day_off: create_rw_signal(3),
-            morning: create_rw_signal(1),
-            finish_early: create_rw_signal(1),
-            section_error: create_rw_signal("".to_string()),
-            personal_error: create_rw_signal("".to_string()),
-            step: create_rw_signal(0),
-            schedule: create_rw_signal(vec![]),
-            hide: create_rw_signal(false),
-            max_size: store_value(AtomicUsize::from(8)),
+            max_nb_conflicts: RwSignal::new(0),
+            week: std::array::from_fn(|_i| RwSignal::new(0)),
+            day_off: RwSignal::new(3),
+            morning: RwSignal::new(1),
+            finish_early: RwSignal::new(1),
+            section_error: RwSignal::new("".to_string()),
+            personal_error: RwSignal::new("".to_string()),
+            step: RwSignal::new(0),
+            schedule: RwSignal::new(vec![]),
+            hide: RwSignal::new(false),
+            max_size: StoredValue::new(AtomicUsize::from(8)),
         }
     }
 }

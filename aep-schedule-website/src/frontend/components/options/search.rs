@@ -3,7 +3,7 @@ use crate::frontend::{
     state::reactive_course::ReactiveCourse,
 };
 use aep_schedule_generator::data::course::CourseName;
-use leptos::*;
+use leptos::prelude::*;
 
 #[component]
 pub fn SearchCourse(

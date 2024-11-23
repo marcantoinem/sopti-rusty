@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::sync::Arc;
 
 use crate::frontend::components::common::schedule::{Schedule, ScheduleEvent};
 use crate::frontend::components::icons::download::Download;
@@ -11,10 +11,10 @@ use aep_schedule_generator::{
     },
     data::time::{period::Period, week_number::WeekNumber},
 };
-use leptos::{html::A, *};
+use leptos::prelude::*;
 
 #[component]
-pub fn Course<'a>(i: usize, course: &'a TakenCourse) -> impl IntoView {
+pub fn Course(i: usize, course: TakenCourse) -> impl IntoView {
     let theo_group = course.theo_group().map(|g| format!("T: {}", g.number));
     let lab_group = course.lab_group().map(|g| format!("L: {}", g.number));
     let color_box = match i % 8 {
@@ -42,10 +42,10 @@ pub fn Course<'a>(i: usize, course: &'a TakenCourse) -> impl IntoView {
 }
 
 #[component]
-fn PeriodEvent<'a>(
+fn PeriodEvent(
     i: usize,
-    period: &'a Period,
-    course: &'a TakenCourse,
+    period: Period,
+    course: Arc<TakenCourse>,
     period_type: &'static str,
 ) -> impl IntoView {
     let mut location = period.hours.to_string() + " - " + period.room.as_str();
@@ -73,7 +73,7 @@ fn PeriodEvent<'a>(
     }
 
     view! {
-        <ScheduleEvent period=&period class=class>
+        <ScheduleEvent period=period class=class>
             <span>{location}</span>
             <span>{sigle}</span>
         </ScheduleEvent>
@@ -81,22 +81,28 @@ fn PeriodEvent<'a>(
 }
 
 #[component]
-fn CoursePeriods<'a>(i: usize, course: &'a TakenCourse) -> impl IntoView {
-    match &course.taken_course_type {
+fn CoursePeriods(i: usize, course: TakenCourse) -> impl IntoView {
+    let taken_course_type = course.taken_course_type.clone();
+    let course = Arc::new(course);
+    match taken_course_type {
         TakenCourseType::TheoOnly { theo_group } => theo_group
             .periods
-            .iter()
+            .into_iter()
             .map(|p| {
-                view! {<PeriodEvent i period=&p course=course period_type="T"/>}
+                let course = Arc::clone(&course);
+                view! {<PeriodEvent i period=p course period_type="T"/>}
             })
-            .collect_view(),
+            .collect_view()
+            .into_any(),
         TakenCourseType::LabOnly { lab_group } => lab_group
             .periods
-            .iter()
+            .into_iter()
             .map(|p| {
-                view! {<PeriodEvent i period=&p course=course period_type="L"/>}
+                let course = Arc::clone(&course);
+                view! {<PeriodEvent i period=p course period_type="L"/>}
             })
-            .collect_view(),
+            .collect_view()
+            .into_any(),
         TakenCourseType::Both {
             theo_group,
             lab_group,
@@ -106,40 +112,44 @@ fn CoursePeriods<'a>(i: usize, course: &'a TakenCourse) -> impl IntoView {
             lab_group,
         } => view! {
             {
-                theo_group.periods.iter().map(|p| {
-                    view! {<PeriodEvent i period=&p course=course period_type="T"/>}
+                theo_group.periods.into_iter().map(|p| {
+                    let course = Arc::clone(&course);
+                    view! {<PeriodEvent i period=p course period_type="T"/>}
                 }).collect_view()
             }
             {
-                lab_group.periods.iter().map(|p| {
-                    view! {<PeriodEvent i period=&p course=course period_type="L"/>}
+                lab_group.periods.into_iter().map(|p| {
+                    let course = Arc::clone(&course);
+                    view! {<PeriodEvent i period=p course period_type="L"/>}
                 }).collect_view()
             }
         }
-        .into_view(),
+        .into_any(),
     }
 }
 
 #[component]
-pub fn ScheduleComponent(schedule: Schedule, calendar: Rc<Calendar>) -> impl IntoView {
+pub fn ScheduleComponent(schedule: Schedule, calendar: Arc<Calendar>) -> impl IntoView {
+    let courses = schedule.taken_courses.clone();
+    let courses2 = schedule.taken_courses.clone();
     let schedule2 = schedule.clone();
-    let (download, set_download) = create_signal("".to_string());
-    let link: NodeRef<A> = create_node_ref();
+    let (download, set_download) = signal("".to_string());
+    let link = NodeRef::new();
 
     view! {
         <div class="flex flex-col w-full items-center card p-2">
             <a class="hidden" download="cours.ics" href=move || download.get() node_ref=link></a>
             <table class="cours">
-                {schedule.taken_courses.iter().enumerate().map(|(i, c)| view!{<Course i course={c} />}).collect_view()}
+                {courses.into_iter().enumerate().map(|(i, c)| view!{<Course i course={c} />}).collect_view()}
             </table>
             <Schedule last_day=schedule.last_day>
-                {schedule.taken_courses.iter().enumerate().map(|(i, c)| view!{<CoursePeriods i course=c />}).collect_view()}
+                {courses2.into_iter().enumerate().map(|(i, c)| view!{<CoursePeriods i course=c />}).collect_view()}
             </Schedule>
             <button class="button-download flex" on:pointerdown=move |_| {
                let ics = calendar.generate_ics(&schedule2);
                let url = url_escape::encode_fragment(&ics);
                set_download("data:text/plain;charset=utf-8,".to_string() + &url);
-               link().unwrap().click();
+               link.get().unwrap().click();
             }>
                <Download weight=IconWeight::Regular size="3vh"/>
                <span>"Télécharger le calendrier de cet horaire"</span>

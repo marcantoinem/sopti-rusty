@@ -1,4 +1,4 @@
-use leptos::*;
+use leptos::prelude::*;
 
 #[component]
 pub fn NumberInput<F>(
@@ -46,7 +46,6 @@ where
                     class="bg-gray-50 border-x-0 border-gray-300 h-7 text-center text-gray-900 text-sm focus:ring-amber-500 focus:border-amber-500 block w-full py-2.5"
                     placeholder="0"
                     on:input=on_input
-                    type="number"
                     min="0"
                     max=max
                     prop:value=value

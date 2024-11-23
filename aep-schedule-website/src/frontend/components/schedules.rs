@@ -1,10 +1,10 @@
-use std::rc::Rc;
+use std::sync::Arc;
 
 use crate::frontend::components::icons::warning_circle::WarningCircle;
 use crate::frontend::components::options::todo::Todo;
 use crate::frontend::state::OptionState;
 use crate::{backend::routes::get_calendar, frontend::components::schedule::ScheduleComponent};
-use leptos::*;
+use leptos::prelude::*;
 
 #[component]
 pub fn SchedulesComponent() -> impl IntoView {
@@ -12,25 +12,25 @@ pub fn SchedulesComponent() -> impl IntoView {
 
     view! {
         <Await
-            future=get_calendar
+            future=get_calendar()
             children=move |calendar| {
                 let bad_generation = state.schedule.get().is_empty();
                 let generated = state.step.get() == 6;
                 match generated && !bad_generation {
                     true => {
-                        let calendar = Rc::new(calendar.clone().unwrap());
+                        let calendar = Arc::new(calendar.clone().unwrap());
                         view !{
                             <For
                                 each=move || state.schedule.get()
                                 key= |course| course.id
                                 children= move |schedule| {
-                                    let calendar = Rc::clone(&calendar);
+                                    let calendar = Arc::clone(&calendar);
                                     view !{
                                         <ScheduleComponent schedule calendar/>
                                     }
                                 }
                             />
-                        }.into_view()
+                        }.into_any()
                     },
                     _ => view ! {
                         <Todo/>
@@ -47,7 +47,7 @@ pub fn SchedulesComponent() -> impl IntoView {
                                 false => None,
                             }
                         }
-                    }.into_view()
+                    }.into_any()
                 }
             }
         />
