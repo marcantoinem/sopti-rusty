@@ -14,12 +14,13 @@ use leptos_router::{
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
         <!DOCTYPE html>
-        <html lang="en">
+        <html lang="fr">
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
                 <AutoReload options=options.clone() />
                 <HydrationScripts options/>
+                <link rel="stylesheet" id="leptos" href="/pkg/aep-schedule-website.css"/>
                 <MetaTags/>
             </head>
             <body>
@@ -66,17 +67,11 @@ pub fn Nav() -> impl IntoView {
 
 #[component]
 pub fn App() -> impl IntoView {
+    provide_meta_context();
+
     view! {
-
-        // injects a stylesheet into the document <head>
-        // id=leptos means cargo-leptos will hot-reload this stylesheet
-        <Stylesheet id="leptos" href="/pkg/aep-schedule-website.css"/>
-
-        // sets the document title
-        <Title text="Générateur d'horaire"/>
-
-        // content for this welcome page
         <Router>
+            <Title text="Générateur d'horaire"/>
             <Nav/>
             <main class="h-full">
                 <FlatRoutes fallback=|| "Not found">
