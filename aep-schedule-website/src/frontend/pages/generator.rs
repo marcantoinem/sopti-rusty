@@ -29,27 +29,28 @@ pub fn GeneratorPage() -> impl IntoView {
 
     view! {
         <aside class="left-panel" class=("hide-left-panel", hide)>
-            <OptionsForms/>
+            <OptionsForms />
         </aside>
-        <section class="right-panel"
-        // on:scroll=move |ev| {
-        //     use web_sys::wasm_bindgen::JsCast;
-        //     let target = ev
-        //         .target()
-        //         .unwrap()
-        //         .dyn_into::<web_sys::Element>()
-        //         .unwrap();
-        //     let scroll_top = target.scroll_top() as f64;
-        //     let client_height = target.client_height() as f64;
-        //     let scroll_height = target.scroll_height() as f64;
-        //     if (scroll_top + client_height >= scroll_height - 500.0) && state.step.get() == 6 {
-        //         state.regenerate();
-        //     }
+        <section class="right-panel">
+            // on:scroll=move |ev| {
+            // use web_sys::wasm_bindgen::JsCast;
+            // let target = ev
+            // .target()
+            // .unwrap()
+            // .dyn_into::<web_sys::Element>()
+            // .unwrap();
+            // let scroll_top = target.scroll_top() as f64;
+            // let client_height = target.client_height() as f64;
+            // let scroll_height = target.scroll_height() as f64;
+            // if (scroll_top + client_height >= scroll_height - 500.0) && state.step.get() == 6 {
+            // state.regenerate();
+            // }
 
-        >
-            <SchedulesComponent/>
+            <SchedulesComponent />
         </section>
-        <Notifications modal set_modal/>
-        <button on:pointerdown=move |_| {hide.set(false)} id="go-back"><CaretDoubleRight weight=IconWeight::Regular size="3vh"/></button>
+        <Notifications modal set_modal />
+        <button on:pointerdown=move |_| { hide.set(false) } id="go-back">
+            <CaretDoubleRight weight=IconWeight::Regular size="3vh" />
+        </button>
     }
 }

@@ -72,28 +72,44 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
 
     view! {
         <div class="relative search-container ".to_owned() + &class>
-            <input type="text" class="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none text-black" on:input=on_input placeholder=placeholder prop:value=input id=id on:keyup=move |ev| {
-                if ev.key() == "Enter" && !is_hidden.get() {
-                    let course = input.get().trim().to_uppercase();
-                    select_choice(course);
+            <input
+                type="text"
+                class="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none text-black"
+                on:input=on_input
+                placeholder=placeholder
+                prop:value=input
+                id=id
+                on:keyup=move |ev| {
+                    if ev.key() == "Enter" && !is_hidden.get() {
+                        let course = input.get().trim().to_uppercase();
+                        select_choice(course);
+                    }
                 }
-            }
             />
-            <button class=button_theme on:pointerdown=move |_| {
-                let input = input.get().trim().to_uppercase();
-                select_choice(input);
-            }>
-                <PlusCircle size="2em"/>
+            <button
+                class=button_theme
+                on:pointerdown=move |_| {
+                    let input = input.get().trim().to_uppercase();
+                    select_choice(input);
+                }
+            >
+                <PlusCircle size="2em" />
             </button>
             <div class="result-box">
-                {suggestions.into_iter().enumerate().map(|(i, autocomplete)| view!{
-                    <div
-                        class=("hidden", move || {!suggestion_range.get().contains(&i)})
-                        on:pointerdown=move |_| select_choice(autocomplete.value.clone())
-                    >
-                        {autocomplete.label}
-                    </div>
-                }).collect_view()}
+                {suggestions
+                    .into_iter()
+                    .enumerate()
+                    .map(|(i, autocomplete)| {
+                        view! {
+                            <div
+                                class=("hidden", move || { !suggestion_range.get().contains(&i) })
+                                on:pointerdown=move |_| select_choice(autocomplete.value.clone())
+                            >
+                                {autocomplete.label}
+                            </div>
+                        }
+                    })
+                    .collect_view()}
             </div>
         </div>
     }

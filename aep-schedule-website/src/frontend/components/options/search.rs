@@ -26,6 +26,11 @@ pub fn SearchCourse(
     };
 
     Some(view! {
-        <AutoComplete suggestion_list=courses placeholder="Cours" submit=on_submit id="course-submitter"/>
+        <AutoComplete
+            suggestion_list=courses
+            placeholder="Cours"
+            submit=on_submit
+            id="course-submitter"
+        />
     })
 }

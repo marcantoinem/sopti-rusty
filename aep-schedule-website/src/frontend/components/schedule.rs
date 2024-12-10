@@ -90,7 +90,7 @@ fn CoursePeriods(i: usize, course: TakenCourse) -> impl IntoView {
             .into_iter()
             .map(|p| {
                 let course = Arc::clone(&course);
-                view! {<PeriodEvent i period=p course period_type="T"/>}
+                view! { <PeriodEvent i period=p course period_type="T" /> }
             })
             .collect_view()
             .into_any(),
@@ -99,7 +99,7 @@ fn CoursePeriods(i: usize, course: TakenCourse) -> impl IntoView {
             .into_iter()
             .map(|p| {
                 let course = Arc::clone(&course);
-                view! {<PeriodEvent i period=p course period_type="L"/>}
+                view! { <PeriodEvent i period=p course period_type="L" /> }
             })
             .collect_view()
             .into_any(),
@@ -111,18 +111,22 @@ fn CoursePeriods(i: usize, course: TakenCourse) -> impl IntoView {
             theo_group,
             lab_group,
         } => view! {
-            {
-                theo_group.periods.into_iter().map(|p| {
+            {theo_group
+                .periods
+                .into_iter()
+                .map(|p| {
                     let course = Arc::clone(&course);
-                    view! {<PeriodEvent i period=p course period_type="T"/>}
-                }).collect_view()
-            }
-            {
-                lab_group.periods.into_iter().map(|p| {
+                    view! { <PeriodEvent i period=p course period_type="T" /> }
+                })
+                .collect_view()}
+            {lab_group
+                .periods
+                .into_iter()
+                .map(|p| {
                     let course = Arc::clone(&course);
-                    view! {<PeriodEvent i period=p course period_type="L"/>}
-                }).collect_view()
-            }
+                    view! { <PeriodEvent i period=p course period_type="L" /> }
+                })
+                .collect_view()}
         }
         .into_any(),
     }
@@ -140,19 +144,31 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Arc<Calendar>) -> impl In
         <div class="flex flex-col w-full items-center card p-2">
             <a class="hidden" download="cours.ics" href=move || download.get() node_ref=link></a>
             <table class="cours">
-                {courses.into_iter().enumerate().map(|(i, c)| view!{<Course i course={c} />}).collect_view()}
+                {courses
+                    .into_iter()
+                    .enumerate()
+                    .map(|(i, c)| view! { <Course i course=c /> })
+                    .collect_view()}
             </table>
-            <Schedule last_day=schedule.last_day>
-                {courses2.into_iter().enumerate().map(|(i, c)| view!{<CoursePeriods i course=c />}).collect_view()}
+            <Schedule last_day=schedule
+                .last_day>
+                {courses2
+                    .into_iter()
+                    .enumerate()
+                    .map(|(i, c)| view! { <CoursePeriods i course=c /> })
+                    .collect_view()}
             </Schedule>
-            <button class="button-download flex" on:pointerdown=move |_| {
-               let ics = calendar.generate_ics(&schedule2);
-               let url = url_escape::encode_fragment(&ics);
-               set_download("data:text/plain;charset=utf-8,".to_string() + &url);
-               link.get().unwrap().click();
-            }>
-               <Download weight=IconWeight::Regular size="3vh"/>
-               <span>"Télécharger le calendrier de cet horaire"</span>
+            <button
+                class="button-download flex"
+                on:pointerdown=move |_| {
+                    let ics = calendar.generate_ics(&schedule2);
+                    let url = url_escape::encode_fragment(&ics);
+                    set_download("data:text/plain;charset=utf-8,".to_string() + &url);
+                    link.get().unwrap().click();
+                }
+            >
+                <Download weight=IconWeight::Regular size="3vh" />
+                <span>"Télécharger le calendrier de cet horaire"</span>
             </button>
         </div>
     }

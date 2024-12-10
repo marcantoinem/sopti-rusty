@@ -31,38 +31,43 @@ where
     // let set_modal = SetModal::from_context();
 
     view! {
-        <div on:pointerdown=move |_| {
+        <div
+            on:pointerdown=move |_| {
                 open.update(|b| *b = !*b);
                 submit();
             }
             class="gap-2 cursor-pointer items-center py-1.5 px-3 rounded-lg flex"
-            class=("bg-green-500", move || {open.get()})
-            class=("bg-red-500", move || {!open.get()})
+            class=("bg-green-500", move || { open.get() })
+            class=("bg-red-500", move || { !open.get() })
         >
             <span class="text-lg text-bold text-sans">{group.number.to_string()}</span>
             <div class="flex flex-col justify-between w-full">
-                {group.periods.iter().map(|p| {
-                    view!{
-                        <div class="flex group-text w-full justify-between">
-                            <span>{p.day.to_string()}</span>
-                            <span class="period-group">{p.hours.to_string()}</span>
-                            <span>{p.week_nb.to_string()}</span>
-                        </div>
-                    }
-                }).collect_view()}
+                {group
+                    .periods
+                    .iter()
+                    .map(|p| {
+                        view! {
+                            <div class="flex group-text w-full justify-between">
+                                <span>{p.day.to_string()}</span>
+                                <span class="period-group">{p.hours.to_string()}</span>
+                                <span>{p.week_nb.to_string()}</span>
+                            </div>
+                        }
+                    })
+                    .collect_view()}
             </div>
-            //{match group.open {
-            //    false => Some(view !{
-            //        <div on:pointerdown=move |ev| {
-            //            ev.stop_propagation();
-            //            let sigle_group = SigleGroup::new(course_sigle.clone(), group_type, group.number);
-            //            set_modal.set(Some(sigle_group));
-            //            }>
-            //            <BellRinging size="1em"/>
-            //        </div>
-            //    }),
-            //    true => None,
-            //}}
+        // {match group.open {
+        // false => Some(view !{
+        // <div on:pointerdown=move |ev| {
+        // ev.stop_propagation();
+        // let sigle_group = SigleGroup::new(course_sigle.clone(), group_type, group.number);
+        // set_modal.set(Some(sigle_group));
+        // }>
+        // <BellRinging size="1em"/>
+        // </div>
+        // }),
+        // true => None,
+        // }}
         </div>
     }
 }
@@ -79,13 +84,22 @@ where
     F: Fn() + Copy + 'static,
 {
     view! {
-        {groups.into_iter().enumerate().map(|(i, group)| {
+        {groups
+            .into_iter()
+            .enumerate()
+            .map(|(i, group)| {
                 let open = open[i];
                 view! {
-                    <GroupsChips open group _course_sigle=course_sigle.clone() _group_type=group_type submit/>
+                    <GroupsChips
+                        open
+                        group
+                        _course_sigle=course_sigle.clone()
+                        _group_type=group_type
+                        submit
+                    />
                 }
-            }).collect_view()
-        }
+            })
+            .collect_view()}
     }
 }
 
@@ -99,52 +113,84 @@ where
         <Tab active_tab tab_id=course.sigle.to_string()>
             <p>{course.name}</p>
             <div class="flex justify-around">
-                {
-                    match course.course_type {
-                        ReactiveCourseType::TheoOnly { theo_open, theo_groups } => {
-                            let groups = theo_groups;
-                            view!{
-                                <div class="flex gap-2 flex-col pb-2 max-h-[26rem] overflow-y-auto">
-                                    <h3>"Théorie"</h3>
-                                    <GroupsSettings groups open=theo_open course_sigle group_type=GroupType::TheoGroup submit/>
-                                </div>
-                            }.into_any()
-                        },
-                        ReactiveCourseType::LabOnly { lab_open, lab_groups } => {
-                            let groups = lab_groups;
-                            view!{
-                                <div class="flex gap-2 flex-col pb-2 overflow-y-auto">
-                                    <h3>"Laboratoire"</h3>
-                                    <GroupsSettings groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
-                                </div>
-                            }.into_any()
-                        },
-                        ReactiveCourseType::Both { theo_open, theo_groups, lab_open, lab_groups } => {
-                            let theo_groups = theo_groups;
-                            let lab_groups = lab_groups;
-                            view!{
-                                <div class="flex gap-2 flex-col pb-2 overflow-y-auto">
-                                    <h3>"Théorie"</h3>
-                                    <GroupsSettings groups=theo_groups open=theo_open course_sigle=course_sigle.clone() group_type=GroupType::TheoGroup submit/>
-                                </div>
-                                <div class="vertical-bar"></div>
-                                <div class="flex gap-2 flex-col pb-2 overflow-y-auto">
-                                    <h3>"Laboratoire"</h3>
-                                    <GroupsSettings groups=lab_groups open=lab_open course_sigle=course_sigle.clone() group_type=GroupType::LabGroup submit/>
-                                </div>
-                            }.into_any()
-                        },
-                        ReactiveCourseType::Linked { both_open, theo_groups, lab_groups } => {
-                            let groups = theo_groups.merge(lab_groups);
-                            view!{
-                                <div class="flex gap-2 flex-col pb-2 overflow-y-auto">
-                                    <h3>"Théorie et laboratoire lié"</h3>
-                                    <GroupsSettings groups open=both_open course_sigle=course_sigle group_type=GroupType::LabGroup submit/>
-                                </div>
-                            }.into_any()
-                        },
+                {match course.course_type {
+                    ReactiveCourseType::TheoOnly { theo_open, theo_groups } => {
+                        let groups = theo_groups;
+                        view! {
+                            <div class="flex gap-2 flex-col pb-2 max-h-[26rem] overflow-y-auto">
+                                <h3>"Théorie"</h3>
+                                <GroupsSettings
+                                    groups
+                                    open=theo_open
+                                    course_sigle
+                                    group_type=GroupType::TheoGroup
+                                    submit
+                                />
+                            </div>
+                        }
+                            .into_any()
                     }
-                }
+                    ReactiveCourseType::LabOnly { lab_open, lab_groups } => {
+                        let groups = lab_groups;
+                        view! {
+                            <div class="flex gap-2 flex-col pb-2 overflow-y-auto">
+                                <h3>"Laboratoire"</h3>
+                                <GroupsSettings
+                                    groups
+                                    open=lab_open
+                                    course_sigle=course_sigle.clone()
+                                    group_type=GroupType::LabGroup
+                                    submit
+                                />
+                            </div>
+                        }
+                            .into_any()
+                    }
+                    ReactiveCourseType::Both { theo_open, theo_groups, lab_open, lab_groups } => {
+                        let theo_groups = theo_groups;
+                        let lab_groups = lab_groups;
+                        view! {
+                            <div class="flex gap-2 flex-col pb-2 overflow-y-auto">
+                                <h3>"Théorie"</h3>
+                                <GroupsSettings
+                                    groups=theo_groups
+                                    open=theo_open
+                                    course_sigle=course_sigle.clone()
+                                    group_type=GroupType::TheoGroup
+                                    submit
+                                />
+                            </div>
+                            <div class="vertical-bar"></div>
+                            <div class="flex gap-2 flex-col pb-2 overflow-y-auto">
+                                <h3>"Laboratoire"</h3>
+                                <GroupsSettings
+                                    groups=lab_groups
+                                    open=lab_open
+                                    course_sigle=course_sigle.clone()
+                                    group_type=GroupType::LabGroup
+                                    submit
+                                />
+                            </div>
+                        }
+                            .into_any()
+                    }
+                    ReactiveCourseType::Linked { both_open, theo_groups, lab_groups } => {
+                        let groups = theo_groups.merge(lab_groups);
+                        view! {
+                            <div class="flex gap-2 flex-col pb-2 overflow-y-auto">
+                                <h3>"Théorie et laboratoire lié"</h3>
+                                <GroupsSettings
+                                    groups
+                                    open=both_open
+                                    course_sigle=course_sigle
+                                    group_type=GroupType::LabGroup
+                                    submit
+                                />
+                            </div>
+                        }
+                            .into_any()
+                    }
+                }}
             </div>
         </Tab>
     }
@@ -161,21 +207,21 @@ where
     let courses = state.courses;
 
     view! {
-        <Await
-            future=get_courses()
-            let:all_courses
-        >
-            <SearchCourse set_active_tab all_courses=all_courses.clone()/>
+        <Await future=get_courses() let:all_courses>
+            <SearchCourse set_active_tab all_courses=all_courses.clone() />
         </Await>
         <div class="flex w-full flex-wrap gap-1">
-            <button class="flex items-center py-1 px-2 rounded-xl bg-amber-500 text-black transition" class=("opacity-75", move || active_tab.get() != "") id="personal" on:pointerdown={
-                move |_| set_active_tab.set("".to_string())
-            }>
-                <CalendarX weight=IconWeight::Regular size="16px"/>
+            <button
+                class="flex items-center py-1 px-2 rounded-xl bg-amber-500 text-black transition"
+                class=("opacity-75", move || active_tab.get() != "")
+                id="personal"
+                on:pointerdown=move |_| set_active_tab.set("".to_string())
+            >
+                <CalendarX weight=IconWeight::Regular size="16px" />
                 {"Horaire personnel"}
             </button>
             <For
-                each=move || {courses.get()}
+                each=move || { courses.get() }
                 key=|c| c.sigle.clone()
                 children=move |course| {
                     let sigle = course.sigle.to_string();
@@ -183,22 +229,33 @@ where
                     let sigle = course.sigle.to_string();
                     let sigle2 = course.sigle.to_string();
                     let sigle3 = course.sigle.to_string();
-                    view!{
-                        <button class="flex items-center py-1 px-2 rounded-xl bg-amber-500 text-black transition" class=("opacity-75", add_hidden) id=sigle3 on:pointerdown={
-                            let sigle = sigle.clone();
-                            move |_| set_active_tab.set(sigle.clone())
-                        }>
-                        {sigle2}
-                        <button class="close" on:click={
-                            let sigle = sigle.clone();
-                            move |_| {
-                                state.courses.update(|courses| {
-                                    courses.retain(|c| c.sigle.as_str() != sigle);
-                                });
-                                submit();
+                    view! {
+                        <button
+                            class="flex items-center py-1 px-2 rounded-xl bg-amber-500 text-black transition"
+                            class=("opacity-75", add_hidden)
+                            id=sigle3
+                            on:pointerdown={
+                                let sigle = sigle.clone();
+                                move |_| set_active_tab.set(sigle.clone())
                             }
-                        }>
-                        <X weight=IconWeight::Regular size="16px"/></button>
+                        >
+                            {sigle2}
+                            <button
+                                class="close"
+                                on:click={
+                                    let sigle = sigle.clone();
+                                    move |_| {
+                                        state
+                                            .courses
+                                            .update(|courses| {
+                                                courses.retain(|c| c.sigle.as_str() != sigle);
+                                            });
+                                        submit();
+                                    }
+                                }
+                            >
+                                <X weight=IconWeight::Regular size="16px" />
+                            </button>
                         </button>
                     }
                 }
@@ -207,12 +264,8 @@ where
         <Tab active_tab tab_id="".to_string()>
             <PersonalTimeSelector week=state.week submit></PersonalTimeSelector>
         </Tab>
-        <For
-            each=move || {courses.get()}
-            key=|c| c.sigle.clone()
-            let:course
-        >
-            <CourseTab course active_tab submit/>
+        <For each=move || { courses.get() } key=|c| c.sigle.clone() let:course>
+            <CourseTab course active_tab submit />
         </For>
     }
 }

@@ -55,25 +55,45 @@ pub fn ClassRoomComponent() -> impl IntoView {
     view! {
         <section class="flex flex-col w-full justify-between items-center p-4">
             <div class="warning-box">
-                <WarningCircle size="5em"/>
+                <WarningCircle size="5em" />
                 <span>
-                    <span>"Cet horaire est construit à partir de l'horaire général des cours de Polytechnique Montréal. D'autres activités peuvent occuper un local. Pour connaître l'horaire complet d'un local ou le réserver: "</span>
-                    <a href="https://www.polymtl.ca/renseignements-generaux/reserver-une-salle-ou-organiser-un-evenement">"Réserver une salle"</a>
+                    <span>
+                        "Cet horaire est construit à partir de l'horaire général des cours de Polytechnique Montréal. D'autres activités peuvent occuper un local. Pour connaître l'horaire complet d'un local ou le réserver: "
+                    </span>
+                    <a href="https://www.polymtl.ca/renseignements-generaux/reserver-une-salle-ou-organiser-un-evenement">
+                        "Réserver une salle"
+                    </a>
                 </span>
             </div>
-            <Await
-                future=get_classrooms()
-                let:classrooms
-            >
-                {classrooms.as_ref().map(|classrooms| {
-                    let classrooms = classrooms.into_iter().map(|c| AutoCompleteOption::new(c.to_string(), c.to_string())).collect();
-                    view!{
-                        <AutoComplete suggestion_list=classrooms placeholder="Local" class="w-96 shadow-2xl border-b-4 border-amber-500 focus:outline-none focus:ring-0" submit=on_submit id="input-classroom"/>
-                    }
-                }).ok()}
+            <Await future=get_classrooms() let:classrooms>
+                {classrooms
+                    .as_ref()
+                    .map(|classrooms| {
+                        let classrooms = classrooms
+                            .into_iter()
+                            .map(|c| AutoCompleteOption::new(c.to_string(), c.to_string()))
+                            .collect();
+                        view! {
+                            <AutoComplete
+                                suggestion_list=classrooms
+                                placeholder="Local"
+                                class="w-96 shadow-2xl border-b-4 border-amber-500 focus:outline-none focus:ring-0"
+                                submit=on_submit
+                                id="input-classroom"
+                            />
+                        }
+                    })
+                    .ok()}
             </Await>
             <Schedule last_day=5 col_height="0.6em">
-                {move || periods.get().into_iter().enumerate().map(|(i, p)| view!{<PeriodEvent i period_course=p/>}).collect_view()}
+                {move || {
+                    periods
+                        .get()
+                        .into_iter()
+                        .enumerate()
+                        .map(|(i, p)| view! { <PeriodEvent i period_course=p /> })
+                        .collect_view()
+                }}
             </Schedule>
         </section>
     }

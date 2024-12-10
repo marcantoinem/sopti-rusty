@@ -44,18 +44,20 @@ pub fn Notifications(
     view! {
         <div class=class>
             <div class="notif-body">
-                <div class="close-button" on:pointerdown=move |_| {
-                    set_modal.set(None);
-                }>
+                <div
+                    class="close-button"
+                    on:pointerdown=move |_| {
+                        set_modal.set(None);
+                    }
+                >
                     <X size="2em"></X>
                 </div>
                 <form on:submit=on_submit>
-                    <p>"Entrez votre courriel pour recevoir des notifications quand la section ouvrira"</p>
-                    <input type="text"
-                        pattern=r"[^@\s]+@[^@\s]+\.[^@\s]+"
-                        node_ref=input_element
-                    />
-                    <input type="submit" value="Envoyer"/>
+                    <p>
+                        "Entrez votre courriel pour recevoir des notifications quand la section ouvrira"
+                    </p>
+                    <input type="text" pattern=r"[^@\s]+@[^@\s]+\.[^@\s]+" node_ref=input_element />
+                    <input type="submit" value="Envoyer" />
                 </form>
             </div>
         </div>

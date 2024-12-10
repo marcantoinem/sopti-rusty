@@ -60,39 +60,47 @@ where
     };
     view! {
         <Schedule col_height="0.4em">
-            {(0..5).into_iter().map(|i| {
-                (0..26).into_iter().map(|j| {
-                    let j = 2 * j;
-                    let style = format!(
-                        "grid-column:{};grid-row:{} / span {};",
-                        i + 3,
-                        j + 5,
-                        2
-                    );
-                    let class = move || {
-                        let day = week[i].get();
-                        let hour = day & (1 << j);
-                        if hour != 0 {
-                            "touch-none selected-hour"
-                        } else {
-                            "touch-none"
-                        }
-                    };
-                    view! {
-                        <div style=style class=class
-                            on:pointerdown=move |e| {
-                                set_initial.set(Some((i, j)));
-                                set_positive.set((week[i].get() & (1 << j)) == 0);
-                                let _ = e.target().unwrap().dyn_ref::<Element>().unwrap().release_pointer_capture(e.pointer_id());
+            {(0..5)
+                .into_iter()
+                .map(|i| {
+                    (0..26)
+                        .into_iter()
+                        .map(|j| {
+                            let j = 2 * j;
+                            let style = format!(
+                                "grid-column:{};grid-row:{} / span {};",
+                                i + 3,
+                                j + 5,
+                                2,
+                            );
+                            let class = move || {
+                                let day = week[i].get();
+                                let hour = day & (1 << j);
+                                if hour != 0 { "touch-none selected-hour" } else { "touch-none" }
+                            };
+                            view! {
+                                <div
+                                    style=style
+                                    class=class
+                                    on:pointerdown=move |e| {
+                                        set_initial.set(Some((i, j)));
+                                        set_positive.set((week[i].get() & (1 << j)) == 0);
+                                        let _ = e
+                                            .target()
+                                            .unwrap()
+                                            .dyn_ref::<Element>()
+                                            .unwrap()
+                                            .release_pointer_capture(e.pointer_id());
+                                    }
+                                    on:pointerover=move |_| {
+                                        set_destination.set((i, j));
+                                    }
+                                ></div>
                             }
-                            on:pointerover=move |_| {
-                                set_destination.set((i, j));
-                            }>
-                        </div>
-                    }
-                }).collect_view()
-            }).collect_view()}
-            <div style=selection class=selection_class></div>
+                        })
+                        .collect_view()
+                })
+                .collect_view()} <div style=selection class=selection_class></div>
         </Schedule>
     }
 }

@@ -31,31 +31,51 @@ where
     view! {
         <div class="three-col">
             <div class="flex flex-col items-center">
-                <House weight=weight_house size="10vh"/>
+                <House weight=weight_house size="10vh" />
                 <p class="font-sans font-medium tracking-tight">"Plus de congés"</p>
-                <input type="range" min="0" max="4" class="lg:w-24 w-16 accent-amber-500" prop:value=state.day_off  on:input=move |ev| {
-                    state.day_off.set(event_target_value(&ev).parse::<u8>().unwrap());
-                    submit();
-                }/>
+                <input
+                    type="range"
+                    min="0"
+                    max="4"
+                    class="lg:w-24 w-16 accent-amber-500"
+                    prop:value=state.day_off
+                    on:input=move |ev| {
+                        state.day_off.set(event_target_value(&ev).parse::<u8>().unwrap());
+                        submit();
+                    }
+                />
             </div>
             <div class="flex flex-col items-center">
                 <div class="flex">
-                    <SunHorizon weight=weight_early size="10vh"/>
-                    <Sun weight=weight_morning size="10vh"/>
+                    <SunHorizon weight=weight_early size="10vh" />
+                    <Sun weight=weight_morning size="10vh" />
                 </div>
                 <p class="font-sans font-medium tracking-tight">"Cours plus tôt ou plus tard"</p>
-                <input type="range" min="-4" max="4" class="lg:w-48 w-32 accent-amber-500" prop:value=state.morning  on:input=move |ev| {
-                    state.morning.set(event_target_value(&ev).parse::<i8>().unwrap());
-                    submit();
-                }/>
+                <input
+                    type="range"
+                    min="-4"
+                    max="4"
+                    class="lg:w-48 w-32 accent-amber-500"
+                    prop:value=state.morning
+                    on:input=move |ev| {
+                        state.morning.set(event_target_value(&ev).parse::<i8>().unwrap());
+                        submit();
+                    }
+                />
             </div>
             <div class="flex flex-col items-center">
-                <CalendarCheck weight=weight_finish size="10vh"/>
+                <CalendarCheck weight=weight_finish size="10vh" />
                 <p class="font-sans font-medium tracking-tight">"Finir plus tôt"</p>
-                <input type="range" min="0" max="4" class="lg:w-24 w-16 accent-amber-500" prop:value=state.finish_early  on:input=move |ev| {
-                    state.finish_early.set(event_target_value(&ev).parse::<u8>().unwrap());
-                    submit();
-                }
+                <input
+                    type="range"
+                    min="0"
+                    max="4"
+                    class="lg:w-24 w-16 accent-amber-500"
+                    prop:value=state.finish_early
+                    on:input=move |ev| {
+                        state.finish_early.set(event_target_value(&ev).parse::<u8>().unwrap());
+                        submit();
+                    }
                 />
             </div>
         </div>
