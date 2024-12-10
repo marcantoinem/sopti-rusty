@@ -48,7 +48,7 @@ pub fn Nav() -> impl IntoView {
 
                 <a href="https://forms.gle/u5AWgGx7vcLbCPCc7" class="sources pad-left"  target="_blank">
                     <span class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight">"Signaler un bug"</span>
-                    <Bug weight=IconWeight::Regular size="3vh"/>
+                    <Bug size="3vh"/>
                 </a>
                 <a href="https://git.step.polymtl.ca/Lemark/aep-schedule-generator-rusty" class="sources" target="_blank" ><span class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight">"Sources "</span><GitlabLogo weight=IconWeight::Regular size="3vh"/></a>
             </nav>
