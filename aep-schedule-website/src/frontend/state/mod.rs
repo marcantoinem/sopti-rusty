@@ -13,8 +13,8 @@ pub mod reactive_course;
 
 #[derive(Copy, Clone)]
 pub struct OptionState {
-    pub stored_courses: StoredValue<Vec<ReactiveCourse>>,
-    pub action_courses: Action<String, Vec<ReactiveCourse>>,
+    pub courses: RwSignal<Vec<ReactiveCourse>>,
+    pub action_courses: Action<String, ()>,
     pub week: [RwSignal<u64>; 5],
     pub max_nb_conflicts: RwSignal<u8>,
     pub day_off: RwSignal<u8>,
@@ -33,8 +33,8 @@ impl OptionState {
         use_context().unwrap()
     }
 
-    pub fn validate(self) {
-        let mut options: SchedulesOptions = (&self).into();
+    pub fn validate(&self) {
+        let mut options: SchedulesOptions = self.into();
         if options.courses_to_take.is_empty() {
             self.step.set(1);
             return;
@@ -100,26 +100,23 @@ impl OptionState {
 
 impl Default for OptionState {
     fn default() -> Self {
-        let stored_courses: StoredValue<Vec<ReactiveCourse>> = StoredValue::new(vec![]);
+        let courses: RwSignal<Vec<ReactiveCourse>> = RwSignal::new(vec![]);
 
         let action_courses = Action::new(move |sigle: &String| {
             let sigle = sigle.clone();
             async move {
-                if let Ok(c) = get_course(sigle).await {
-                    if !stored_courses
-                        .get_value()
-                        .iter()
-                        .any(|react_c| react_c.sigle == c.sigle)
-                    {
-                        stored_courses.update_value(|courses| courses.push(c.into()));
-                    }
+                if let Ok(c) = get_course(sigle.clone()).await {
+                    courses.update(|courses| {
+                        if !courses.iter().any(|c| c.sigle == sigle) {
+                            courses.push(c.into());
+                        }
+                    });
                 }
-                stored_courses.get_value()
             }
         });
 
         Self {
-            stored_courses,
+            courses,
             action_courses,
             max_nb_conflicts: RwSignal::new(0),
             week: std::array::from_fn(|_i| RwSignal::new(0)),
@@ -138,14 +135,7 @@ impl Default for OptionState {
 
 impl From<&OptionState> for SchedulesOptions {
     fn from(state: &OptionState) -> Self {
-        let courses_to_take = state
-            .action_courses
-            .value()
-            .get()
-            .unwrap_or_default()
-            .into_iter()
-            .map(|c| c.into())
-            .collect();
+        let courses_to_take = state.courses.get().into_iter().map(|c| c.into()).collect();
         let mut max_size = 8;
         state
             .max_size

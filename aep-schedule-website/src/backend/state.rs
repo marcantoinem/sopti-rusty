@@ -1,5 +1,4 @@
 use crate::frontend::app::shell;
-use crate::frontend::app::App;
 use aep_schedule_generator::data::courses::Courses;
 use aep_schedule_generator::icalendar::calendar::Calendar;
 use axum::{

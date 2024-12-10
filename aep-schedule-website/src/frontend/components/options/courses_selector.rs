@@ -151,20 +151,21 @@ where
 }
 
 #[component]
-pub fn CoursesSelector<F>(state: OptionState, submit: F) -> impl IntoView
+pub fn CoursesSelector<F>(submit: F) -> impl IntoView
 where
     F: Fn() + Copy + 'static + Send,
 {
     let (active_tab, set_active_tab) = signal("".to_string());
 
-    let action_courses = state.action_courses;
+    let state = OptionState::from_context();
+    let courses = state.courses;
 
     view! {
         <Await
             future=get_courses()
-            let:courses
+            let:all_courses
         >
-            <SearchCourse courses=courses.clone() action_courses set_active_tab/>
+            <SearchCourse set_active_tab all_courses=all_courses.clone()/>
         </Await>
         <div class="flex w-full flex-wrap gap-1">
             <button class="flex items-center py-1 px-2 rounded-xl bg-amber-500 text-black transition" class=("opacity-75", move || active_tab.get() != "") id="personal" on:pointerdown={
@@ -174,7 +175,7 @@ where
                 {"Horaire personnel"}
             </button>
             <For
-                each=move || {action_courses.value().get().unwrap_or_default()}
+                each=move || {courses.get()}
                 key=|c| c.sigle.clone()
                 children=move |course| {
                     let sigle = course.sigle.to_string();
@@ -188,15 +189,10 @@ where
                             move |_| set_active_tab.set(sigle.clone())
                         }>
                         {sigle2}
-                        <button class="close" on:pointerdown={
+                        <button class="close" on:click={
                             let sigle = sigle.clone();
                             move |_| {
-                                action_courses.value().update(|courses| {
-                                    if let Some(courses) = courses {
-                                        courses.retain(|c| c.sigle.as_str() != sigle);
-                                    }}
-                                );
-                                state.stored_courses.update_value(|courses| {
+                                state.courses.update(|courses| {
                                     courses.retain(|c| c.sigle.as_str() != sigle);
                                 });
                                 submit();
@@ -212,7 +208,7 @@ where
             <PersonalTimeSelector week=state.week submit></PersonalTimeSelector>
         </Tab>
         <For
-            each=move || {action_courses.value().get().unwrap_or_default()}
+            each=move || {courses.get()}
             key=|c| c.sigle.clone()
             let:course
         >

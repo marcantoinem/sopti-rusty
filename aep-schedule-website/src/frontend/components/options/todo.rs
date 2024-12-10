@@ -46,15 +46,15 @@ pub fn Step(
 
 #[component]
 pub fn Todo() -> impl IntoView {
-    let state = OptionState::from_context();
     let first_generation_done: FirstGenerationDone = use_context().unwrap();
 
+    let state = OptionState::from_context();
     let submit = move |_| {
         first_generation_done.0.set(true);
         state.generate();
     };
 
-    let step = state.step;
+    let step: RwSignal<u8> = state.step;
 
     let disab = move || {
         let step = step.get();

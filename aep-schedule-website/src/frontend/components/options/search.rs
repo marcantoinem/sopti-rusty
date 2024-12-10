@@ -1,24 +1,25 @@
 use crate::frontend::{
     components::common::autocomplete::{AutoComplete, AutoCompleteOption},
-    state::reactive_course::ReactiveCourse,
+    state::OptionState,
 };
 use aep_schedule_generator::data::course::CourseName;
 use leptos::prelude::*;
 
 #[component]
 pub fn SearchCourse(
-    courses: Result<Vec<CourseName>, ServerFnError>,
+    all_courses: Result<Vec<CourseName>, ServerFnError>,
     set_active_tab: WriteSignal<String>,
-    action_courses: Action<String, Vec<ReactiveCourse>>,
 ) -> impl IntoView {
-    let Ok(courses) = courses else {
+    let Ok(courses) = all_courses else {
         return None;
     };
+    let state = OptionState::from_context();
     let courses = courses
         .into_iter()
         .map(|c| AutoCompleteOption::new(c.sigle.clone(), c.sigle + " - " + &c.name))
         .collect();
 
+    let action_courses = state.action_courses;
     let on_submit = move |sigle: String| {
         set_active_tab(sigle.clone());
         action_courses.dispatch(sigle);

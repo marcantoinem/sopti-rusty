@@ -18,10 +18,11 @@ fn weight(input: u8) -> IconWeight {
 }
 
 #[component]
-pub fn SelectOptimizations<F>(state: OptionState, submit: F) -> impl IntoView
+pub fn SelectOptimizations<F>(submit: F) -> impl IntoView
 where
     F: Fn() + Copy + 'static,
 {
+    let state = OptionState::from_context();
     let weight_house = Memo::new(move |_| weight(state.day_off.get()));
     let weight_early = Memo::new(move |_| weight((-cmp::min(0, state.morning.get())) as u8));
     let weight_morning = Memo::new(move |_| weight(cmp::max(0, state.morning.get()) as u8));
