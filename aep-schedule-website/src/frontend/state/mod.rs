@@ -34,7 +34,7 @@ impl OptionState {
 
     pub fn submit(&self) {
         self.validate();
-        if !self.first_generation_done.get_value() || self.step.get() < 5 {
+        if !self.first_generation_done.get_value() || self.step.get_untracked() < 5 {
             return;
         }
         self.generate();
