@@ -22,6 +22,19 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <HydrationScripts options />
                 <link rel="stylesheet" id="leptos" href="/pkg/aep-schedule-website.css" />
                 <MetaTags />
+                <script>
+                    var _paq = window._paq = window._paq || [];
+                    _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+                    _paq.push(["trackPageView"]);
+                    _paq.push(["enableLinkTracking"]);
+                    (function() {
+                            var u="//analytics.step.polymtl.ca/";
+                            _paq.push(["setTrackerUrl", u+"matomo.php"]);
+                            _paq.push(["setSiteId", "2"]);
+                            var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0];
+                            g.async=true; g.src=u+"matomo.js"; s.parentNode.insertBefore(g,s);
+                    })();
+                </script>
             </head>
             <body>
                 <App />
