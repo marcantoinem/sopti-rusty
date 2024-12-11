@@ -3,31 +3,20 @@ use crate::frontend::{
         common::number_input::NumberInput,
         options::{courses_selector::CoursesSelector, optimizations::SelectOptimizations},
     },
-    pages::generator::FirstGenerationDone,
     state::OptionState,
 };
 use leptos::prelude::*;
 
 #[component]
 pub fn OptionsForms() -> impl IntoView {
-    let first_generation_done: FirstGenerationDone = use_context().unwrap();
-
     let state = OptionState::from_context();
+
     let submit = move || {
-        state.validate();
-        if !first_generation_done.0.get() || state.step.get() < 5 {
-            return;
-        }
-        state.generate();
+        state.submit();
     };
 
     let submit_mobile = move |_| {
-        state.validate();
-        if state.step.get() < 5 {
-            state.hide.set(true);
-            return;
-        }
-        state.generate();
+        state.submit_mobile();
     };
 
     view! {

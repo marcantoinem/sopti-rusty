@@ -7,14 +7,13 @@ use aep_schedule_generator::{
 use leptos::prelude::*;
 use reactive_course::ReactiveCourse;
 
-use crate::backend::routes::get_course;
-
+pub mod action_add_course;
 pub mod reactive_course;
 
 #[derive(Copy, Clone)]
 pub struct OptionState {
+    pub first_generation_done: StoredValue<bool>,
     pub courses: RwSignal<Vec<ReactiveCourse>>,
-    pub action_courses: Action<String, ()>,
     pub week: [RwSignal<u64>; 5],
     pub max_nb_conflicts: RwSignal<u8>,
     pub day_off: RwSignal<u8>,
@@ -33,10 +32,28 @@ impl OptionState {
         use_context().unwrap()
     }
 
-    pub fn validate(&self) {
+    pub fn submit(&self) {
+        self.validate();
+        if !self.first_generation_done.get_value() || self.step.get() < 5 {
+            return;
+        }
+        self.generate();
+    }
+
+    pub fn submit_mobile(&self) {
+        self.validate();
+        if self.step.get() < 5 {
+            self.hide.set(true);
+            return;
+        }
+        self.generate();
+    }
+
+    fn validate(&self) {
         let mut options: SchedulesOptions = self.into();
         if options.courses_to_take.is_empty() {
             self.step.set(1);
+            self.schedule.set(vec![]);
             return;
         }
         let mut impossible_courses = options.get_impossible_course().into_iter();
@@ -49,6 +66,7 @@ impl OptionState {
             error.push_str(" sont toutes fermées.");
             self.section_error.set(error);
             self.step.set(2);
+            self.schedule.set(vec![]);
             return;
         }
         self.section_error.set("".to_string());
@@ -63,6 +81,7 @@ impl OptionState {
             error.push_str(" sont en conflits avec les heures libres sélectionnées.");
             self.personal_error.set(error);
             self.step.set(3);
+            self.schedule.set(vec![]);
             return;
         }
         self.personal_error.set("".to_string());
@@ -73,7 +92,7 @@ impl OptionState {
         });
     }
 
-    pub fn generate(&self) {
+    fn generate(&self) {
         self.max_size
             .update_value(|v| v.store(8, Ordering::Relaxed));
         self.hide.set(true);
@@ -102,22 +121,9 @@ impl Default for OptionState {
     fn default() -> Self {
         let courses: RwSignal<Vec<ReactiveCourse>> = RwSignal::new(vec![]);
 
-        let action_courses = Action::new(move |sigle: &String| {
-            let sigle = sigle.clone();
-            async move {
-                if let Ok(c) = get_course(sigle.clone()).await {
-                    courses.update(|courses| {
-                        if !courses.iter().any(|c| c.sigle == sigle) {
-                            courses.push(c.into());
-                        }
-                    });
-                }
-            }
-        });
-
         Self {
+            first_generation_done: StoredValue::new(false),
             courses,
-            action_courses,
             max_nb_conflicts: RwSignal::new(0),
             week: std::array::from_fn(|_i| RwSignal::new(0)),
             day_off: RwSignal::new(3),
@@ -135,18 +141,23 @@ impl Default for OptionState {
 
 impl From<&OptionState> for SchedulesOptions {
     fn from(state: &OptionState) -> Self {
-        let courses_to_take = state.courses.get().into_iter().map(|c| c.into()).collect();
+        let courses_to_take = state
+            .courses
+            .get_untracked()
+            .into_iter()
+            .map(|c| c.into())
+            .collect();
         let mut max_size = 8;
         state
             .max_size
             .update_value(|v| max_size = v.load(Ordering::Relaxed));
-        let max_nb_conflicts = state.max_nb_conflicts.get();
+        let max_nb_conflicts = state.max_nb_conflicts.get_untracked();
         let evaluation = EvaluationOption {
-            day_off: state.day_off.get(),
-            morning: state.morning.get(),
-            finish_early: state.finish_early.get(),
+            day_off: state.day_off.get_untracked(),
+            morning: state.morning.get_untracked(),
+            finish_early: state.finish_early.get_untracked(),
         };
-        let user_conflicts = Week::new(state.week.map(|s| s.get() << 2));
+        let user_conflicts = Week::new(state.week.map(|s| s.get_untracked() << 2));
         Self {
             courses_to_take,
             max_nb_conflicts,

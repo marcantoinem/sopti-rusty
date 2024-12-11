@@ -61,10 +61,10 @@ impl From<ReactiveCourse> for Course {
                 mut lab_groups,
             } => {
                 for (i, theo) in theo_open.iter().enumerate() {
-                    theo_groups.get_mut(i.into()).unwrap().open = theo.get();
+                    theo_groups.get_mut(i.into()).unwrap().open = theo.get_untracked();
                 }
                 for (i, lab) in lab_open.iter().enumerate() {
-                    lab_groups.get_mut(i.into()).unwrap().open = lab.get();
+                    lab_groups.get_mut(i.into()).unwrap().open = lab.get_untracked();
                 }
                 CourseType::Both {
                     theo_groups,

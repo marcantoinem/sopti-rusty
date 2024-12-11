@@ -1,6 +1,6 @@
 use crate::frontend::{
     components::common::autocomplete::{AutoComplete, AutoCompleteOption},
-    state::OptionState,
+    state::action_add_course::ActionAddCourse,
 };
 use aep_schedule_generator::data::course::CourseName;
 use leptos::prelude::*;
@@ -13,13 +13,12 @@ pub fn SearchCourse(
     let Ok(courses) = all_courses else {
         return None;
     };
-    let state = OptionState::from_context();
     let courses = courses
         .into_iter()
         .map(|c| AutoCompleteOption::new(c.sigle.clone(), c.sigle + " - " + &c.name))
         .collect();
 
-    let action_courses = state.action_courses;
+    let action_courses = ActionAddCourse::from_context().0;
     let on_submit = move |sigle: String| {
         set_active_tab(sigle.clone());
         action_courses.dispatch(sigle);

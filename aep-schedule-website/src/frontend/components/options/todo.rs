@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 
 use crate::frontend::components::icons::warning_circle::WarningCircle;
-use crate::frontend::{pages::generator::FirstGenerationDone, state::OptionState};
+use crate::frontend::state::OptionState;
 use leptos::prelude::*;
 
 #[component]
@@ -62,12 +62,10 @@ pub fn Step(
 
 #[component]
 pub fn Todo() -> impl IntoView {
-    let first_generation_done: FirstGenerationDone = use_context().unwrap();
-
     let state = OptionState::from_context();
     let submit = move |_| {
-        first_generation_done.0.set(true);
-        state.generate();
+        state.first_generation_done.set_value(true);
+        state.submit();
     };
 
     let step: RwSignal<u8> = state.step;
