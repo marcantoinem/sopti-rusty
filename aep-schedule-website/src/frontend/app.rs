@@ -24,20 +24,18 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <MetaTags />
             </head>
             <body>
-                // STEP analytics
                 <script>
-                    var _paq = window._paq = window._paq || [];
-                    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-                    _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
-                    _paq.push(["trackPageView"]);
-                    _paq.push(["enableLinkTracking"]);
-                    (function() {
-                        var u="//analytics.step.polymtl.ca/";
-                        _paq.push(["setTrackerUrl", u+"matomo.php"]);
-                        _paq.push(["setSiteId", "2"]);
+                var _paq = window._paq = window._paq || [];
+                _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+                _paq.push(["trackPageView"]);
+                _paq.push(["enableLinkTracking"]);
+                (function() {
+                    var u="//analytics.step.polymtl.ca/";
+                    _paq.push(["setTrackerUrl", u+"matomo.php"]);
+                    _paq.push(["setSiteId", "2"]);
                         var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0];
-                        g.async=true; g.src=u+"matomo.js"; s.parentNode.insertBefore(g,s);
-                    })();
+                    g.async=true; g.src=u+"matomo.js"; s.parentNode.insertBefore(g,s);
+                })();
                 </script>
                 <App />
             </body>
@@ -53,21 +51,21 @@ pub fn Nav() -> impl IntoView {
         <header>
             <nav class=("active", is_active) class="flex-wrap overflow-x-hidden">
                 <span class="text-2xl font-semibold leading-none font-sans tracking-tight">
-                    "Générateur d"horaire de l"AEP" <span class="text-amber-600">"v2"</span>
+                    "Générateur d'horaire de l'AEP" <span class="text-amber-600">"v2"</span>
                 </span>
                 <span class="bg-red-200 text-red-800 text-lg font-sans tracking-tight font-medium me-2 px-2.5 py-0.5 rounded-full shrink">
                     "Beta - "<a class="text-gray-800" href="https://horaires.aep.polymtl.ca/">
-                        "Retourner à l"ancien générateur"
+                        "Retourner à l'ancien générateur"
                     </a>
                 </span>
                 <A href="/">
                     <span class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight">
-                        "Générateur d"horaire"
+                        "Générateur d'horaire"
                     </span>
                 </A>
                 <A href="/local">
                     <span class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight">
-                        "Horaire d"un local"
+                        "Horaire d'un local"
                     </span>
                 </A>
                 <A href="/apropos">
@@ -121,7 +119,7 @@ pub fn App() -> impl IntoView {
 
     view! {
         <Router>
-            <Title text="Générateur d"horaire" />
+            <Title text="Générateur d'horaire" />
             <Nav />
             <main class="h-full">
                 <FlatRoutes fallback=|| "Not found">
