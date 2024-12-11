@@ -1,4 +1,4 @@
-use crate::frontend::app::App;
+use crate::frontend::app::shell;
 use aep_schedule_generator::data::courses::Courses;
 use aep_schedule_generator::icalendar::calendar::Calendar;
 use axum::{
@@ -8,9 +8,9 @@ use axum::{
     http::Request,
     response::{IntoResponse, Response},
 };
-use leptos::*;
+use leptos::prelude::*;
 use leptos_axum::handle_server_fns_with_context;
-use leptos_router::RouteListing;
+use leptos_axum::AxumRouteListing;
 use std::fs::File;
 use std::io::BufReader;
 use std::sync::Arc;
@@ -31,11 +31,11 @@ pub struct AppState {
     pub courses: Arc<RwLock<Courses>>,
     pub calendar: Arc<RwLock<Calendar>>,
     pub users_to_notify: Arc<Mutex<UsersToNotify>>,
-    pub routes: Vec<RouteListing>,
+    pub routes: Vec<AxumRouteListing>,
 }
 
 impl AppState {
-    pub async fn new(leptos_options: LeptosOptions, routes: Vec<RouteListing>) -> Self {
+    pub async fn new(leptos_options: LeptosOptions, routes: Vec<AxumRouteListing>) -> Self {
         #[cfg(not(debug_assertions))]
         {
             // Don't spam Poly when reloading the website in debug mode
@@ -130,15 +130,18 @@ pub async fn leptos_routes_handler(
     State(app_state): State<AppState>,
     req: Request<AxumBody>,
 ) -> Response {
+    let state = axum::extract::State(app_state.clone());
     let handler = leptos_axum::render_route_with_context(
-        app_state.leptos_options.clone(),
         app_state.routes.clone(),
         move || {
             provide_context(app_state.calendar.clone());
             provide_context(app_state.courses.clone());
             provide_context(app_state.users_to_notify.clone());
         },
-        App,
+        {
+            let leptos_options = app_state.leptos_options.clone();
+            move || shell(leptos_options.clone())
+        },
     );
-    handler(req).await.into_response()
+    handler(state, req).await.into_response()
 }
