@@ -1394,8 +1394,9 @@ dependencies = [
 
 [[package]]
 name = "icalendar"
-version = "0.16.3"
-source = "git+https://github.com/marcantoinem/icalendar-rs?branch=fix/wrapping-behaviour#e640f6ca5f519eb536dbedd787b5843be463622a"
+version = "0.16.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "78aa665b8aa17f012f7e6f89e7124e48a83716b9c5600fe318fa22e2a3d7063d"
 dependencies = [
  "chrono",
  "iso8601",

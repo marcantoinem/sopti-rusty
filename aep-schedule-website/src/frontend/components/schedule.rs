@@ -137,12 +137,12 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Arc<Calendar>) -> impl In
     let courses = schedule.taken_courses.clone();
     let courses2 = schedule.taken_courses.clone();
     let schedule2 = schedule.clone();
-    let (download, set_download) = signal("".to_string());
-    let link = NodeRef::new();
+    let ics = calendar.generate_ics(&schedule2);
+    let url = url_escape::encode_fragment(&ics);
+    let url = "data:text/plain;charset=utf-8,".to_string() + &url;
 
     view! {
         <div class="flex flex-col w-full items-center card p-2">
-            <a class="hidden" download="cours.ics" href=move || download.get() node_ref=link></a>
             <table class="cours">
                 {courses
                     .into_iter()
@@ -158,18 +158,10 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Arc<Calendar>) -> impl In
                     .map(|(i, c)| view! { <CoursePeriods i course=c /> })
                     .collect_view()}
             </Schedule>
-            <button
-                class="button-download flex"
-                on:pointerdown=move |_| {
-                    let ics = calendar.generate_ics(&schedule2);
-                    let url = url_escape::encode_fragment(&ics);
-                    set_download("data:text/plain;charset=utf-8,".to_string() + &url);
-                    link.get().unwrap().click();
-                }
-            >
+            <a class="button-download flex" download="cours.ics" href={url}>
                 <Download weight=IconWeight::Regular size="3vh" />
                 <span>"Télécharger le calendrier de cet horaire"</span>
-            </button>
+            </a>
         </div>
     }
 }
