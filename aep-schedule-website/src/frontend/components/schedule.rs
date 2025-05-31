@@ -142,7 +142,7 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Arc<Calendar>) -> impl In
     let url = "data:text/plain;charset=utf-8,".to_string() + &url;
 
     view! {
-        <div class="flex flex-col w-full items-center card p-2">
+        <div class="flex flex-col w-full items-center p-2 bg-zinc-100 shadow-md text-gray-900 text-center rounded-md font-bold">
             <table class="cours">
                 {courses
                     .into_iter()
