@@ -30,7 +30,7 @@ pub struct AppState {
     pub leptos_options: LeptosOptions,
     pub courses: Arc<RwLock<Courses>>,
     pub calendar: Arc<RwLock<Calendar>>,
-    pub users_to_notify: Arc<Mutex<UsersToNotify>>,
+    //pub users_to_notify: Arc<Mutex<UsersToNotify>>,
     pub routes: Vec<AxumRouteListing>,
 }
 
@@ -55,13 +55,13 @@ impl AppState {
         let courses = Arc::new(RwLock::new(Courses::from_csv(horsage, fermes)));
         let alternance = BufReader::new(File::open("alternance.csv").unwrap());
         let calendar = Arc::new(RwLock::new(Calendar::from_csv(alternance)));
-        let users_to_notify = Arc::new(Mutex::new(UsersToNotify::new()));
+        //let users_to_notify = Arc::new(Mutex::new(UsersToNotify::new()));
 
         Self {
             routes,
             leptos_options,
             calendar,
-            users_to_notify,
+            //users_to_notify,
             courses,
         }
     }
@@ -89,12 +89,12 @@ impl AppState {
             fs::write("fermes.csv", fermes).expect("Unable to write file");
             let horsage = BufReader::new(File::open("horsage.csv").unwrap());
             let fermes = BufReader::new(File::open("fermes.csv").unwrap());
-            let opened_course = self.courses.write().await.update(horsage, fermes);
-            self.users_to_notify
-                .lock()
-                .unwrap()
-                .send_opened(opened_course)
-                .await;
+            let _opened_course = self.courses.write().await.update(horsage, fermes);
+            //self.users_to_notify
+            //    .lock()
+            //    .unwrap()
+            //    .send_opened(opened_course)
+            //    .await;
         }
     }
 
@@ -119,7 +119,7 @@ pub async fn server_fn_handler(
         move || {
             provide_context(app_state.calendar.clone());
             provide_context(app_state.courses.clone());
-            provide_context(app_state.users_to_notify.clone());
+            // provide_context(app_state.users_to_notify.clone());
         },
         request,
     )
@@ -136,7 +136,7 @@ pub async fn leptos_routes_handler(
         move || {
             provide_context(app_state.calendar.clone());
             provide_context(app_state.courses.clone());
-            provide_context(app_state.users_to_notify.clone());
+            //provide_context(app_state.users_to_notify.clone());
         },
         {
             let leptos_options = app_state.leptos_options.clone();
