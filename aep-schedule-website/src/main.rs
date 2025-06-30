@@ -27,7 +27,7 @@ cfg_if::cfg_if!(if #[cfg(feature = "ssr")] {
         // build our application with a route
         let app = Router::new()
             .route(
-                "/api/*fn_name",
+                "/api/{*fn_name}",
                 get(server_fn_handler).post(server_fn_handler),
             )
             .leptos_routes_with_handler(routes, get(leptos_routes_handler))

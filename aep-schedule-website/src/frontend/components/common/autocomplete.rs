@@ -74,7 +74,7 @@ pub fn AutoComplete<F: FnMut(String) + Copy + Clone + 'static>(
         <div class="relative search-container ".to_owned() + &class>
             <input
                 type="text"
-                class="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none text-black"
+                class="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none text-black bg-white"
                 on:input=on_input
                 placeholder=placeholder
                 prop:value=input

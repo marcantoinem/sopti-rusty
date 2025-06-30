@@ -254,7 +254,7 @@ where
                                     }
                                 }
                             >
-                                <X weight=IconWeight::Regular size="16px" />
+                                <X size="16px" />
                             </button>
                         </button>
                     }

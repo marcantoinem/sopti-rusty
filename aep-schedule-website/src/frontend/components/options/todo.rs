@@ -14,9 +14,9 @@ pub fn Step(
 ) -> impl IntoView {
     let bg_color = move || {
         match n.cmp(&step.get()) {
-            Ordering::Less => "flex transition-all items-center justify-center w-10 h-10 border rounded-full bg-green-400",
-            Ordering::Greater => "flex transition-all items-center justify-center w-10 h-10 border rounded-full bg-gray-100",
-            Ordering::Equal => "flex transition-all items-center justify-center w-10 h-10 border rounded-full bg-amber-400",
+            Ordering::Less => "flex transition-all items-center justify-center w-10 h-10 border rounded-full bg-green-400 border-gray-300",
+            Ordering::Greater => "flex transition-all items-center justify-center w-10 h-10 border rounded-full bg-gray-100 border-gray-300",
+            Ordering::Equal => "flex transition-all items-center justify-center w-10 h-10 border rounded-full bg-amber-400 border-gray-300",
         }
     };
 
@@ -95,7 +95,7 @@ pub fn Todo() -> impl IntoView {
                         description="Assurez d'avoir au moins une section d'ouverte pour la théorie et la pratique. En sélectionnant l'onglet du cours et en appuyant sur les sections."
                     >
                         <div
-                            class="warning-box"
+                            class="p-4 gap-4 max-w-3xl flex flex-row items-center text-justify bg-red-500 text-white"
                             class=("hidden", move || state.section_error.get().is_empty())
                         >
                             <WarningCircle size="2em" />
@@ -109,7 +109,7 @@ pub fn Todo() -> impl IntoView {
                         description="Sélectionnez une plage de temps à avoir absolument libre en pressant et relâchant sur votre horaire personnel."
                     >
                         <div
-                            class="warning-box"
+                            class="p-4 gap-4 max-w-3xl flex flex-row items-center text-justify bg-red-500 text-white"
                             class=("hidden", move || state.personal_error.get().is_empty())
                         >
                             <WarningCircle size="2em" />
@@ -126,7 +126,7 @@ pub fn Todo() -> impl IntoView {
                         <div class="flex flex-col items-center mr-4">
                             <div>
                                 <div
-                                    class="flex transition-colors items-center justify-center w-10 h-10 border rounded-full"
+                                    class="flex transition-colors items-center justify-center w-10 h-10 border rounded-full border-gray-300"
                                     class=("bg-gray-100", move || step.get() < 5)
                                     class=("bg-green-400", move || step.get() == 5)
                                     class=("bg-amber-400", move || step.get() == 6)

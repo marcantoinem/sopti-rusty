@@ -1,20 +1,20 @@
 $background-color: #151420;
 $highlight-color: rgb(245 158 11);
-$highlight-text: #0F1741;
+$highlight-text: #0f1741;
 $tern-color: #daa662;
 $tern-text: #3b3b3b;
-$secondary-color: #40477E;
-$error-color: #DC3545;
-$light-background: #F8F8F8;
-$highlight-background: #FFFFFF;
-$success: #0FCC3B;
+$secondary-color: #40477e;
+$error-color: #dc3545;
+$light-background: #f8f8f8;
+$highlight-background: #ffffff;
+$success: #0fcc3b;
 
 @keyframes fadeIn {
-	0% {
-		opacity: 0;
-	}
+    0% {
+        opacity: 0;
+    }
 
-	100% {
-		opacity: 1;
-	}
+    100% {
+        opacity: 1;
+    }
 }

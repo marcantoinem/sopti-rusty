@@ -31,7 +31,7 @@ pub fn SchedulesComponent() -> impl IntoView {
                         if generated && bad_generation {
                             Some(
                                 view! {
-                                    <div class="warning-box">
+                                    <div class="p-4 gap-4 max-w-3xl flex flex-row items-center text-justify bg-red-500 text-white">
                                         <WarningCircle size="4em" />
                                         <span>
                                             "Aucun horaire n'a pu être généré, augmentez le nombre de conflits ou ouvrez des sections. Probablement que deux groupes sont toujours en conflits."
