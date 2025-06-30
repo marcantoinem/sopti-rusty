@@ -11,3 +11,5 @@ pkg
 **/flamegraph.svg
 **/perf.data*
 **/env.nu
+
+**/.cargo/config.toml
