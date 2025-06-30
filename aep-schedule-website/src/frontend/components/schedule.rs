@@ -2,7 +2,6 @@ use std::sync::Arc;
 
 use crate::frontend::components::common::schedule::{Schedule, ScheduleEvent};
 use crate::frontend::components::icons::download::Download;
-use crate::frontend::components::icons::IconWeight;
 use aep_schedule_generator::icalendar::calendar::Calendar;
 use aep_schedule_generator::{
     algorithm::{
@@ -142,7 +141,7 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Arc<Calendar>) -> impl In
     let url = "data:text/plain;charset=utf-8,".to_string() + &url;
 
     view! {
-        <div class="flex flex-col w-full items-center card p-2">
+        <div class="flex flex-col w-full items-center p-2 bg-zinc-100 shadow-md text-gray-900 text-center rounded-md font-bold">
             <table class="cours">
                 {courses
                     .into_iter()
@@ -158,8 +157,8 @@ pub fn ScheduleComponent(schedule: Schedule, calendar: Arc<Calendar>) -> impl In
                     .map(|(i, c)| view! { <CoursePeriods i course=c /> })
                     .collect_view()}
             </Schedule>
-            <a class="button-download flex" download="cours.ics" href={url}>
-                <Download weight=IconWeight::Regular size="3vh" />
+            <a class="button-download flex" download="cours.ics" href=url>
+                <Download size="3vh" />
                 <span>"Télécharger le calendrier de cet horaire"</span>
             </a>
         </div>

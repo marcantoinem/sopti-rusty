@@ -7,7 +7,7 @@
     display: none;
 }
 
-input:focus~.result-box {
+input:focus ~ .result-box {
     display: block;
 }
 
@@ -29,7 +29,7 @@ input:focus~.result-box {
     z-index: 69;
 }
 
-.result-box>div {
+.result-box > div {
     z-index: 70;
     cursor: pointer;
     background-color: #fff;
@@ -37,18 +37,6 @@ input:focus~.result-box {
     border-bottom: 1px solid #d4d4d4;
 }
 
-.result-box>div:hover {
+.result-box > div:hover {
     background-color: #d4d4d4;
-}
-
-.warning-box {
-    padding: 1em;
-    gap: 1em;
-    max-width: 42em;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    text-justify: auto;
-    background-color: $error-color;
-    color: white;
 }

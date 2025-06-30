@@ -1,6 +1,5 @@
 use crate::frontend::components::icons::bug::Bug;
 use crate::frontend::components::icons::gitlab_logo::GitlabLogo;
-use crate::frontend::components::icons::IconWeight;
 use crate::frontend::pages::apropos::HomePage;
 use crate::frontend::pages::classroom::ClassRoomComponent;
 use crate::frontend::pages::generator::GeneratorPage;
@@ -92,7 +91,7 @@ pub fn Nav() -> impl IntoView {
                     <span class="rounded-md font-medium text-gray-700 text-lg font-sans tracking-tight">
                         "Sources "
                     </span>
-                    <GitlabLogo weight=IconWeight::Regular size="3vh" />
+                    <GitlabLogo size="3vh" />
                 </a>
             </nav>
             <div

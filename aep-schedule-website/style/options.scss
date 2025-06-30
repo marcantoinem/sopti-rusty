@@ -1,128 +1,117 @@
-@import 'constant.scss';
+@import "constant.scss";
 
 .relative {
-  position: relative;
-}
-
-.card {
-  background-color: $light-background;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  color: $background-color;
-  text-align: center;
-  border-radius: 5px;
-  width: 80%;
-  padding: 0px;
-  font-weight: bold;
+    position: relative;
 }
 
 .top-left {
-  position: absolute;
-  top: 2px;
-  right: 2px;
+    position: absolute;
+    top: 2px;
+    right: 2px;
 }
 
 .three-col {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    width: 100%;
 }
 
 .bottom {
-  margin-top: auto;
+    margin-top: auto;
 }
 
 .card p {
-  margin: 2px;
+    margin: 2px;
 }
 
 .card h3 {
-  margin: 0px;
-  padding: 0px;
+    margin: 0px;
+    padding: 0px;
 }
 
 .auto-bottom {
-  margin-top: auto;
+    margin-top: auto;
 }
 
 @keyframes translateOpen {
-  0% {
-    max-height: 22px;
-  }
+    0% {
+        max-height: 22px;
+    }
 
-  100% {
-    max-height: 100px;
-  }
+    100% {
+        max-height: 100px;
+    }
 }
 
 .group-text {
-  gap: 3px;
-  width: 100%;
-  align-items: flex-start;
-  justify-content: flex-start;
+    gap: 3px;
+    width: 100%;
+    align-items: flex-start;
+    justify-content: flex-start;
 }
 
 .period-group {
-  margin-left: auto;
+    margin-left: auto;
 
-  @media screen and (max-width: 1000px) {
-    display: none;
-  }
+    @media screen and (max-width: 1000px) {
+        display: none;
+    }
 }
 
 .closed-group {
-  background-color: $error-color;
+    background-color: $error-color;
 }
 
 .vertical-bar {
-  max-height: 100%;
-  width: 2px;
-  border-radius: 10px;
-  margin-bottom: 5px;
-  background-color: $background-color;
+    max-height: 100%;
+    width: 2px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    background-color: $background-color;
 }
 
 .close {
-  background: none;
-  border: none;
-  display: flex;
-  align-items: center;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
 }
 
 .selected-hour {
-  background-color: rgb(87, 104, 175);
+    background-color: rgb(87, 104, 175);
 }
 
 .unselected-hour {
-  background-color: $light-background;
+    background-color: $light-background;
 }
 
 .notif-modal {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  z-index: 40;
-  backdrop-filter: blur(0.5em);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    z-index: 40;
+    backdrop-filter: blur(0.5em);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .notif-body {
-  width: 42em;
-  height: 15em;
-  background-color: $light-background;
-  display: flex;
-  padding: 5em;
-  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  position: relative;
+    width: 42em;
+    height: 15em;
+    background-color: $light-background;
+    display: flex;
+    padding: 5em;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    position: relative;
 }
 
 .close-button {
-  height: 2em;
-  width: 2em;
-  position: absolute;
-  right: 2em;
-  top: 2em;
+    height: 2em;
+    width: 2em;
+    position: absolute;
+    right: 2em;
+    top: 2em;
 }

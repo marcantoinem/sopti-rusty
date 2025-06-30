@@ -1,13 +1,13 @@
-@import 'constant.scss';
+@import "constant.scss";
 
 .schedule-container {
-  width: 83%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 10pt;
-  border-collapse: collapse;
-  animation: 0.1s ease-out 1 fadeIn;
+    width: 83%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10pt;
+    border-collapse: collapse;
+    animation: 0.1s ease-out 1 fadeIn;
 }
 
 // Calendar inspired by https://codepen.io/kjellmf/pen/qgxyVJ
@@ -17,132 +17,132 @@ $time-width: 1em;
 $days: $time-width 10px repeat(5, 1fr);
 
 .schedule {
-  width: 100%;
-  display: grid;
-  grid-template-rows: $days-height auto;
+    width: 100%;
+    display: grid;
+    grid-template-rows: $days-height auto;
 }
 
 .days {
-  background: $background-color;
-  color: white;
-  display: grid;
-  place-content: center;
-  text-align: center;
-  top: 0;
-  z-index: 10;
-  border-bottom: 2px solid $highlight-color;
+    background: $background-color;
+    color: white;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    top: 0;
+    z-index: 10;
+    border-bottom: 2px solid $highlight-color;
 }
 
 .cours {
-  width: 100%;
+    width: 100%;
 }
 
 .content {
-  display: grid;
-  user-select: none;
+    display: grid;
+    user-select: none;
 }
 
 .time {
-  grid-column: 1;
-  text-align: right;
-  align-self: end;
-  font-size: 80%;
-  position: relative;
-  bottom: -1.4ex;
-  color: black;
-  padding-right: 2px;
+    grid-column: 1;
+    text-align: right;
+    align-self: end;
+    font-size: 80%;
+    position: relative;
+    bottom: -1.4ex;
+    color: black;
+    padding-right: 2px;
 }
 
 .col {
-  border-left: 1px solid black;
-  grid-row: 1 / span 58;
-  grid-column: span 1;
+    border-left: 1px solid black;
+    grid-row: 1 / span 58;
+    grid-column: span 1;
 }
 
 .filler-col {
-  grid-row: 1 / -1;
-  grid-column: 2;
+    grid-row: 1 / -1;
+    grid-column: 2;
 }
 
 .row {
-  grid-column: 2 / -1;
-  border-bottom: 1px solid black;
+    grid-column: 2 / -1;
+    border-bottom: 1px solid black;
 }
 
 .event {
-  border-radius: 0.5em;
-  padding: 1px;
-  margin: 1px 1px 2px 2px;
-  font-weight: bold;
-  font-size: 70%;
-  text-align: center;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
+    border-radius: 0.5em;
+    padding: 1px;
+    margin: 1px 1px 2px 2px;
+    font-weight: bold;
+    font-size: 70%;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
 }
 
 .event p {
-  margin: 0px;
+    margin: 0px;
 }
 
 .conflict {
-  background-color: rgba(255, 69, 69, 0.69);
-  z-index: 10;
+    background-color: rgba(255, 69, 69, 0.69);
+    z-index: 10;
 }
 
 .b1 {
-  width: calc(50% - 2px);
-  margin-right: calc(50% + 1px);
+    width: calc(50% - 2px);
+    margin-right: calc(50% + 1px);
 }
 
 .b2 {
-  width: calc(50% - 2px);
-  margin-left: calc(50% + 1px);
+    width: calc(50% - 2px);
+    margin-left: calc(50% + 1px);
 }
 
 .button-download {
-  padding: 0px 10px;
-  gap: 10px;
-  height: 4vh;
-  background-color: $highlight-color;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  color: $highlight-text;
-  font-weight: bolder;
-  border-radius: 10px;
-  cursor: pointer;
+    padding: 0px 10px;
+    gap: 10px;
+    height: 4vh;
+    background-color: $highlight-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    color: $highlight-text;
+    font-weight: bolder;
+    border-radius: 10px;
+    cursor: pointer;
 }
 
 .color1 {
-  background-color: #41AAE6;
+    background-color: #41aae6;
 }
 
 .color2 {
-  background-color: #8CC83C;
+    background-color: #8cc83c;
 }
 
 .color3 {
-  background-color: #FA961E;
+    background-color: #fa961e;
 }
 
 .color4 {
-  background-color: #B91E32;
+    background-color: #b91e32;
 }
 
 .color5 {
-  background-color: #950de4;
+    background-color: #950de4;
 }
 
 .color6 {
-  background-color: #007706;
+    background-color: #007706;
 }
 
 .color7 {
-  background-color: #ffd20b;
+    background-color: #ffd20b;
 }
 
 .color8 {
-  background-color: #ff008c;
+    background-color: #ff008c;
 }

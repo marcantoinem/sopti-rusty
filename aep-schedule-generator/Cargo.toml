@@ -17,17 +17,15 @@ opt-level = 3
 debug = true
 
 [dev-dependencies]
-criterion = { version = "0.5", features = ["html_reports"] }
+criterion = { version = "0.6", features = ["html_reports"] }
 
 [[bench]]
 name = "generator"
 harness = false
 
 [dependencies]
-compact_str = { version = "0.8", features = ["serde"] }
-serde = { version = "1.0.187", features = ["derive", "rc"] }
+compact_str = { version = "0.9", features = ["serde"] }
+serde = { version = "1.0.219", features = ["derive", "rc"] }
 icalendar = "0.16"
 chrono = { version = "0.4.38", features = ["serde"] }
-uuid = { version = "1.6.1", features = ["v4"] }
-rand = { version = "0.8.5", features = ["std_rng"] }
 log = "0.4.21"

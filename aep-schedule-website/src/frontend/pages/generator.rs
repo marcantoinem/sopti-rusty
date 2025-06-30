@@ -1,4 +1,4 @@
-use crate::frontend::components::icons::{caret_double_right::CaretDoubleRight, IconWeight};
+use crate::frontend::components::icons::caret_double_right::CaretDoubleRight;
 use crate::frontend::components::notifications::Notifications;
 use crate::frontend::components::{options::form::OptionsForms, schedules::SchedulesComponent};
 use crate::frontend::state::action_add_course::ActionAddCourse;
@@ -28,7 +28,8 @@ pub fn GeneratorPage() -> impl IntoView {
         <aside class="left-panel" class=("hide-left-panel", hide)>
             <OptionsForms />
         </aside>
-        <div class="right-panel"
+        <div
+            class="right-panel"
             on:scroll:target=move |ev| {
                 use web_sys::wasm_bindgen::JsCast;
                 let target = ev.target().dyn_into::<web_sys::Element>().unwrap();
@@ -44,7 +45,7 @@ pub fn GeneratorPage() -> impl IntoView {
         </div>
         <Notifications modal set_modal />
         <button on:pointerdown=move |_| { hide.set(false) } id="go-back">
-            <CaretDoubleRight weight=IconWeight::Regular size="3vh" />
+            <CaretDoubleRight size="3vh" />
         </button>
     }
 }

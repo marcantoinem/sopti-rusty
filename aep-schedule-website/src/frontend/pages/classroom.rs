@@ -40,21 +40,22 @@ fn PeriodEvent(i: usize, period_course: PeriodCourse) -> impl IntoView {
 pub fn ClassRoomComponent() -> impl IntoView {
     let (periods, set_periods) = signal(vec![]);
 
-    let change_classroom =
-        Action::new(|(room, set): &(String, WriteSignal<Vec<PeriodCourse>>)| {
-            let set = *set;
-            let room = room.clone();
-            async move {
-                if let Ok(periods) = get_classroom(room.into()).await {
-                    set.set(periods);
-                }
+    let change_classroom = Action::new(|(room, set): &(String, WriteSignal<Vec<PeriodCourse>>)| {
+        let set = *set;
+        let room = room.clone();
+        async move {
+            if let Ok(periods) = get_classroom(room.into()).await {
+                set.set(periods);
             }
-        });
+        }
+    });
 
-    let on_submit = move |sigle: String| {change_classroom.dispatch((sigle, set_periods));};
+    let on_submit = move |sigle: String| {
+        change_classroom.dispatch((sigle, set_periods));
+    };
     view! {
         <section class="flex flex-col w-full justify-between items-center p-4">
-            <div class="warning-box">
+            <div class="p-4 gap-4 max-w-3xl flex flex-row items-center text-justify bg-red-500 text-white">
                 <WarningCircle size="5em" />
                 <span>
                     <span>
