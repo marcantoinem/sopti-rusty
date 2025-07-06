@@ -1,0 +1,133 @@
+[workspace]
+resolver = "2"
+members = ["crates/*"]
+
+[profile.dev]
+opt-level = 1
+debug = false
+
+[profile.dev.package."*"]
+opt-level = 3
+
+# Defines a size-optimized profile for the WASM bundle in release mode
+[profile.wasm-release]
+inherits = "release"
+opt-level = 3
+lto = true
+panic = "abort"
+codegen-units = 4
+
+[workspace.dependencies]
+leptos = { version = "0.8", features = ["nightly"] }
+leptos_router = { version = "0.8" }
+leptos_meta = { version = "0.8" }
+leptos_axum = { version = "0.8" }
+
+axum = { version = "0.8", features = ["macros"] }
+cfg-if = "1"
+console_error_panic_hook = "0.1"
+console_log = "1"
+log = "0.4"
+simple_logger = "5"
+tokio = { version = "1.38", features = ["full"] }
+tower = { version = "0.5.0", features = ["util"] }
+tower-http = { version = "0.6", features = [
+    "compression-gzip",
+    "fs",
+] }
+wasm-bindgen = "=0.2.100"
+web-sys = { version = "0.3.69", features = [
+    "console",
+    "Document",
+    "Element",
+    "Event",
+    "FormData",
+    "Node",
+    "Storage",
+    "Window",
+] }
+
+rand = { version = "0.9" }
+compact_str = { version = "0.9", features = ["serde"] }
+icalendar = "0.16"
+chrono = { version = "0.4.38", features = ["serde"] }
+tracing = { version = "0.1.40" }
+serde = { version = "1.0", features = ["derive"] }
+reqwest = { version = "0.12" }
+url-escape = "0.1.1"
+p256 = { version = "0.13.2", features = ["arithmetic"] }
+web-push-native = { version = "0.4.0" }
+lettre = { version = "0.11.7", features = [
+    "tokio1",
+    "tokio1-native-tls",
+] }
+
+[[workspace.metadata.leptos]]
+# The name used by wasm-bindgen/cargo-leptos for the JS/WASM bundle. Defaults to the crate name
+name = "aep-schedule-website"
+
+bin-package = "server"
+lib-package = "frontend"
+
+# The site root folder is where cargo-leptos generate all output. WARNING: all content of this folder will be erased on a rebuild. Use it in your server setup.
+site-root = "target/site"
+
+# The site-root relative folder where all compiled output (JS, WASM and CSS) is written
+# Defaults to pkg
+site-pkg-dir = "pkg"
+
+# [Optional] The source CSS file. If it ends with .sass or .scss then it will be compiled by dart-sass into CSS. The CSS is optimized by Lightning CSS before being written to <site-root>/<site-pkg>/app.css
+style-file = "style/main.scss"
+tailwind-input-file = "style/tailwind.css"
+
+# Assets source dir. All files found here will be copied and synchronized to site-root.
+# The assets-dir cannot have a sub directory with the same name/path as site-pkg-dir.
+#
+# Optional. Env: LEPTOS_ASSETS_DIR.
+assets-dir = "public"
+
+# The IP and port (ex: 127.0.0.1:3000) where the server serves the content. Use it in your server setup.
+site-addr = "127.0.0.1:6942"
+
+# The port to use for automatic reload monitoring
+reload-port = 3001
+
+# [Optional] Command to use when running end2end tests. It will run in the end2end dir.
+#   [Windows] for non-WSL use "npx.cmd playwright test"
+#   This binary name can be checked in Powershell with Get-Command npx
+# end2end-cmd = "npx playwright test"
+# end2end-dir = "end2end"
+
+#  The browserlist query used for optimizing the CSS.
+browserquery = "defaults"
+
+# Set by cargo-leptos watch when building with that tool. Controls whether autoreload JS will be included in the head
+watch = false
+
+# The environment Leptos will run in, usually either "DEV" or "PROD"
+env = "DEV"
+
+# The features to use when compiling the bin target
+#
+# Optional. Can be over-ridden with the command line parameter --bin-features
+bin-features = []
+
+# If the --no-default-features flag should be used when compiling the bin target
+#
+# Optional. Defaults to false.
+bin-default-features = false
+
+# The features to use when compiling the lib target
+#
+# Optional. Can be over-ridden with the command line parameter --lib-features
+lib-features = []
+
+# If the --no-default-features flag should be used when compiling the lib target
+#
+# Optional. Defaults to false.
+lib-default-features = false
+
+# The profile to use for the lib target when compiling for release
+#
+# Optional. Defaults to "release".
+lib-profile-release = "wasm-release"
