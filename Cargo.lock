@@ -64,7 +64,6 @@ name = "app"
 version = "0.1.0"
 dependencies = [
  "backend",
- "cfg-if",
  "compact_str",
  "generator",
  "leptos",

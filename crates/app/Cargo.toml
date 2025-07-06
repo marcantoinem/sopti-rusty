@@ -13,7 +13,6 @@ leptos_meta.workspace = true
 leptos_router.workspace = true
 leptos_axum = { workspace = true, optional = true }
 
-cfg-if.workspace = true
 web-sys.workspace = true
 compact_str.workspace = true
 url-escape.workspace = true

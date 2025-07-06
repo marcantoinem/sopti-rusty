@@ -1,20 +1,15 @@
 # Sample configuration taken from leptos
 # Get started with a build env with Rust nightly
-FROM rustlang/rust:nightly-alpine as builder
+FROM rustlang/rust:nightly-alpine AS builder
 
-#Install libc equivalent
-RUN apk add --no-cache musl-dev
-RUN apk add --no-cache pkgconfig
-RUN apk add --no-cache libressl-dev
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 
-# Install cargo-binstall, which makes it easier to install other
-# cargo extensions like cargo-leptos
-RUN wget https://github.com/cargo-bins/cargo-binstall/releases/latest/download/cargo-binstall-x86_64-unknown-linux-musl.tgz
-RUN tar -xvf cargo-binstall-x86_64-unknown-linux-musl.tgz
-RUN cp cargo-binstall /usr/local/cargo/bin
+RUN apk update
+RUN apk add --no-cache musl-dev pkgconfig libressl-dev cargo-leptos
 
-# Install cargo-leptos
-RUN cargo binstall cargo-leptos -y
+RUN wget -q https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64-musl \
+    && chmod +x tailwindcss-linux-x64-musl \
+    && mv tailwindcss-linux-x64-musl /usr/local/bin/tailwindcss
 
 # Add the WASM target
 RUN rustup target add wasm32-unknown-unknown
@@ -23,17 +18,16 @@ RUN rustup target add wasm32-unknown-unknown
 RUN mkdir -p /app
 WORKDIR /app
 COPY . .
-WORKDIR /app/aep-schedule-website
 
 # Build the app
 RUN cargo leptos build --release -vv
 
 FROM alpine AS runner
 # Copy the server binary to the /app directory
-COPY --from=builder /app/aep-schedule-website/target/release/aep-schedule-website /app/
+COPY --from=builder /app/target/release/server /app/
 # /target/site contains our JS/WASM/CSS, etc.
-COPY --from=builder /app/aep-schedule-website/target/site /app/site
-COPY --from=builder /app/aep-schedule-website/alternance.csv /app/
+COPY --from=builder /app/target/site /app/site
+COPY --from=builder /app/alternance.csv /app/
 
 WORKDIR /app
 # Set any required env variables and
@@ -42,4 +36,4 @@ ENV LEPTOS_SITE_ADDR="0.0.0.0:6942"
 ENV LEPTOS_SITE_ROOT="site"
 EXPOSE 6942
 # Run the server
-CMD ["/app/aep-schedule-website"]
+CMD ["/app/server"]
