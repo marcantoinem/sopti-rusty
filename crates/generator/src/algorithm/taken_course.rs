@@ -2,6 +2,7 @@ use crate::data::course_type::CourseType;
 use crate::data::group::Group;
 use crate::data::group_index::GroupIndex;
 use crate::data::{course::Course, group_sigle::GroupType};
+use compact_str::CompactString;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -73,7 +74,7 @@ impl TakenCourseBuilder {
         };
 
         TakenCourse {
-            sigle: course.sigle.to_string(),
+            sigle: course.sigle,
             name: course.name,
             taken_course_type,
             nb_credit: course.nb_credit,
@@ -91,7 +92,7 @@ pub enum TakenCourseType {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TakenCourse {
-    pub sigle: String,
+    pub sigle: CompactString,
     pub name: String,
     pub taken_course_type: TakenCourseType,
     pub nb_credit: usize,
@@ -116,6 +117,23 @@ impl TakenCourse {
     }
     pub fn for_each_group(&self, mut function: impl FnMut(&Group, GroupType)) {
         match &self.taken_course_type {
+            TakenCourseType::LabOnly { lab_group } => function(lab_group, GroupType::LabGroup),
+            TakenCourseType::TheoOnly { theo_group } => function(theo_group, GroupType::TheoGroup),
+            TakenCourseType::Linked {
+                theo_group,
+                lab_group,
+            }
+            | TakenCourseType::Both {
+                theo_group,
+                lab_group,
+            } => {
+                function(theo_group, GroupType::TheoGroup);
+                function(lab_group, GroupType::LabGroup)
+            }
+        }
+    }
+    pub fn for_each_group_mut(&mut self, mut function: impl FnMut(&mut Group, GroupType)) {
+        match &mut self.taken_course_type {
             TakenCourseType::LabOnly { lab_group } => function(lab_group, GroupType::LabGroup),
             TakenCourseType::TheoOnly { theo_group } => function(theo_group, GroupType::TheoGroup),
             TakenCourseType::Linked {

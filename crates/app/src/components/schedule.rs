@@ -133,8 +133,8 @@ fn CoursePeriods(i: usize, course: TakenCourse) -> impl IntoView {
 
 #[component]
 pub fn ScheduleComponent(schedule: Schedule, calendar: Arc<Calendar>) -> impl IntoView {
-    let courses = schedule.taken_courses.clone();
-    let courses2 = schedule.taken_courses.clone();
+    let courses = schedule.courses.clone();
+    let courses2 = schedule.courses.clone();
     let schedule2 = schedule.clone();
     let ics = calendar.generate_ics(&schedule2);
     let url = url_escape::encode_fragment(&ics);

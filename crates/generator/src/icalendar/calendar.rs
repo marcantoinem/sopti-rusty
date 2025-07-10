@@ -64,7 +64,7 @@ impl Calendar {
         let mut cal = icalendar::Calendar::new();
         cal.name("horaire");
 
-        for course in schedule.taken_courses.iter() {
+        for course in schedule.courses.iter() {
             course.for_each_group(|g, group_type| {
                 for p in g.periods.iter() {
                     match p.week_nb {

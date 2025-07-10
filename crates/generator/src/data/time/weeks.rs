@@ -8,7 +8,7 @@ use crate::{
     algorithm::scores::{BEST_AFTERNOON, BEST_MORNING},
     data::time::week::Week,
 };
-use std::cmp;
+use std::{cmp, ops::BitOrAssign};
 
 #[derive(Default, PartialEq, Debug, Clone)]
 pub struct Weeks([Week<7>; 2]);
@@ -22,6 +22,7 @@ impl Weeks {
         }
         self.0[period.week_nb as usize].add_period(period);
     }
+
     pub fn conflict_in_day(&self, period: &Period) -> bool {
         if period.week_nb == WeekNumber::Both {
             return (self.0[0][period.day as usize] | self.0[1][period.day as usize])
@@ -35,12 +36,22 @@ impl Weeks {
         [self.0[0][day as usize], self.0[1][day as usize]]
     }
 
+    pub fn weekend(&self) -> [Hours; 4] {
+        [
+            self.0[0][Day::Sunday as usize],
+            self.0[1][Day::Sunday as usize],
+            self.0[0][Day::Saturday as usize],
+            self.0[1][Day::Saturday as usize],
+        ]
+    }
+
     pub fn get_day_off(&self, period: &Period) -> u8 {
         self.hours(period.day)
             .into_iter()
             .map(|h| (h == NO_HOUR) as u8)
             .sum()
     }
+
     pub fn get_morning(&self, period: &Period) -> u16 {
         self.hours(period.day)
             .into_iter()
@@ -48,6 +59,7 @@ impl Weeks {
             .map(|h| cmp::min(BEST_MORNING as u16, h.trailing_zeros() as u16))
             .sum()
     }
+
     pub fn get_finish_early(&self, period: &Period) -> u16 {
         self.hours(period.day)
             .into_iter()
@@ -55,7 +67,16 @@ impl Weeks {
             .map(|h| cmp::min(BEST_AFTERNOON as u16, h.leading_zeros() as u16))
             .sum()
     }
+
     pub fn iter(&self) -> impl Iterator<Item = Hours> + '_ {
         self.0.iter().map(|w| w.iter().cloned()).flatten()
+    }
+}
+
+impl BitOrAssign for Weeks {
+    fn bitor_assign(&mut self, rhs: Self) {
+        for (week, other_week) in self.0.iter_mut().zip(rhs.0.into_iter()) {
+            *week |= other_week;
+        }
     }
 }
