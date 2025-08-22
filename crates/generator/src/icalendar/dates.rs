@@ -53,8 +53,8 @@ impl Dates {
                     event
                         .starts(start)
                         .ends(end)
-                        .add_property("CATEGORIES", &course.sigle)
-                        .add_property("RELATED-TO", &course.sigle);
+                        .add_property("CATEGORIES", course.sigle.as_str())
+                        .add_property("RELATED-TO", course.sigle.as_str());
                     cal.push(event.done());
                 }
             }

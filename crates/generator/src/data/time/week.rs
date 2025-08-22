@@ -2,7 +2,7 @@ use super::{
     hours::{Hours, NO_HOUR},
     period::Period,
 };
-use std::ops::Deref;
+use std::ops::{BitOrAssign, Deref};
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub struct Week<const N: usize>([Hours; N]);
@@ -44,5 +44,13 @@ impl<const N: usize> Week<N> {
             return false;
         }
         self.0[period.day as usize] & period.hours != NO_HOUR
+    }
+}
+
+impl<const N: usize> BitOrAssign for Week<N> {
+    fn bitor_assign(&mut self, rhs: Self) {
+        for (day, other_day) in self.0.iter_mut().zip(rhs.0.into_iter()) {
+            *day |= other_day;
+        }
     }
 }
