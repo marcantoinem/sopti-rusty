@@ -1,11 +1,6 @@
 use compact_str::CompactString;
 
-use super::{
-    //conflicts::Conflicts,
-    schedule::ScheduleBuilder,
-    schedules::Schedules,
-    scores::EvaluationOption,
-};
+use super::{schedule::ScheduleBuilder, schedules::Schedules, scores::EvaluationOption};
 use crate::data::{course::Course, time::week::Week};
 
 #[derive(Default, Debug, Clone, PartialEq)]
@@ -18,9 +13,6 @@ pub struct SchedulesOptions {
 }
 
 impl SchedulesOptions {
-    // pub fn get_simple_conflict<'a>(&'a self) -> Option<Conflicts> {
-
-    // }
     pub fn apply_personal_schedule<'a>(&'a mut self) {
         self.courses_to_take
             .iter_mut()

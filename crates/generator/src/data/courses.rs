@@ -60,7 +60,7 @@ impl Courses {
                     self.rooms
                         .entry(period.room.clone())
                         .and_modify(|periods| {
-                            periods.push(PeriodCourse::from(period, course.sigle.clone()))
+                            periods.push(PeriodCourse::new(period, course.sigle.clone()))
                         })
                         .or_default();
                 }

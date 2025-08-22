@@ -8,6 +8,7 @@ pub struct Period {
     pub room: CompactString,
     pub hours: Hours,
     pub week_nb: WeekNumber,
+    pub in_conflict: bool,
 }
 
 impl Period {
@@ -17,6 +18,7 @@ impl Period {
             room: room.into(),
             hours: hours.into(),
             week_nb: week_nb.into(),
+            in_conflict: false,
         }
     }
 }
@@ -28,7 +30,7 @@ pub struct PeriodCourse {
 }
 
 impl PeriodCourse {
-    pub fn from(period: &Period, sigle: CompactString) -> Self {
+    pub fn new(period: &Period, sigle: CompactString) -> Self {
         Self {
             period: period.clone(),
             sigle: sigle.clone(),

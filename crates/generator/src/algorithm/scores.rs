@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+const NB_DAY_2_WEEK: u8 = 2 * 7;
 pub const BEST_MORNING: u8 = 4 * 5;
 pub const BEST_AFTERNOON: u8 = 64 - BEST_MORNING;
 
@@ -17,7 +18,7 @@ impl Default for Score {
     fn default() -> Self {
         Self {
             global: 0.0,
-            day_off: 14,
+            day_off: NB_DAY_2_WEEK,
             morning_hours: 0,
             min_morning: u8::MAX,
             afternoon_hours: 0,
