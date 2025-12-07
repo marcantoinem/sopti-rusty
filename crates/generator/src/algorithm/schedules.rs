@@ -82,8 +82,8 @@ impl<'a> Schedules<'a> {
             } => {
                 for (theo_group, lab_group) in theo_groups
                     .iter()
-                    .filter(|g| g.open)
-                    .zip(lab_groups.iter().filter(|g| g.open))
+                    .zip(lab_groups.iter())
+                    .filter(|(g_theo, g_lab)| g_theo.open && g_lab.open)
                 {
                     let course = TakenCourseBuilder::new(i, theo_group.into(), lab_group.into());
                     if let Some(schedule) = schedule.add_check_conflicts(n, min, e, course) {

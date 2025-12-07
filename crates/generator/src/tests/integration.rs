@@ -60,3 +60,28 @@ fn assert_possible() {
     let result = options.get_schedules().into_sorted_vec();
     assert_eq!(result.len(), 69);
 }
+
+#[test]
+fn test_linked_course_type() {
+    let chill_session = ["MTH1008"];
+    let courses_to_take = get_h24_courses();
+    let mut courses_to_take = courses_to_take.get_courses(&chill_session);
+    let evaluation = default_evaluation();
+    open_all_courses(&mut courses_to_take);
+    let mut options = SchedulesOptions {
+        courses_to_take,
+        max_nb_conflicts: 0,
+        evaluation,
+        user_conflicts: Week::new([0xffffffffffffffff, 0, 0, 0, 0]),
+        max_size: 21,
+    };
+    options.apply_personal_schedule();
+    let result = options.get_schedules().into_sorted_vec();
+    for horaire in result {
+        for course in horaire.courses {
+            let theo_group = course.theo_group().unwrap();
+            let lab_group = course.lab_group().unwrap();
+            assert_eq!(theo_group.number, lab_group.number);
+        }
+    }
+}
