@@ -11,18 +11,6 @@ body {
 }
 
 nav {
-    @media screen and (max-width: 1000px) {
-        flex-direction: column;
-        top: -100%;
-        transition: 0.3s;
-    }
-
-    @media screen and (min-width: 1000px) {
-        flex-direction: row;
-        height: 3em;
-        left: 0;
-    }
-
     width: 100%;
     display: flex;
     box-sizing: border-box;
@@ -35,6 +23,18 @@ nav {
     gap: 1em;
     border-bottom: 5px solid $highlight-color;
     z-index: 42;
+
+    @media screen and (max-width: 1000px) {
+        flex-direction: column;
+        top: -100%;
+        transition: 0.3s;
+    }
+
+    @media screen and (min-width: 1000px) {
+        flex-direction: row;
+        height: 3em;
+        left: 0;
+    }
 }
 
 nav > a {
