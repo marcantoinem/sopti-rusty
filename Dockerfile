@@ -5,7 +5,7 @@ FROM rustlang/rust:nightly-alpine AS builder
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 
 RUN apk update
-RUN apk add --no-cache musl-dev pkgconfig libressl-dev cargo-leptos
+RUN apk add --no-cache musl-dev pkgconfig openssl-dev openssl-libs-static cargo-leptos
 RUN cargo install -f wasm-bindgen-cli --version 0.2.106
 
 RUN wget -q https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64-musl \
