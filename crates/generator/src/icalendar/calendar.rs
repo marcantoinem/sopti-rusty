@@ -65,18 +65,17 @@ impl Calendar {
         cal.name("horaire");
 
         for course in schedule.courses.iter() {
-            course.for_each_group(|g, group_type| {
-                for p in g.periods.iter() {
-                    match p.week_nb {
-                        WeekNumber::B1 | WeekNumber::B2 => self.weeks[p.week_nb as usize]
-                            [p.day as usize]
-                            .push_events(&mut cal, course, p, group_type),
-                        WeekNumber::Both => {
-                            self.both[p.day as usize].push_events(&mut cal, course, p, group_type)
-                        }
+            let (group, group_type) = course.get_group();
+            for p in group.periods.iter() {
+                match p.week_nb {
+                    WeekNumber::B1 | WeekNumber::B2 => self.weeks[p.week_nb as usize]
+                        [p.day as usize]
+                        .push_events(&mut cal, course, p, group_type),
+                    WeekNumber::Both => {
+                        self.both[p.day as usize].push_events(&mut cal, course, p, group_type)
                     }
                 }
-            });
+            }
         }
         cal.done().to_string()
     }

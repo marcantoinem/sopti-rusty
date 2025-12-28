@@ -115,10 +115,11 @@ impl TakenCourse {
             _ => None,
         }
     }
-    pub fn for_each_group(&self, mut function: impl FnMut(&Group, GroupType)) {
+
+    pub fn get_group(&self) -> (&Group, GroupType) {
         match &self.taken_course_type {
-            TakenCourseType::LabOnly { lab_group } => function(lab_group, GroupType::LabGroup),
-            TakenCourseType::TheoOnly { theo_group } => function(theo_group, GroupType::TheoGroup),
+            TakenCourseType::LabOnly { lab_group } => (lab_group, GroupType::LabGroup),
+            TakenCourseType::TheoOnly { theo_group } => (theo_group, GroupType::TheoGroup),
             TakenCourseType::Linked {
                 theo_group,
                 lab_group,
@@ -127,15 +128,16 @@ impl TakenCourse {
                 theo_group,
                 lab_group,
             } => {
-                function(theo_group, GroupType::TheoGroup);
-                function(lab_group, GroupType::LabGroup)
+                (theo_group, GroupType::TheoGroup);
+                (lab_group, GroupType::LabGroup)
             }
         }
     }
-    pub fn for_each_group_mut(&mut self, mut function: impl FnMut(&mut Group, GroupType)) {
+
+    pub fn get_group_mut(&mut self) -> (&mut Group, GroupType) {
         match &mut self.taken_course_type {
-            TakenCourseType::LabOnly { lab_group } => function(lab_group, GroupType::LabGroup),
-            TakenCourseType::TheoOnly { theo_group } => function(theo_group, GroupType::TheoGroup),
+            TakenCourseType::LabOnly { lab_group } => (lab_group, GroupType::LabGroup),
+            TakenCourseType::TheoOnly { theo_group } => (theo_group, GroupType::TheoGroup),
             TakenCourseType::Linked {
                 theo_group,
                 lab_group,
@@ -144,8 +146,8 @@ impl TakenCourse {
                 theo_group,
                 lab_group,
             } => {
-                function(theo_group, GroupType::TheoGroup);
-                function(lab_group, GroupType::LabGroup)
+                (theo_group, GroupType::TheoGroup);
+                (lab_group, GroupType::LabGroup)
             }
         }
     }
