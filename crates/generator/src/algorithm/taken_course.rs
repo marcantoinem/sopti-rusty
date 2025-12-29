@@ -14,7 +14,7 @@ pub struct TakenCourseBuilder {
 
 impl TakenCourseBuilder {
     #[inline(always)]
-    pub fn new(index: u8, theo_group: GroupIndex, lab_group: GroupIndex) -> Self {
+    pub(super) fn new(index: u8, theo_group: GroupIndex, lab_group: GroupIndex) -> Self {
         Self {
             index,
             theo_group,
@@ -22,11 +22,11 @@ impl TakenCourseBuilder {
         }
     }
     #[inline(always)]
-    pub fn get_course<'a>(&self, courses: &'a [Course]) -> &'a Course {
+    pub(super) fn get_course<'a>(&self, courses: &'a [Course]) -> &'a Course {
         &courses[self.index as usize]
     }
     #[inline(always)]
-    pub fn for_each_group<'a>(&self, courses: &'a [Course], function: impl FnMut(&Group)) {
+    pub(super) fn for_each_group<'a>(&self, courses: &'a [Course], function: impl FnMut(&Group)) {
         let course = self.get_course(courses);
         match &course.course_type {
             CourseType::LabOnly { lab_groups } => {
@@ -48,7 +48,7 @@ impl TakenCourseBuilder {
                 .for_each(function),
         }
     }
-    pub fn build<'a>(self, courses: &'a [Course]) -> TakenCourse {
+    pub(super) fn build<'a>(self, courses: &'a [Course]) -> TakenCourse {
         let course = self.get_course(courses).clone();
         let taken_course_type = match &course.course_type {
             CourseType::LabOnly { lab_groups } => TakenCourseType::LabOnly {
@@ -107,6 +107,7 @@ impl TakenCourse {
             _ => None,
         }
     }
+
     pub fn lab_group(&self) -> Option<&Group> {
         match &self.taken_course_type {
             TakenCourseType::LabOnly { lab_group }
