@@ -36,7 +36,7 @@ impl Courses {
                 continue;
             };
             if let Some(course) = self.courses.get_mut(sigle) {
-                let period = Period::new(week_day, room.into(), hour, week_nb);
+                let period = Period::new(week_day, room, hour, week_nb);
                 course.insert_or_push(period_type, Group::new(number, period));
             } else {
                 let Ok(nb_credit) = nb_credit
@@ -47,8 +47,8 @@ impl Courses {
                 else {
                     continue;
                 };
-                let mut course = Course::new(sigle.into(), name.into(), nb_credit, course_type);
-                let period = Period::new(week_day, room.into(), hour, week_nb);
+                let mut course = Course::new(sigle, name, nb_credit, course_type);
+                let period = Period::new(week_day, room, hour, week_nb);
                 course.insert_or_push(period_type, Group::new(number, period));
                 self.courses.insert(sigle.into(), course);
             }
@@ -86,9 +86,9 @@ impl Courses {
                 continue;
             };
             let number = GroupIndex::from(number - 1);
-            course
-                .get_mut(period_type, number)
-                .and_then(|g| Some(g.open = false));
+            if let Some(group) = course.get_mut(period_type, number) {
+                group.open = false;
+            }
         }
     }
 
@@ -100,8 +100,7 @@ impl Courses {
         let closed: Vec<SigleGroup> = self
             .courses
             .iter()
-            .map(|c| c.1.get_all_closed_groups())
-            .flatten()
+            .flat_map(|c| c.1.get_all_closed_groups())
             .collect();
         self.update_all_courses(csv_horsages);
         self.update_closed(csv_fermes);
@@ -127,8 +126,8 @@ impl Courses {
 
     pub fn get_courses(&self, sigles: &[&str]) -> Vec<Course> {
         sigles
-            .into_iter()
-            .filter_map(|sigle| self.get_course(*sigle))
+            .iter()
+            .filter_map(|sigle| self.get_course(sigle))
             .collect()
     }
 

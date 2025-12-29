@@ -69,7 +69,7 @@ impl Weeks {
     }
 
     pub fn iter(&self) -> impl Iterator<Item = Hours> + '_ {
-        self.0.iter().map(|w| w.iter().cloned()).flatten()
+        self.0.iter().flat_map(|w| w.iter().cloned())
     }
 }
 

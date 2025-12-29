@@ -26,7 +26,7 @@ impl TakenCourseBuilder {
         &courses[self.index as usize]
     }
     #[inline(always)]
-    pub(super) fn for_each_group<'a>(&self, courses: &'a [Course], function: impl FnMut(&Group)) {
+    pub(super) fn for_each_group(&self, courses: &[Course], function: impl FnMut(&Group)) {
         let course = self.get_course(courses);
         match &course.course_type {
             CourseType::LabOnly { lab_groups } => {
@@ -48,7 +48,7 @@ impl TakenCourseBuilder {
                 .for_each(function),
         }
     }
-    pub(super) fn build<'a>(self, courses: &'a [Course]) -> TakenCourse {
+    pub(super) fn build(self, courses: &[Course]) -> TakenCourse {
         let course = self.get_course(courses).clone();
         let taken_course_type = match &course.course_type {
             CourseType::LabOnly { lab_groups } => TakenCourseType::LabOnly {
@@ -117,10 +117,10 @@ impl TakenCourse {
         }
     }
 
-    pub fn get_group(&self) -> (&Group, GroupType) {
+    pub fn for_each_group(&self, mut function: impl FnMut(&Group, GroupType)) {
         match &self.taken_course_type {
-            TakenCourseType::LabOnly { lab_group } => (lab_group, GroupType::LabGroup),
-            TakenCourseType::TheoOnly { theo_group } => (theo_group, GroupType::TheoGroup),
+            TakenCourseType::LabOnly { lab_group } => function(lab_group, GroupType::LabGroup),
+            TakenCourseType::TheoOnly { theo_group } => function(theo_group, GroupType::TheoGroup),
             TakenCourseType::Linked {
                 theo_group,
                 lab_group,
@@ -129,16 +129,15 @@ impl TakenCourse {
                 theo_group,
                 lab_group,
             } => {
-                (theo_group, GroupType::TheoGroup);
-                (lab_group, GroupType::LabGroup)
+                function(theo_group, GroupType::TheoGroup);
+                function(lab_group, GroupType::LabGroup)
             }
         }
     }
-
-    pub fn get_group_mut(&mut self) -> (&mut Group, GroupType) {
+    pub fn for_each_group_mut(&mut self, mut function: impl FnMut(&mut Group, GroupType)) {
         match &mut self.taken_course_type {
-            TakenCourseType::LabOnly { lab_group } => (lab_group, GroupType::LabGroup),
-            TakenCourseType::TheoOnly { theo_group } => (theo_group, GroupType::TheoGroup),
+            TakenCourseType::LabOnly { lab_group } => function(lab_group, GroupType::LabGroup),
+            TakenCourseType::TheoOnly { theo_group } => function(theo_group, GroupType::TheoGroup),
             TakenCourseType::Linked {
                 theo_group,
                 lab_group,
@@ -147,8 +146,8 @@ impl TakenCourse {
                 theo_group,
                 lab_group,
             } => {
-                (theo_group, GroupType::TheoGroup);
-                (lab_group, GroupType::LabGroup)
+                function(theo_group, GroupType::TheoGroup);
+                function(lab_group, GroupType::LabGroup)
             }
         }
     }

@@ -26,7 +26,7 @@ pub struct ScheduleBuilder<'a> {
 
 impl<'a> PartialOrd for ScheduleBuilder<'a> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.score.partial_cmp(&other.score)
+        Some(self.cmp(other))
     }
 }
 
