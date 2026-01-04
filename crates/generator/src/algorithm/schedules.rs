@@ -14,7 +14,7 @@ pub struct Schedules<'a> {
 }
 
 impl<'a> Schedules<'a> {
-    pub fn new(options: &'a SchedulesOptions) -> Self {
+    pub(super) fn new(options: &'a SchedulesOptions) -> Self {
         Self {
             schedules: BinaryHeap::new(),
             options,
@@ -22,7 +22,7 @@ impl<'a> Schedules<'a> {
         }
     }
 
-    pub fn get_min(&self) -> f64 {
+    pub(super) fn get_min(&self) -> f64 {
         if self.schedules.len() < self.options.max_size {
             return 0.0;
         }

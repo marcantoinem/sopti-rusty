@@ -39,5 +39,5 @@ fn main() {
 
     println!("{:#?}", calendar);
 
-    let _ = std::fs::write("test.ics", calendar.generate_ics(&result));
+    let _ = std::fs::write("test.ics", calendar.generate_ics(result));
 }

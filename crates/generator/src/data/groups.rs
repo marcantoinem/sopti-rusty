@@ -22,7 +22,7 @@ impl Groups {
         let number = new_group.number.to_usize();
         if number >= self.0.len() {
             self.0
-                .extend((0..(number - self.0.len() + 4)).into_iter().map(|_| None));
+                .extend((0..(number - self.0.len() + 4)).map(|_| None));
         }
         if let Some(group) = &mut self.0[number] {
             group.add_period(new_group);
@@ -42,10 +42,6 @@ impl Groups {
         self.iter().count()
     }
 
-    pub fn into_iter(self) -> impl Iterator<Item = Group> {
-        self.0.into_iter().filter_map(|g| g)
-    }
-
     pub fn iter(&self) -> impl Iterator<Item = &Group> {
         self.0.iter().filter_map(|g| g.as_ref())
     }
@@ -55,7 +51,7 @@ impl Groups {
     }
 
     pub fn is_empty(&self) -> bool {
-        self.0.iter().all(|g| *g == None)
+        self.0.iter().all(|g| g.is_none())
     }
 
     pub fn get_mut(&mut self, index: GroupIndex) -> Option<&mut Group> {
@@ -105,5 +101,14 @@ impl Index<usize> for Groups {
 impl IndexMut<usize> for Groups {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         &mut self.0[index]
+    }
+}
+
+impl std::iter::IntoIterator for Groups {
+    type Item = Group;
+    type IntoIter = std::iter::Flatten<std::vec::IntoIter<std::option::Option<Group>>>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter().flatten()
     }
 }

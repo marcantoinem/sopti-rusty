@@ -18,8 +18,8 @@ impl DatesBuilder {
     }
 
     fn new_weekend(session_start: &str, session_end: &str, day: Day) -> Dates {
-        let session_start = find_next_weekday(&session_start, day);
-        let session_end = find_last_weekday(&session_end, day);
+        let session_start = find_next_weekday(session_start, day);
+        let session_end = find_last_weekday(session_end, day);
         Dates::Weekend {
             session_start,
             session_end,
@@ -41,10 +41,9 @@ fn find_next_weekday(first_date: &str, next_day: Day) -> NaiveDate {
     if date < 0 {
         date += 7;
     }
-    let fixed = first_date
+    first_date
         .checked_add_days(chrono::Days::new(date as u64))
-        .unwrap();
-    fixed
+        .unwrap()
 }
 
 fn find_last_weekday(first_date: &str, next_day: Day) -> NaiveDate {
@@ -53,8 +52,7 @@ fn find_last_weekday(first_date: &str, next_day: Day) -> NaiveDate {
     if date > 0 {
         date -= 7;
     }
-    let fixed = first_date
+    first_date
         .checked_sub_days(chrono::Days::new(-date as u64))
-        .unwrap();
-    fixed
+        .unwrap()
 }

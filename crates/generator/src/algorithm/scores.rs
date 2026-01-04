@@ -35,7 +35,7 @@ pub struct EvaluationOption {
 }
 
 impl Score {
-    pub fn evaluate(&mut self, options: EvaluationOption) -> f64 {
+    pub(super) fn evaluate(&mut self, options: EvaluationOption) -> f64 {
         let day_off = 2.0 * options.day_off as f64;
         let morning = options.morning as f64;
         let finish_early = options.finish_early as f64;

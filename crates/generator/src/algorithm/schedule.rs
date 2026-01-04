@@ -26,7 +26,7 @@ pub struct ScheduleBuilder<'a> {
 
 impl<'a> PartialOrd for ScheduleBuilder<'a> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.score.partial_cmp(&other.score)
+        Some(self.cmp(other))
     }
 }
 
@@ -43,7 +43,7 @@ impl<'a> Ord for ScheduleBuilder<'a> {
 
 impl<'a> ScheduleBuilder<'a> {
     #[inline(always)]
-    pub fn new(courses: &'a [Course]) -> Self {
+    pub(super) fn new(courses: &'a [Course]) -> Self {
         Self {
             score: Score::default(),
             weeks: Weeks::default(),
@@ -53,17 +53,7 @@ impl<'a> ScheduleBuilder<'a> {
         }
     }
     #[inline(always)]
-    pub fn add(mut self, course: TakenCourseBuilder) -> Self {
-        course.for_each_group(self.courses, |group| {
-            for period in &group.periods {
-                self.weeks.add_period(period);
-            }
-        });
-        self.taken_courses.push(course);
-        self
-    }
-    #[inline(always)]
-    pub fn add_check_conflicts(
+    pub(super) fn add_check_conflicts(
         &self,
         n: u8,
         min: f64,
@@ -90,6 +80,7 @@ impl<'a> ScheduleBuilder<'a> {
         new_schedule.taken_courses.push(new_course);
         Some(new_schedule)
     }
+
     #[inline(always)]
     fn add_update_score(&mut self, period: &Period) {
         let day_off = self.weeks.get_day_off(period);
@@ -103,7 +94,7 @@ impl<'a> ScheduleBuilder<'a> {
         self.score.afternoon_hours += self.weeks.get_finish_early(period);
     }
 
-    pub fn build(self) -> Schedule {
+    pub(super) fn build(self) -> Schedule {
         let last_day = if self.weeks.weekend().iter().all(|d| *d == NO_HOUR) {
             5
         } else {

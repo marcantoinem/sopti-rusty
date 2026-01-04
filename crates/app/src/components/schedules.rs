@@ -15,19 +15,19 @@ pub fn SchedulesComponent() -> impl IntoView {
             future=get_calendar()
             children=move |calendar| {
                 let calendar = Arc::new(calendar.clone().unwrap());
-                let bad_generation = state.schedule.get().is_empty();
-                let generated = state.step.get() == 6;
                 view! {
                     {move || {
                         let bad_generation = state.schedule.get().is_empty();
                         let generated = state.step.get() == 6;
-                        if !(generated && !bad_generation) {
+                        if !generated || bad_generation {
                             Some(view! { <Todo /> })
                         } else {
                             None
                         }
                     }}
                     {move || {
+                        let bad_generation = state.schedule.get().is_empty();
+                        let generated = state.step.get() == 6;
                         if generated && bad_generation {
                             Some(
                                 view! {

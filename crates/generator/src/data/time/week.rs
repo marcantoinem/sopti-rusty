@@ -25,7 +25,7 @@ impl<const N: usize> Deref for Week<N> {
 impl<const N: usize> Week<N> {
     #[inline]
     pub fn new(week: [u64; N]) -> Self {
-        Self(week.map(|d| Hours::from(d)))
+        Self(week.map(Hours::from))
     }
 
     #[inline]

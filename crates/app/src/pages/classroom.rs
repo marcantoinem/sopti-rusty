@@ -71,7 +71,7 @@ pub fn ClassRoomComponent() -> impl IntoView {
                     .as_ref()
                     .map(|classrooms| {
                         let classrooms = classrooms
-                            .into_iter()
+                            .iter()
                             .map(|c| AutoCompleteOption::new(c.to_string(), c.to_string()))
                             .collect();
                         view! {
