@@ -65,8 +65,8 @@ impl Calendar {
         cal.name("horaire");
 
         for course in schedule.courses.iter() {
-            course.for_each_group(|g, group_type| {
-                for p in g.periods.iter() {
+            course.for_each_group(|group, group_type| {
+                for p in group.periods.iter() {
                     match p.week_nb {
                         WeekNumber::B1 | WeekNumber::B2 => self.weeks[p.week_nb as usize]
                             [p.day as usize]
