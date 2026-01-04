@@ -1,3 +1,4 @@
+#![recursion_limit = "256"]
 pub mod fileserv;
 
 use app::App;
